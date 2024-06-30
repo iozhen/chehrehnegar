@@ -1,0 +1,15 @@
+{
+  "headerLinks": [
+    { "href": "/", "title": "Home" },
+    { "href": "/about", "title": "About" },
+    { "href": "/team", "title": "Team" },
+    { "href": "/contact", "title": "Contact Us" }
+  ],
+  "aboutUsList": [
+    { "title": "Monitoring the area of dams and wetlands" },
+    { "title": "Monitoring the eutrophication level in dams and wetlands" },
+    { "title": "Monitoring the intensity and spatial extent of aerosol" },
+    { "title": "Flood forecast and early warning" },
+    { "title": "Monitoring agricultural water consumption" }
+  ]
+}

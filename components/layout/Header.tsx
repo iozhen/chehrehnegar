@@ -4,6 +4,7 @@ const Header = () => {
   return (
     <div className="header_nofade">
       <a href="https://en.sharif.edu/" target="_blank">
+        {/* comment */}
         <div className="sharif">
           <img src="/images/sharif.png" />
         </div>

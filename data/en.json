@@ -1,0 +1,17 @@
+{
+  "Menu_Home": "Home",
+  "Menu_About": "About",
+  "Menu_Team": "Team",
+  "Menu_Contact": "Contact Us",
+  "Bina": "Bina",
+  "Home_desc": "An AI-based Platform to Process, Analyze and Visualize Environmental Data",
+  "Home_Btn": "Launch Bina",
+  "About_Title": "About",
+  "About_desc": "BINA is an AI-based WebGIS platform for environmental monitoring purposes. BINA uses the state-of-the-art AI-based techniques to process Sentinel/Landsat images and extract quantitative and qualitative information on water and other environmental resources. The optimized architecture of BINA allows efficient processing, storage, display, and navigation of geospatial Earth data, with the aid of Earth Engine. BINA currently monitors the history of surface area and eutrophication status in 55 reservoirs across Iran. Modules on wetland monitoring, agricultural water consumption, early flood forecasting and awareness, and aerosol dynamics will apprear soon. BINA has been developed by the computational hydrology and remote sensing research group at Sharif University of Technology, with the support of the Office of Vice President for Research and Technology.",
+  "Some_example": "Some example applications",
+  "About_1": "Monitoring the area of dams and wetlands",
+  "About_2": "Monitoring the eutrophication level in dams and wetlands",
+  "About_3": "Monitoring the intensity and spatial extent of aerosol",
+  "About_4": "Flood forecast and early warning",
+  "About_5": "Monitoring agricultural water consumption"
+}

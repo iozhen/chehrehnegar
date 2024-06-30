@@ -2,39 +2,20 @@ import React from "react";
 
 const Header = () => {
   return (
-    <div className="header_nofade">
-      <a href="https://en.sharif.edu/" target="_blank">
-        {/* comment */}
-        <div className="sharif">
-          <img src="/images/sharif.png" />
-        </div>
-      </a>
-      <div className="falan">
-        <a href="homefa.html">
-          <p>فا</p>
-        </a>
-      </div>
-      <div className="contact">
-        <a href="contact.html">
-          <p>Contact Us</p>
-        </a>
-        <div className="team">
-          <a href="team.html">
-            <p>Team</p>
-          </a>
-          <div className="about">
-            <a href="about.html">
-              <p>About</p>
-            </a>
-            <div className="home">
-              <a href="index.html">
-                <p>Home</p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <header className="fixed top-0 left-0 h-[10%] w-full bg-[#0007] flex justify-between items-center">
+      <a
+        href="https://en.sharif.edu/"
+        target="_blank"
+        className="w-[76px] h-[76px] inline-block bg-[url(/images/sharif.png)] bg-cover bg-center"
+      ></a>
+      <nav className="text-white flex justify-center items-center gap-[40px] text-[1.5vw] pr-[35px]">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Team</a>
+        <a href="#">Contact Us</a>
+        <a href="#">فا</a>
+      </nav>
+    </header>
   );
 };
 

@@ -8,9 +8,9 @@ interface LayoutProps {
 function Layout({ children }: LayoutProps) {
   return (
     <div>
-      <div className="bg-[#465261] min-h-[100vh] w-[100vw]">
+      <div className="min-h-[100vh] w-[100vw]">
         <Header />
-        <div className="flex w-full relative">{children}</div>
+        <div className="w-full h-screen">{children}</div>
       </div>
     </div>
   );

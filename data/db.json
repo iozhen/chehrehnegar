@@ -11,5 +11,14 @@
     { "title": "Monitoring the intensity and spatial extent of aerosol" },
     { "title": "Flood forecast and early warning" },
     { "title": "Monitoring agricultural water consumption" }
+  ],
+  "teamList": [
+    { "title": "Mohammad Danesh-Yazdi (PI and project lead)" },
+    { "title": "Armin Molaei Rudsary (Software developer)" },
+    {
+      "title": "Parisa AbbasAlizaeh Rezaei (Remote sensing of water quantity)"
+    },
+    { "title": "Zahra Kazempour (Remote sensing of water quality)" },
+    { "title": "Nooshdokht Bayat-Afshary (Data analysis)" }
   ]
 }

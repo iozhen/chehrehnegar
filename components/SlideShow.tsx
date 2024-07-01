@@ -21,7 +21,7 @@ const Slider = ({ slides }: { slides: slideType[] }) => {
   }, [slides.length]);
 
   return (
-    <div className="relative w-full max-w-full h-full m-auto overflow-hidden">
+    <div className="relative w-full max-w-full h-full m-auto animate-zoom-in-zoom-out">
       {slides.map(({ imgPath, location }, index) => (
         <div
           key={index}

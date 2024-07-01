@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import data from "../../data/db.json";
 import Link from "next/link";
 
@@ -10,10 +10,24 @@ interface linksType {
 
 const Header = () => {
   const router = useRouter();
+  const isHomePage = router.pathname === "/";
+  const [headerShowState, setHeaderShowState] = useState<boolean>();
+
+  useEffect(() => {
+    window.addEventListener("scroll", (e) => {
+      window.scrollY > 150
+        ? setHeaderShowState(true)
+        : setHeaderShowState(false);
+    });
+  }, []);
+
   return (
     <header
+      style={{
+        background: `${isHomePage || headerShowState ? "#0007" : "#0000"}`,
+      }}
       className={
-        "fixed top-0 left-0 w-full bg-[#0007] flex justify-between items-center " +
+        "animate-map-fade fixed top-0 left-0 w-full flex justify-between items-center z-[10] " +
         (router.pathname.includes("map") ? "h-[7vh]" : "h-[10%]")
       }
     >

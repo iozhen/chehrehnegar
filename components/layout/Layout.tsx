@@ -37,7 +37,7 @@ function Layout({ children }: LayoutProps) {
 
   return (
     <div>
-      <div className="min-h-[100vh] w-[100vw]">
+      <div className="min-h-[100vh] w-[100vw] overflow-hidden">
         <Header />
         <div className="w-full h-screen">{children}</div>
       </div>

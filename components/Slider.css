@@ -1,0 +1,32 @@
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 100%; /* عرض حداکثر اسلایدر */
+  margin: auto;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease; /* ترانزیشن fade */
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+.slide-content {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  color: white;
+}

@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header
       className={
-        "fixed top-0 left-0 w-full bg-[#0007] flex justify-between items-center " +
+        "fixed top-0 left-0 w-full bg-[#0007] flex justify-between items-center z-10 " +
         (router.pathname.includes("map") ? "h-[7vh]" : "h-[10%]")
       }
     >

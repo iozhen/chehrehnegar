@@ -16,6 +16,10 @@
   }
 }
 
+body {
+  overflow-x: hidden;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

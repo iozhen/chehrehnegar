@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <header
       style={{ background: `${headerShowState ? "#0007" : "#0000"}` }}
-      className="fixed top-0 left-0 h-[10%] w-full flex justify-between items-center"
+      className="fixed top-0 left-0 h-[10%] w-full flex justify-between items-center z-10"
     >
       <a
         href="https://en.sharif.edu/"

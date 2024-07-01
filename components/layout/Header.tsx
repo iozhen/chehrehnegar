@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import React from "react";
 import data from "../../data/db.json";
 import Link from "next/link";
@@ -9,25 +9,23 @@ interface linksType {
 }
 
 const Header = () => {
-  const [headerShowState, setHeaderShowState] = useState<boolean>();
-
-  useEffect(() => {
-    window.addEventListener("scroll", (e) => {
-      window.scrollY > 150
-        ? setHeaderShowState(true)
-        : setHeaderShowState(false);
-    });
-  }, []);
-
+  const router = useRouter();
   return (
     <header
-      style={{ background: `${headerShowState ? "#0007" : "#0000"}` }}
-      className="animate-map-fade fixed top-0 left-0 h-[10%] w-full flex justify-between items-center z-10"
+      className={
+        "fixed top-0 left-0 w-full bg-[#0007] flex justify-between items-center " +
+        (router.pathname.includes("map") ? "h-[7vh]" : "h-[10%]")
+      }
     >
       <a
         href="https://en.sharif.edu/"
         target="_blank"
-        className="w-[76px] h-[76px] inline-block bg-[url(/images/sharif.png)] bg-cover bg-center"
+        className={
+          "inline-block bg-[url(/images/sharif.png)] bg-cover bg-center " +
+          (router.pathname.includes("map")
+            ? "w-[45px] h-[45px]"
+            : "w-[76px] h-[76px]")
+        }
       ></a>
 
       <nav className="text-white flex justify-center items-center gap-[40px] text-[1.5vw] pr-[35px]">

@@ -15,11 +15,13 @@ const Contact = () => {
 
       <div
         dir={`${isEnLang ? "ltr" : "rtl"}`}
-        className="w-[75%] mx-auto mb-[70px]"
+        className="w-[90%] mx-auto mb-[70px] ___ sm:w-[80%] ___ md:w-[75%]"
       >
-        <h3 className="text-[35px] font-bold">{t("Contact_Title")}</h3>
+        <h3 className="text-[21px] font-bold ___ sm:text-[30px] ___ lg:text-[35px]">
+          {t("Contact_Title")}
+        </h3>
 
-        <p className="text-[25px] font-normal text-justify leading-[40px] mb-[40px]">
+        <p className="text-[18px] font-normal text-justify leading-[40px] mb-[40px] ___ sm:text-[20px] sm:leading-[35px] ___ lg:text-[25px] lg:leading-[40px]">
           {t("Contact_desc1")} <br />
           {t("Contact_desc2")} <br />
           {t("Contact_desc3")} <br />
@@ -28,9 +30,7 @@ const Contact = () => {
         {i18next.language === "en" ? (
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.9990550161046!2d51.34838808776515!3d35.70164086692187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e00a6421aaaab%3A0x58579384133c80f5!2sDepartment%20of%20Civil%20Engineering!5e0!3m2!1sen!2s!4v1649746061292!5m2!1sen!2s"
-            width="600"
-            height="450"
-            className="border-0 m-auto"
+            className="w-full max-w-[600px] border-0 m-auto aspect-[4/3]"
             allowFullScreen={false}
             loading="lazy"
           ></iframe>

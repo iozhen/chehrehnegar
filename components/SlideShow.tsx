@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface slideType {
   imgPath: string;
@@ -8,7 +10,9 @@ interface slideType {
 }
 
 const Slider = ({ slides }: { slides: slideType[] }) => {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const isEnLang = i18next.language === "en";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,13 +35,19 @@ const Slider = ({ slides }: { slides: slideType[] }) => {
           }}
           className="absolute transition duration-[1s] w-full h-full bg-center bg-cover"
         >
-          <div className="fixed bottom-[40px] left-[80px] text-[2vw] text-white flex justify-center items-center gap-[15px] animate-fade-animate">
+          <div
+            className={`fixed text-[2vw] text-white flex justify-center items-center gap-[15px] animate-fade-animate bottom-[40px] 
+              ${
+                isEnLang ? "left-[80px] text-left" : "right-[80px] text-right"
+              }  
+            `}
+          >
             <FontAwesomeIcon
               icon={faMapMarkerAlt}
               color="red"
               style={{ fontSize: "2vw" }}
             />
-            <span>{location}</span>
+            <span>{t(`${location}`)}</span>
           </div>
         </div>
       ))}

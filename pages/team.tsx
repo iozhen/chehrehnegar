@@ -1,11 +1,16 @@
+import { useTranslation } from "react-i18next";
 import data from "../data/db.json";
 import React from "react";
+import i18next from "i18next";
 
 interface teamListType {
   title: string;
 }
 
 const Team = () => {
+  const { t } = useTranslation();
+  const isEnLang = i18next.language === "en";
+
   return (
     <div>
       <img
@@ -13,13 +18,13 @@ const Team = () => {
         className="w-full block mb-[40px]"
       />
 
-      <div className="w-[75%] mx-auto mb-[70px]">
-        <h3 className="text-[35px] font-bold pb-[30px]">Developer Team</h3>
+      <div dir={isEnLang ? "ltr" : "rtl"} className="w-[75%] mx-auto mb-[70px]">
+        <h3 className="text-[35px] font-bold pb-[30px]">{t("Team_Title")}</h3>
 
-        <ul className="pl-[45px]">
+        <ul className={`${isEnLang ? "pl-[45px]" : "pr-[45px]"}`}>
           {data.teamList.map(({ title }: teamListType, index: number) => (
             <li key={index} className="list-disc text-[25px] font-normal">
-              {title}
+              {t(`${title}`)}
             </li>
           ))}
         </ul>

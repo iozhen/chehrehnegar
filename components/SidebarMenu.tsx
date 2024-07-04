@@ -13,6 +13,7 @@ interface sidebarType {
 export default function SidebarMenu({
    setSidebarState,
    sidebarState,
+   changeLanguage,
 }: sidebarType) {
    const { t } = i18next;
    const isEnLang = i18next.language === "en";
@@ -23,6 +24,10 @@ export default function SidebarMenu({
             ${
                sidebarState
                   ? "translate-x-0"
+                  : changeLanguage
+                  ? isEnLang
+                     ? "translate-x-[100%] transition-none"
+                     : "translate-x-[-100%] transition-none"
                   : isEnLang
                   ? "translate-x-[100%]"
                   : "translate-x-[-100%]"

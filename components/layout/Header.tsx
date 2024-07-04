@@ -20,6 +20,7 @@ const Header = () => {
    const { t } = useTranslation();
    const isEnLang = i18next.language === "en";
    const [sidebarState, setSidebarState] = useState<boolean>();
+   const [changeLanguage, setChangeLanguage] = useState<boolean>(false);
 
    useEffect(() => {
       window.addEventListener("scroll", (e) => {
@@ -54,8 +55,8 @@ const Header = () => {
 
          <nav
             className={`hidden text-white justify-center items-center gap-[40px] ___ sm:text-[22px] sm:flex
-          ${isEnLang ? "flex-row pr-[35px]" : "flex-row-reverse pl-[35px]"}
-        `}
+               ${isEnLang ? "flex-row pr-[35px]" : "flex-row-reverse pl-[35px]"}
+            `}
          >
             {data.headerLinks.map(({ href, title }: linksType, index) => (
                <Link href={href} key={index}>
@@ -64,11 +65,13 @@ const Header = () => {
             ))}
 
             <button
-               onClick={() =>
+               onClick={() => {
+                  setChangeLanguage(true);
+                  setTimeout(() => setChangeLanguage(false), 200);
                   isEnLang
                      ? i18next.changeLanguage("fa")
-                     : i18next.changeLanguage("en")
-               }
+                     : i18next.changeLanguage("en");
+               }}
             >
                {isEnLang ? "فا" : "En"}
             </button>
@@ -84,6 +87,7 @@ const Header = () => {
          <SidebarMenu
             setSidebarState={setSidebarState}
             sidebarState={sidebarState}
+            changeLanguage={changeLanguage}
          />
       </header>
    );

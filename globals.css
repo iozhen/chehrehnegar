@@ -3,29 +3,76 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+   --foreground-rgb: 0, 0, 0;
+   --background-start-rgb: 214, 219, 220;
+   --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+   :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+   }
 }
 
 body {
-  overflow-x: hidden;
+   overflow-x: hidden;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+   .text-balance {
+      text-wrap: balance;
+   }
 }
 
-.title {
-  font-family: "Open Sans", sans-serif;
+/* roboto */
+@font-face {
+   font-family: 'Roboto';
+   src: url('/public/fonts/roboto/Roboto-Light.ttf');
+   font-weight: 300;
+}
+@font-face {
+   font-family: 'Roboto';
+   src: url('/public/fonts/roboto/Roboto-Regular.ttf');
+   font-weight: 400;
+}
+@font-face {
+   font-family: 'Roboto';
+   src: url('/public/fonts/roboto/Roboto-Medium.ttf');
+   font-weight: 500;
+}
+@font-face {
+   font-family: 'Roboto';
+   src: url('/public/fonts/roboto/Roboto-Bold.ttf');
+   font-weight: 700;
+}
+
+* {
+   font-family: 'Roboto', 'Open Sans', sans-serif;
+}
+
+/* home slider */
+.homeSlider .swiper-pagination {
+   width: 232px !important;
+   left: 0px !important;
+   bottom: 20px !important;
+   font-size: 0 !important;
+   display: flex !important;
+   justify-content: center;
+   gap: 5px !important;
+}
+
+.homeSlider .swiper-pagination-bullet {
+   width: 18px !important;
+   height: 8px !important;
+   border-radius: 1000px;
+   background: #d9d9d9 !important;
+   transition: 0.4s;
+   margin: unset !important;
+}
+
+.homeSlider .swiper-pagination-bullet-active {
+   width: 36px !important;
+   background: #58999f !important;
 }

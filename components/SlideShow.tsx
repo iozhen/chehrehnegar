@@ -1,48 +1,75 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect } from "react";
+import React from "react";
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
 
-interface slideType {
-  imgPath: string;
-  location: string;
-}
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
 
-const Slider = ({ slides }: { slides: slideType[] }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+// import required modules
+import { Pagination, Autoplay } from "swiper/modules";
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) =>
-        prevSlide === slides.length - 1 ? 0 : prevSlide + 1
-      );
-    }, 5000);
+// next translation
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
-    return () => clearInterval(interval);
-  }, [slides.length]);
+export default function HomeSlider() {
+   const pagination = {
+      clickable: true,
+      renderBullet: function (index: number, className: string) {
+         return '<span class="' + className + '">' + (index + 1) + "</span>";
+      },
+   };
 
-  return (
-    <div className="relative w-full max-w-full h-full m-auto overflow-hidden">
-      {slides.map(({ imgPath, location }, index) => (
-        <div
-          key={index}
-          style={{
-            opacity: `${index === currentSlide ? 1 : 0}`,
-            backgroundImage: `url(${imgPath})`,
-          }}
-          className="absolute transition duration-[1s] w-full h-full bg-center bg-cover"
-        >
-          <div className="fixed bottom-[40px] left-[80px] text-[2vw] text-white flex justify-center items-center gap-[15px] animate-fade-animate">
-            <FontAwesomeIcon
-              icon={faMapMarkerAlt}
-              color="red"
-              style={{ fontSize: "2vw" }}
+   const { t } = useTranslation();
+   const isEnLang = i18next.language === "en";
+
+   return (
+      <>
+         <Swiper
+            pagination={pagination}
+            modules={[Pagination, Autoplay]}
+            className="homeSlider relative rounded-[20px]"
+            autoplay={{
+               delay: 5000,
+               disableOnInteraction: false,
+            }}
+         >
+            {["", "", "", "", ""].map((_, index) => (
+               <SwiperSlide
+                  key={index}
+                  className="w-full h-full rounded-[20px] bg-white"
+               >
+                  <div className="w-full h-[517px] overflow-hidden bg-[url(/images/slide.png)] bg-cover">
+                     {/* prettier-ignore */}
+                     <div className={`w-full h-full max-sm:px-[20px] px-[45px] pt-[130px] bg-[url(/images/sliderFade.png)] bg-cover flex flex-col ${isEnLang ? 'items-start' : 'items-end'}`}>
+                        <p
+                           className={`max-sm:text-[20px] text-[24px] w-full max-sm:leading-[35px] leading-[48px] text-white font-[700] ___ sm:text-[35px] ___ md:text-[40px] max-sm:mb-[20px] mb-[30px]
+                        ${
+                           isEnLang
+                              ? 'justify-self-start text-left left-[25px] ___ sm:left-[50px] ___ md:left-[80px]'
+                              : 'justify-self-end text-right drop-shadow-[0_0_30px_#000] right-[25px] ___ sm:right-[50px] ___ md:right-[80px]'
+                        }
+                        `}
+                        >
+                           {t('Home_desc1')} <br />
+                           {t('Home_desc2')} <br />
+                           {t('Home_desc3')} <br />
+                        </p>
+                        <button className="max-sm:w-[140px] w-[180px] max-sm:h-[45px] h-[52px] rounded-[1000px] max-sm:text-[16px] text-[20px] border-[2px] border-[#FFF] text-white flex text-center items-center justify-center justify-self-center font-[700] ___ sm:text-[18px] sm:mb-[100px]">
+                           {t('Home_Btn')}
+                        </button>
+                     </div>
+                  </div>
+               </SwiperSlide>
+            ))}
+
+            <img
+               src="/images/shape-slider.png"
+               alt="shape"
+               className="absolute left-0 bottom-0 w-[232px] h-[71px] z-[9]"
             />
-            <span>{location}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export default Slider;
+         </Swiper>
+      </>
+   );
+}

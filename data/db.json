@@ -1,45 +1,34 @@
 {
   "headerLinks": [
-    { "href": "/", "title": "Home" },
-    { "href": "/about", "title": "About" },
-    { "href": "/team", "title": "Team" },
-    { "href": "/contact", "title": "Contact Us" }
+    { "href": "/", "title": "Menu_Home" },
+    { "href": "/about", "title": "Menu_About" },
+    { "href": "/team", "title": "Menu_Team" },
+    { "href": "/contact", "title": "Menu_Contact" }
   ],
   "aboutUsList": [
-    { "title": "Monitoring the area of dams and wetlands" },
-    { "title": "Monitoring the eutrophication level in dams and wetlands" },
-    { "title": "Monitoring the intensity and spatial extent of aerosol" },
-    { "title": "Flood forecast and early warning" },
-    { "title": "Monitoring agricultural water consumption" }
+    { "title": "About_1" },
+    { "title": "About_2" },
+    { "title": "About_3" },
+    { "title": "About_4" },
+    { "title": "About_5" }
   ],
   "teamList": [
-    { "title": "Mohammad Danesh-Yazdi (PI and project lead)" },
-    { "title": "Armin Molaei Rudsary (Software developer)" },
-    {
-      "title": "Parisa AbbasAlizaeh Rezaei (Remote sensing of water quantity)"
-    },
-    { "title": "Zahra Kazempour (Remote sensing of water quality)" },
-    { "title": "Nooshdokht Bayat-Afshary (Data analysis)" }
+    { "title": "Team_1" },
+    { "title": "Team_2" },
+    { "title": "Team_3" },
+    { "title": "Team_4" },
+    { "title": "Team_5" }
   ],
   "homePageSlider": [
-    { "imgPath": "/images/image1.jpg", "location": "Bemani, Hormozgan" },
-    { "imgPath": "/images/image2.jpg", "location": "Choret Lake, Mazandaran" },
-    { "imgPath": "/images/image3.jpg", "location": "Hara Jungle, Hormozgan" },
-    { "imgPath": "/images/image4.jpg", "location": "AbMalakh Fall, Isfahan" },
-    {
-      "imgPath": "/images/image5.jpg",
-      "location": "BadabSort Spring, Mazandaran"
-    },
-    { "imgPath": "/images/image6.jpg", "location": "Alendan Lake, Mazandaran" },
-    { "imgPath": "/images/image7.jpg", "location": "Neor Lake, Ardabil" },
-    { "imgPath": "/images/image8.jpg", "location": "Soostan Lagoon, Gilan" },
-    {
-      "imgPath": "/images/image9.jpg",
-      "location": "Lake Urmia, West Azerbaijan"
-    },
-    {
-      "imgPath": "/images/image10.jpg",
-      "location": "Lake Urmia, West Azerbaijan"
-    }
+    { "imgPath": "/images/image1.jpg", "location": "location1" },
+    { "imgPath": "/images/image2.jpg", "location": "location2" },
+    { "imgPath": "/images/image3.jpg", "location": "location3" },
+    { "imgPath": "/images/image4.jpg", "location": "location4" },
+    { "imgPath": "/images/image5.jpg", "location": "location5" },
+    { "imgPath": "/images/image6.jpg", "location": "location6" },
+    { "imgPath": "/images/image7.jpg", "location": "location7" },
+    { "imgPath": "/images/image8.jpg", "location": "location8" },
+    { "imgPath": "/images/image9.jpg", "location": "location9" },
+    { "imgPath": "/images/image10.jpg", "location": "location10" }
   ]
 }

@@ -1,36 +1,32 @@
+import PageTitle from "@/components/PageTitle";
+import i18next from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Contact = () => {
-  return (
-    <div>
-      <img
-        src="/images/shadegan_header.png"
-        className="w-full block mb-[40px]"
-      />
+   const { t } = useTranslation();
+   const isEnLang = i18next.language === "en";
 
-      <div className="w-[75%] mx-auto mb-[70px]">
-        <h3 className="text-[35px] font-bold">Contact Us</h3>
+   return (
+      <div>
+         <div
+            dir={`${isEnLang ? "ltr" : "rtl"}`}
+            className="w-[90%] mx-auto mb-[70px] ___ md:w-[700px] ___ lg:w-[900px] ___ xl:w-[1200px]"
+         >
+            <PageTitle title={t("ContactShowTitle")} />
 
-        <p className="text-[25px] font-normal text-justify leading-[40px] mb-[40px]">
-          Mailing address: 425 Civil Engineering Department, Sharif University
-          of Technology, Azadi Ave., Tehran, Tehran, Iran <br />
-          Email: danesh@sharif.edu <br />
-          Tell: +98 (21) 66164241 <br />
-        </p>
+            <h3 className="text-[20px] font-[700] ___ sm:text-[30px] ___ lg:text-[24px]">
+               {t("Contact_Title")}
+            </h3>
 
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.9990550161046!2d51.34838808776515!3d35.70164086692187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e00a6421aaaab%3A0x58579384133c80f5!2sDepartment%20of%20Civil%20Engineering!5e0!3m2!1sen!2s!4v1649746061292!5m2!1sen!2s"
-          width="600"
-          height="450"
-          style={{ border: 0, margin: "0 auto" }}
-          allowFullScreen={false}
-          loading="lazy"
-        ></iframe>
+            <p className="text-[17px] font-normal text-justify max-sm:leading-[35px] leading-[40px] mb-[40px] ___ sm:text-[20px] sm:leading-[35px] ___ lg:text-[24px] lg:leading-[40px]">
+               {t("Contact_desc1")} <br />
+               {t("Contact_desc2")} <br />
+               {t("Contact_desc3")} <br />
+            </p>
+         </div>
       </div>
-
-      <img src="/images/shadegan_footer.png" className="w-full opacity-50" />
-    </div>
-  );
+   );
 };
 
 export default Contact;

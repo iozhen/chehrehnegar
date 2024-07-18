@@ -1,52 +1,33 @@
-import data from "../data/db.json";
-
-interface aboutListType {
-  title: string;
-}
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+import PageTitle from "@/components/PageTitle";
 
 const About = () => {
-  return (
-    <div>
-      <img
-        src="/images/shadegan_header.png"
-        className="w-full block mb-[40px]"
-      />
+   const { t } = useTranslation();
+   const isEnLang = i18next.language === "en";
 
-      <div className="w-[75%] mx-auto mb-[70px]">
-        <h3 className="text-[35px] font-bold">About</h3>
+   return (
+      <div>
+         <div
+            className={`w-[90%] mx-auto mb-[70px] md:w-[700px] ___ lg:w-[900px] ___ xl:w-[1200px]
+               ${isEnLang ? "text-left" : "text-right"}
+            `}
+         >
+            <PageTitle title={t("AboutShowTitle")} />
 
-        <p className="text-[25px] font-normal text-justify leading-[40px] mb-[30px]">
-          BINA is an AI-based WebGIS platform for environmental monitoring
-          purposes. BINA uses the state-of-the-art AI-based techniques to
-          process Sentinel/Landsat images and extract quantitative and
-          qualitative information on water and other environmental resources.
-          The optimized architecture of BINA allows efficient processing,
-          storage, display, and navigation of geospatial Earth data, with the
-          aid of Earth Engine. BINA currently monitors the history of surface
-          area and eutrophication status in 55 reservoirs across Iran. Modules
-          on wetland monitoring, agricultural water consumption, early flood
-          forecasting and awareness, and aerosol dynamics will apprear soon.
-          BINA has been developed by the computational hydrology and remote
-          sensing research group at Sharif University of Technology, with the
-          support of the Office of Vice President for Research and Technology.
-        </p>
+            <h3 className="max-sm:text-[20px] text-[24px] mb-[10px] font-[700] ___ sm:text-[30px] ___ lg:text-[35px]">
+               {t("About_Title")}
+            </h3>
 
-        <h3 className="text-[35px] font-bold pb-[30px]">
-          Some example applications
-        </h3>
-
-        <ul className="pl-[45px]">
-          {data.aboutUsList.map(({ title }: aboutListType, index: number) => (
-            <li key={index} className="list-disc text-[25px] font-normal">
-              {title}
-            </li>
-          ))}
-        </ul>
+            <p
+               dir={isEnLang ? "ltr" : "rtl"}
+               className="max-sm:text-[19px] text-[24px] font-[400] text-justify mb-[30px] ___ sm:text-[20px] sm:leading-[35px] ___ lg:text-[25px] lg:leading-[40px]"
+            >
+               {t("About_desc")}
+            </p>
+         </div>
       </div>
-
-      <img src="/images/shadegan_footer.png" className="w-full opacity-50" />
-    </div>
-  );
+   );
 };
 
 export default About;

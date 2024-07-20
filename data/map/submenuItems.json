@@ -1,0 +1,10 @@
+{
+   "items": [
+      { "title": "Open Street Map", "img": "/images/m1.png" },
+      { "title": "Google Roads", "img": "/images/m2.png" },
+      { "title": "Google Terrain", "img": "/images/m3.png" },
+      { "title": "Google Satellite", "img": "/images/m4.png" },
+      { "title": "Labeled Google Satellite", "img": "/images/m5.png" },
+      { "title": "Water Color", "img": "/images/m7.png" }
+   ]
+}

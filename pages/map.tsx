@@ -165,6 +165,7 @@ const MapComponents: React.FC = () => {
       }
    }, [map, mapType]);
 
+   //it is for show to numbers that mouse hover on map
    useEffect(() => {
       if (map && typeof window !== "undefined") {
          // Controls
@@ -185,74 +186,6 @@ const MapComponents: React.FC = () => {
          map.addControl(scaleControl);
       }
    }, [map]);
-
-   useEffect(() => {
-      // Ruler functionality
-      if (map && typeof window !== "undefined" && isRulerActive) {
-         map.on("click", (evt) => {
-            const clickedPoint = evt.coordinate;
-            setPoints((prevPoints) => {
-               const newPoints = [...prevPoints, clickedPoint];
-
-               if (newPoints.length === 2) {
-                  const line = new LineString(newPoints);
-                  const distance = getDistance(
-                     fromLonLat(newPoints[0]),
-                     fromLonLat(newPoints[1])
-                  );
-                  const distanceFeature = new Feature({
-                     geometry: line,
-                  });
-
-                  distanceFeature.setStyle(
-                     new Style({
-                        stroke: new Stroke({
-                           color: "#ffcc33",
-                           width: 2,
-                        }),
-                     })
-                  );
-
-                  const vectorSource = new VectorSource({
-                     features: [distanceFeature],
-                  });
-
-                  const vectorLayer = new VectorLayer({
-                     source: vectorSource,
-                  });
-
-                  map.addLayer(vectorLayer);
-
-                  const [start, end] = newPoints;
-                  const midPoint = [
-                     (start[0] + end[0]) / 2,
-                     (start[1] + end[1]) / 2,
-                  ];
-
-                  const distanceOverlay = new Overlay({
-                     element: document.createElement("div"),
-                     position: midPoint,
-                     positioning: "bottom-center",
-                  });
-
-                  distanceOverlay.getElement().innerHTML = `${distance.toFixed(
-                     2
-                  )} meters`;
-                  distanceOverlay.getElement().style.color = "black";
-                  distanceOverlay.getElement().style.backgroundColor = "white";
-                  distanceOverlay.getElement().style.padding = "5px";
-                  distanceOverlay.getElement().style.borderRadius = "5px";
-
-                  map.addOverlay(distanceOverlay);
-
-                  setPoints([]);
-               } else {
-                  return newPoints;
-               }
-            });
-         });
-      }
-   }, [map, isRulerActive]);
 
    const addInteraction = () => {
       const newDraw = new Draw({

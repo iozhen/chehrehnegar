@@ -12,12 +12,14 @@ import { Coordinate } from "ol/coordinate";
 import Sidebar from "@/components/Sidebar";
 import data from "@/data/map/submenuItems.json";
 import { fromLonLat } from "ol/proj";
-import { LineString, Point } from "ol/geom";
+import { LineString, Polygon } from "ol/geom";
 import { Feature } from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { Stroke, Style } from "ol/style";
-import { getDistance } from "ol/sphere";
+import { Stroke, Style, Fill } from "ol/style";
+import { getDistance, getArea } from "ol/sphere";
+import { Draw } from "ol/interaction";
+import Control from "ol/control/Control";
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(false);
@@ -26,6 +28,23 @@ const MapComponents: React.FC = () => {
    const [points, setPoints] = useState<Coordinate[]>([]);
    const mapElement = useRef<HTMLDivElement>(null);
    const [map, setMap] = useState<Map | null>(null);
+   const [areaFlag, setAreaFlag] = useState(false);
+   const [draw, setDraw] = useState<Draw | null>(null);
+   const [vectorSource] = useState(new VectorSource());
+   const [vectorLayer] = useState(
+      new VectorLayer({
+         source: vectorSource,
+         style: new Style({
+            fill: new Fill({
+               color: "rgba(255, 255, 255, 0.2)",
+            }),
+            stroke: new Stroke({
+               color: "#ffcc33",
+               width: 2,
+            }),
+         }),
+      })
+   );
 
    useEffect(() => {
       if (typeof window !== "undefined") {
@@ -122,6 +141,7 @@ const MapComponents: React.FC = () => {
                water,
                allwetlandsLayerPoint,
                alldamsLayerPoint,
+               vectorLayer, // Add vectorLayer to map
             ],
          });
 
@@ -234,13 +254,127 @@ const MapComponents: React.FC = () => {
       }
    }, [map, isRulerActive]);
 
+   const addInteraction = () => {
+      const newDraw = new Draw({
+         source: vectorSource,
+         type: "Polygon",
+      });
+
+      newDraw.on("drawend", (event) => {
+         const polygon = event.feature.getGeometry() as Polygon;
+         const area = getArea(polygon);
+         const output = `${Math.round(area * 100) / 100} m²`;
+
+         const tooltipElement = document.createElement("div");
+         tooltipElement.className = "ol-tooltip ol-tooltip-static";
+         tooltipElement.innerHTML = output;
+
+         const overlay = new Overlay({
+            element: tooltipElement,
+            offset: [0, -15],
+            positioning: "bottom-center",
+         });
+         overlay.setPosition(polygon.getInteriorPoint().getCoordinates());
+         map.addOverlay(overlay);
+      });
+
+      setDraw(newDraw);
+      map.addInteraction(newDraw);
+   };
+
+   const handleRulerButtonClick = () => {
+      setIsRulerActive(!isRulerActive);
+      if (map && typeof window !== "undefined" && isRulerActive) {
+         map.on("click", (evt) => {
+            const clickedPoint = evt.coordinate;
+            setPoints((prevPoints) => {
+               const newPoints = [...prevPoints, clickedPoint];
+
+               if (newPoints.length === 2) {
+                  const line = new LineString(newPoints);
+                  const distance = getDistance(
+                     fromLonLat(newPoints[0]),
+                     fromLonLat(newPoints[1])
+                  );
+                  const distanceFeature = new Feature({
+                     geometry: line,
+                  });
+
+                  distanceFeature.setStyle(
+                     new Style({
+                        stroke: new Stroke({
+                           color: "#ffcc33",
+                           width: 2,
+                        }),
+                     })
+                  );
+
+                  const vectorSource = new VectorSource({
+                     features: [distanceFeature],
+                  });
+
+                  const vectorLayer = new VectorLayer({
+                     source: vectorSource,
+                  });
+
+                  map.addLayer(vectorLayer);
+
+                  const [start, end] = newPoints;
+                  const midPoint = [
+                     (start[0] + end[0]) / 2,
+                     (start[1] + end[1]) / 2,
+                  ];
+
+                  const distanceOverlay = new Overlay({
+                     element: document.createElement("div"),
+                     position: midPoint,
+                     positioning: "bottom-center",
+                  });
+
+                  distanceOverlay.getElement().innerHTML = `${distance.toFixed(
+                     2
+                  )} meters`;
+                  distanceOverlay.getElement().style.color = "black";
+                  distanceOverlay.getElement().style.backgroundColor = "white";
+                  distanceOverlay.getElement().style.padding = "5px";
+                  distanceOverlay.getElement().style.borderRadius = "5px";
+
+                  map.addOverlay(distanceOverlay);
+
+                  setPoints([]);
+               } else {
+                  return newPoints;
+               }
+            });
+         });
+      }
+   };
+
+   const handleAreaButtonClick = () => {
+      setAreaFlag(!areaFlag);
+
+      if (areaFlag) {
+         if (draw) {
+            map.removeInteraction(draw);
+            setDraw(null);
+         }
+         vectorSource.clear();
+         const elements = document.getElementsByClassName(
+            "ol-tooltip ol-tooltip-static"
+         );
+         while (elements.length > 0) elements[0].remove();
+      } else {
+         addInteraction();
+      }
+   };
+
    return (
       <div className="flex relative mt-[-7vh]">
          <Sidebar
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
-            isRulerActive={isRulerActive}
-            setIsRulerActive={setIsRulerActive}
+            handleRulerButtonClick={handleRulerButtonClick}
+            handleAreaButtonClick={handleAreaButtonClick}
          />
 
          <div

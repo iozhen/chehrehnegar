@@ -10,15 +10,15 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 interface props {
    setIsSubMenu: (value: boolean) => void;
    isSubMenu: boolean;
-   isRulerActive: boolean;
-   setIsRulerActive: (value: boolean) => void;
+   handleRulerButtonClick: () => void;
+   handleAreaButtonClick: () => void;
 }
 
 const Sidebar = ({
    setIsSubMenu,
    isSubMenu,
-   setIsRulerActive,
-   isRulerActive,
+   handleAreaButtonClick,
+   handleRulerButtonClick,
 }: props) => {
    return (
       <div className="w-[3vw] bg-[#2a2b2e] flex flex-col h-[93vh] gap-[2vw] pt-[3vh]">
@@ -41,18 +41,14 @@ const Sidebar = ({
                className="text-white"
             />
          </button>
-         <button
-            onClick={() => {
-               setIsRulerActive(!isRulerActive);
-            }}
-         >
+         <button onClick={handleRulerButtonClick}>
             <FontAwesomeIcon
                icon={faRulerHorizontal}
                aria-hidden="true"
                className="text-white"
             />
          </button>
-         <button>
+         <button onClick={handleAreaButtonClick}>
             <FontAwesomeIcon
                icon={faAreaChart}
                aria-hidden="true"

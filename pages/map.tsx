@@ -308,6 +308,8 @@ const MapComponents: React.FC = () => {
             isSubMenu={isSubMenu}
             handleRulerButtonClick={handleRulerButtonClick}
             handleAreaButtonClick={handleAreaButtonClick}
+            areaFlag={areaFlag}
+            isRulerActive={isRulerActive}
          />
 
          <div

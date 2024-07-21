@@ -12,6 +12,8 @@ interface props {
    isSubMenu: boolean;
    handleRulerButtonClick: () => void;
    handleAreaButtonClick: () => void;
+   areaFlag: boolean;
+   isRulerActive: boolean;
 }
 
 const Sidebar = ({
@@ -19,6 +21,8 @@ const Sidebar = ({
    isSubMenu,
    handleAreaButtonClick,
    handleRulerButtonClick,
+   areaFlag,
+   isRulerActive,
 }: props) => {
    return (
       <div className="w-[3vw] bg-[#2a2b2e] flex flex-col h-[93vh] gap-[2vw] pt-[3vh]">
@@ -45,14 +49,14 @@ const Sidebar = ({
             <FontAwesomeIcon
                icon={faRulerHorizontal}
                aria-hidden="true"
-               className="text-white"
+               className={isRulerActive ? "text-blue-400" : "text-white"}
             />
          </button>
          <button onClick={handleAreaButtonClick}>
             <FontAwesomeIcon
                icon={faAreaChart}
                aria-hidden="true"
-               className="text-white"
+               className={areaFlag ? "text-blue-400" : "text-white"}
             />
          </button>
          <button>

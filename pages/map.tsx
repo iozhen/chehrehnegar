@@ -11,10 +11,19 @@ import Overlay from "ol/Overlay";
 import { Coordinate } from "ol/coordinate";
 import Sidebar from "@/components/Sidebar";
 import data from "@/data/map/submenuItems.json";
+import { fromLonLat } from "ol/proj";
+import { LineString, Point } from "ol/geom";
+import { Feature } from "ol";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { Stroke, Style } from "ol/style";
+import { getDistance } from "ol/sphere";
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(false);
    const [mapType, setMapType] = useState("Open Street Map");
+   const [isRulerActive, setIsRulerActive] = useState(false);
+   const [points, setPoints] = useState<Coordinate[]>([]);
    const mapElement = useRef<HTMLDivElement>(null);
    const [map, setMap] = useState<Map | null>(null);
 
@@ -132,7 +141,6 @@ const MapComponents: React.FC = () => {
                }
             });
          };
-
          updateMapLayer();
       }
    }, [map, mapType]);
@@ -155,135 +163,86 @@ const MapComponents: React.FC = () => {
 
          map.addControl(mousePosition);
          map.addControl(scaleControl);
-
-         // Create and configure popup overlay
-         const container = document.createElement("div");
-         container.className = "ol-popup";
-         const content = document.createElement("div");
-         content.className = "ol-popup-content";
-         const closer = document.createElement("a");
-         closer.href = "#";
-         closer.className = "ol-popup-closer";
-         closer.innerHTML = "&times;";
-
-         container.appendChild(closer);
-         container.appendChild(content);
-
-         const overlay = new Overlay({
-            element: container,
-            autoPan: true,
-            autoPanAnimation: { duration: 250 },
-         });
-
-         map.addOverlay(overlay);
-
-         const getinfo = (evt: any) => {
-            const coordinate = evt.coordinate;
-            const viewResolution = map.getView().getResolution();
-
-            const wetlandsSource = new ImageWMS({
-               url: "http://bina.civil.sharif.edu/geoserver/wms",
-               params: { LAYERS: "Wetlands:Wetlands" },
-               serverType: "geoserver",
-               crossOrigin: "anonymous",
-            });
-
-            const reservoirsSource = new ImageWMS({
-               url: "http://bina.civil.sharif.edu/geoserver/wms",
-               params: { LAYERS: "allyears:y1987" },
-               serverType: "geoserver",
-               crossOrigin: "anonymous",
-            });
-
-            const wetlandsFeatureInfoUrl = wetlandsSource.getFeatureInfoUrl(
-               coordinate,
-               viewResolution,
-               "EPSG:4326",
-               { INFO_FORMAT: "text/html" }
-            );
-
-            const reservoirsFeatureInfoUrl = reservoirsSource.getFeatureInfoUrl(
-               coordinate,
-               viewResolution,
-               "EPSG:4326",
-               { INFO_FORMAT: "text/html" }
-            );
-
-            fetch(wetlandsFeatureInfoUrl)
-               .then((response) => response.text())
-               .then((wetlandsData) => {
-                  content.innerHTML = wetlandsData;
-                  overlay.setPosition(coordinate);
-               });
-
-            fetch(reservoirsFeatureInfoUrl)
-               .then((response) => response.text())
-               .then((reservoirsData) => {
-                  content.innerHTML += reservoirsData;
-                  overlay.setPosition(coordinate);
-               });
-         };
-
-         map.on("singleclick", getinfo);
-
-         // Create checkboxes for layer visibility
-         const inputPress = () => {
-            const checkboxes = document.querySelectorAll(
-               'input[type="checkbox"]'
-            );
-            let anyChecked = false;
-
-            checkboxes.forEach((checkbox) => {
-               if (checkbox.checked) {
-                  anyChecked = true;
-                  if (checkbox.name === "Reservoirs") {
-                     alldamsLayerPoint.setVisible(true);
-                  } else if (checkbox.name === "Wetlands") {
-                     allwetlandsLayerPoint.setVisible(true);
-                  }
-               } else {
-                  if (checkbox.name === "Reservoirs") {
-                     alldamsLayerPoint.setVisible(false);
-                  } else if (checkbox.name === "Wetlands") {
-                     allwetlandsLayerPoint.setVisible(false);
-                  }
-               }
-            });
-
-            if (!anyChecked) {
-               allwetlandsLayerPoint.setVisible(false);
-               alldamsLayerPoint.setVisible(false);
-            }
-         };
-
-         // Create checkboxes
-         const layerBoxText = document.getElementById("layerBoxText");
-         const checkboxNames = ["Reservoirs", "Wetlands"];
-         checkboxNames.forEach((name, index) => {
-            const input = document.createElement("input");
-            input.type = "checkbox";
-            input.id = `checkbox-${index}`;
-            input.name = name;
-            input.setAttribute("onchange", `inputPress();`);
-            input.setAttribute("data-year", index.toString());
-
-            const label = document.createElement("label");
-            label.innerHTML = name;
-            label.style.marginLeft = "1em";
-
-            layerBoxText?.appendChild(input);
-            layerBoxText?.appendChild(label);
-            layerBoxText?.appendChild(document.createElement("br"));
-         });
-
-         // Expose inputPress to the window scope
-         (window as any).inputPress = inputPress;
       }
    }, [map]);
 
+   useEffect(() => {
+      // Ruler functionality
+      if (map && typeof window !== "undefined") {
+         map.on("click", (evt) => {
+            if (!isRulerActive) return;
+            const clickedPoint = evt.coordinate;
+            setPoints((prevPoints) => {
+               const newPoints = [...prevPoints, clickedPoint];
+
+               if (newPoints.length === 2) {
+                  const line = new LineString(newPoints);
+                  const distance = getDistance(
+                     fromLonLat(newPoints[0]),
+                     fromLonLat(newPoints[1])
+                  );
+                  const distanceFeature = new Feature({
+                     geometry: line,
+                  });
+
+                  distanceFeature.setStyle(
+                     new Style({
+                        stroke: new Stroke({
+                           color: "#ffcc33",
+                           width: 2,
+                        }),
+                     })
+                  );
+
+                  const vectorSource = new VectorSource({
+                     features: [distanceFeature],
+                  });
+
+                  const vectorLayer = new VectorLayer({
+                     source: vectorSource,
+                  });
+
+                  map.addLayer(vectorLayer);
+
+                  const [start, end] = newPoints;
+                  const midPoint = [
+                     (start[0] + end[0]) / 2,
+                     (start[1] + end[1]) / 2,
+                  ];
+
+                  const distanceOverlay = new Overlay({
+                     element: document.createElement("div"),
+                     position: midPoint,
+                     positioning: "bottom-center",
+                  });
+
+                  distanceOverlay.getElement().innerHTML = `${distance.toFixed(
+                     2
+                  )} meters`;
+                  distanceOverlay.getElement().style.color = "black";
+                  distanceOverlay.getElement().style.backgroundColor = "white";
+                  distanceOverlay.getElement().style.padding = "5px";
+                  distanceOverlay.getElement().style.borderRadius = "5px";
+
+                  map.addOverlay(distanceOverlay);
+
+                  setPoints([]);
+               } else {
+                  return newPoints;
+               }
+            });
+         });
+      }
+   }, [map, isRulerActive]);
+
    return (
       <div className="flex relative mt-[-7vh]">
-         <Sidebar setIsSubMenu={setIsSubMenu} isSubMenu={isSubMenu} />
+         <Sidebar
+            setIsSubMenu={setIsSubMenu}
+            isSubMenu={isSubMenu}
+            isRulerActive={isRulerActive}
+            setIsRulerActive={setIsRulerActive}
+         />
 
          <div
             className={
@@ -312,7 +271,7 @@ const MapComponents: React.FC = () => {
          </div>
 
          <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-            <div id="layerBoxText"></div>
+            {/* <div id="layerBoxText"></div> */}
          </div>
       </div>
    );

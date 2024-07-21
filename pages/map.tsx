@@ -168,9 +168,8 @@ const MapComponents: React.FC = () => {
 
    useEffect(() => {
       // Ruler functionality
-      if (map && typeof window !== "undefined") {
+      if (map && typeof window !== "undefined" && isRulerActive) {
          map.on("click", (evt) => {
-            if (!isRulerActive) return;
             const clickedPoint = evt.coordinate;
             setPoints((prevPoints) => {
                const newPoints = [...prevPoints, clickedPoint];

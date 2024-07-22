@@ -8,10 +8,8 @@ import { faLineChart } from "@fortawesome/free-solid-svg-icons";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 interface props {
-   setIsSubMenu: (value: boolean) => void;
-   isSubMenu: boolean;
-   setIsSubMenu2: (value: boolean) => void;
-   isSubMenu2: boolean;
+   setIsSubMenu: (value: number) => void;
+   isSubMenu: number;
    handleRulerButtonClick: () => void;
    handleAreaButtonClick: () => void;
    areaFlag: boolean;
@@ -25,14 +23,16 @@ const Sidebar = ({
    handleRulerButtonClick,
    areaFlag,
    isRulerActive,
-   setIsSubMenu2,
-   isSubMenu2,
 }: props) => {
    return (
       <div className="w-[3vw] bg-[#2a2b2e] flex flex-col h-[93vh] gap-[2vw] pt-[3vh]">
          <button
             onClick={() => {
-               setIsSubMenu(!isSubMenu);
+               if (isSubMenu == 1) {
+                  setIsSubMenu(0);
+               } else {
+                  setIsSubMenu(1);
+               }
             }}
          >
             <FontAwesomeIcon
@@ -44,7 +44,11 @@ const Sidebar = ({
 
          <button
             onClick={() => {
-               setIsSubMenu2(!isSubMenu2);
+               if (isSubMenu == 2) {
+                  setIsSubMenu(0);
+               } else {
+                  setIsSubMenu(2);
+               }
             }}
          >
             <FontAwesomeIcon

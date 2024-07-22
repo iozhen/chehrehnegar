@@ -22,8 +22,7 @@ import { Draw } from "ol/interaction";
 import Control from "ol/control/Control";
 
 const MapComponents: React.FC = () => {
-   const [isSubMenu, setIsSubMenu] = useState(false);
-   const [isSubMenu2, setIsSubMenu2] = useState(false);
+   const [isSubMenu, setIsSubMenu] = useState(0);
    const [mapType, setMapType] = useState("Open Street Map");
    const [isRulerActive, setIsRulerActive] = useState(false);
    const [points, setPoints] = useState<Coordinate[]>([]);
@@ -330,8 +329,6 @@ const MapComponents: React.FC = () => {
          <Sidebar
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
-            setIsSubMenu2={setIsSubMenu2}
-            isSubMenu2={isSubMenu2}
             handleRulerButtonClick={handleRulerButtonClick}
             handleAreaButtonClick={handleAreaButtonClick}
             areaFlag={areaFlag}
@@ -341,7 +338,9 @@ const MapComponents: React.FC = () => {
          <div
             className={
                "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
-               (isSubMenu ? "translate-x-0 left-[3.1vw]" : "-translate-x-full")
+               (isSubMenu === 1
+                  ? "translate-x-0 left-[3.1vw]"
+                  : "-translate-x-full")
             }
          >
             {data.items.map((item) => (
@@ -353,7 +352,7 @@ const MapComponents: React.FC = () => {
                   }}
                   onClick={() => {
                      setMapType(item.title);
-                     setIsSubMenu(!isSubMenu);
+                     setIsSubMenu(0);
                   }}
                >
                   <div className="absolute top-0 left-0 w-full h-full bg-[#0000006c] rounded-[20px]"></div>
@@ -366,7 +365,9 @@ const MapComponents: React.FC = () => {
          <div
             className={
                "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
-               (isSubMenu2 ? "translate-x-0 left-[3.1vw]" : "-translate-x-full")
+               (isSubMenu === 2
+                  ? "translate-x-0 left-[3.1vw]"
+                  : "-translate-x-full")
             }
          >
             <button

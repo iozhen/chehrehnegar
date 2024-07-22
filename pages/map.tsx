@@ -23,6 +23,7 @@ import Control from "ol/control/Control";
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(false);
+   const [isSubMenu2, setIsSubMenu2] = useState(false);
    const [mapType, setMapType] = useState("Open Street Map");
    const [isRulerActive, setIsRulerActive] = useState(false);
    const [points, setPoints] = useState<Coordinate[]>([]);
@@ -42,6 +43,32 @@ const MapComponents: React.FC = () => {
                color: "#ffcc33",
                width: 2,
             }),
+         }),
+      })
+   );
+
+   const wetlandsLayer = useRef(
+      new ImageLayer({
+         title: "Wetlands",
+         visible: false,
+         source: new ImageWMS({
+            url: "http://bina.civil.sharif.edu/geoserver/wms",
+            params: { LAYERS: "Wetlands:Wetlands" },
+            ratio: 1,
+            serverType: "geoserver",
+         }),
+      })
+   );
+
+   const damsLayer = useRef(
+      new ImageLayer({
+         title: "Reservoirs",
+         visible: false,
+         source: new ImageWMS({
+            url: "http://bina.civil.sharif.edu/geoserver/wms",
+            params: { LAYERS: "allyears:y1987" },
+            ratio: 1,
+            serverType: "geoserver",
          }),
       })
    );
@@ -101,29 +128,6 @@ const MapComponents: React.FC = () => {
             }),
          });
 
-         // Define GeoServer layers
-         const allwetlandsLayerPoint = new ImageLayer({
-            title: "Wetlands",
-            visible: false,
-            source: new ImageWMS({
-               url: "http://bina.civil.sharif.edu/geoserver/wms",
-               params: { LAYERS: "Wetlands:Wetlands" },
-               ratio: 1,
-               serverType: "geoserver",
-            }),
-         });
-
-         const alldamsLayerPoint = new ImageLayer({
-            title: "Reservoirs",
-            visible: false,
-            source: new ImageWMS({
-               url: "http://bina.civil.sharif.edu/geoserver/wms",
-               params: { LAYERS: "allyears:y1987" },
-               ratio: 1,
-               serverType: "geoserver",
-            }),
-         });
-
          // Create the map
          const newMap = new Map({
             target: mapElement.current || undefined,
@@ -139,8 +143,8 @@ const MapComponents: React.FC = () => {
                googleSatellite,
                googleSatelliteRoads,
                water,
-               allwetlandsLayerPoint,
-               alldamsLayerPoint,
+               wetlandsLayer.current, // Add wetlandsLayer
+               damsLayer.current, // Add damsLayer
                vectorLayer, // Add vectorLayer to map
             ],
          });
@@ -165,7 +169,7 @@ const MapComponents: React.FC = () => {
       }
    }, [map, mapType]);
 
-   //it is for show to numbers that mouse hover on map
+   // Show mouse coordinates
    useEffect(() => {
       if (map && typeof window !== "undefined") {
          // Controls
@@ -301,11 +305,33 @@ const MapComponents: React.FC = () => {
       }
    };
 
+   const handleWetlandsToggle = () => {
+      if (wetlandsLayer.current) {
+         const isVisible = wetlandsLayer.current.getVisible();
+         wetlandsLayer.current.setVisible(!isVisible);
+         // if (!isVisible && damsLayer.current) {
+         //    damsLayer.current.setVisible(false);
+         // }
+      }
+   };
+
+   const handleDamsToggle = () => {
+      if (damsLayer.current) {
+         const isVisible = damsLayer.current.getVisible();
+         damsLayer.current.setVisible(!isVisible);
+         // if (!isVisible && wetlandsLayer.current) {
+         //    wetlandsLayer.current.setVisible(false);
+         // }
+      }
+   };
+
    return (
       <div className="flex relative mt-[-7vh]">
          <Sidebar
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
+            setIsSubMenu2={setIsSubMenu2}
+            isSubMenu2={isSubMenu2}
             handleRulerButtonClick={handleRulerButtonClick}
             handleAreaButtonClick={handleAreaButtonClick}
             areaFlag={areaFlag}
@@ -336,6 +362,25 @@ const MapComponents: React.FC = () => {
                   </h3>
                </div>
             ))}
+         </div>
+         <div
+            className={
+               "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
+               (isSubMenu2 ? "translate-x-0 left-[3.1vw]" : "-translate-x-full")
+            }
+         >
+            <button
+               className="w-full h-[50px] bg-blue-500 text-white rounded-[10px] mt-4"
+               onClick={handleWetlandsToggle}
+            >
+               Toggle Wetlands
+            </button>
+            <button
+               className="w-full h-[50px] bg-blue-500 text-white rounded-[10px] mt-4"
+               onClick={handleDamsToggle}
+            >
+               Toggle Reservoirs
+            </button>
          </div>
 
          <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>

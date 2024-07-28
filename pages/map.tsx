@@ -20,9 +20,17 @@ import { Stroke, Style, Fill } from "ol/style";
 import { getDistance, getArea } from "ol/sphere";
 import { Draw } from "ol/interaction";
 import axios from "axios";
-import { Chart, registerables } from "chart.js";
+import { Scatter } from "react-chartjs-2";
+import {
+   Chart as ChartJS,
+   Title,
+   Tooltip,
+   Legend,
+   PointElement,
+   LinearScale,
+} from "chart.js";
 
-Chart.register(...registerables);
+ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(0);
@@ -359,6 +367,7 @@ const MapComponents: React.FC = () => {
          if (wetlandsFeatureInfoUrl) {
             axios.get(wetlandsFeatureInfoUrl).then((res) => {
                setWetlandsResponse(res.data);
+               setReservoirsResponse("");
                // if (popupContent.current) {
                //    console.log("====================================");
                //    console.log(wetlandsResponse);
@@ -371,9 +380,7 @@ const MapComponents: React.FC = () => {
          if (reservoirsFeatureInfoUrl) {
             axios.get(reservoirsFeatureInfoUrl).then((res) => {
                setReservoirsResponse(res.data);
-               console.log("====================================");
-               console.log(reservoirsResponse);
-               console.log("====================================");
+               setWetlandsResponse("");
                // if (popupContent.current) {
                //    popupContent.current.innerHTML += reservoirsResponse;
                // }
@@ -421,19 +428,40 @@ const MapComponents: React.FC = () => {
          );
          if (wetlandsFeatureInfoUrl) {
             axios.get(wetlandsFeatureInfoUrl).then((res) => {
-               setWetlandChart(res.data);
-               console.log("====================================");
-               console.log(wetlandChart);
-               console.log("====================================");
+               setWetlandChart({
+                  datasets: [
+                     {
+                        label: "Wetlands Locations",
+                        data: res.data?.features?.map((feature) => ({
+                           x: feature.geometry.coordinates[0],
+                           y: feature.geometry.coordinates[1],
+                        })),
+                        backgroundColor: "rgba(75, 192, 192, 0.6)",
+                     },
+                  ],
+               });
+               setReservoirsChart(null);
             });
          }
          if (reservoirsFeatureInfoUrl) {
             axios.get(reservoirsFeatureInfoUrl).then((res) => {
-               setReservoirsChart(res.data);
-               console.log("====================================");
-               console.log(reservoirsChart);
-               console.log("====================================");
+               setReservoirsChart({
+                  datasets: [
+                     {
+                        label: "Wetlands Locations",
+                        data: res.data?.features?.map((feature) => ({
+                           x: feature.geometry.coordinates[0],
+                           y: feature.geometry.coordinates[1],
+                        })),
+                        backgroundColor: "rgba(75, 192, 192, 0.6)",
+                     },
+                  ],
+               });
+               setWetlandChart(null);
             });
+            console.log("====================================");
+            console.log(reservoirsChart);
+            console.log("====================================");
          }
       }
    };
@@ -443,6 +471,32 @@ const MapComponents: React.FC = () => {
          map.on("singleclick", handleChart);
       }
    }, [map, chart]);
+
+   const options = {
+      scales: {
+         x: {
+            type: "linear",
+            position: "bottom",
+            title: {
+               display: true,
+               text: "Longitude",
+            },
+         },
+         y: {
+            type: "linear",
+            title: {
+               display: true,
+               text: "Latitude",
+            },
+         },
+      },
+      plugins: {
+         title: {
+            display: true,
+            text: "Wetlands Locations",
+         },
+      },
+   };
 
    return (
       <div className="flex relative mt-[-7vh]">
@@ -509,22 +563,32 @@ const MapComponents: React.FC = () => {
          </div>
 
          <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-            <div id="popup" className={info ? "ol-popup" : "popup"}>
-               <div id="popup-content" ref={popupContent} className=""></div>
-               {info && wetlandsResponse?.length > 0 && (
-                  <div
-                     className="info-box bg-gray-200 p-[20px]"
-                     dangerouslySetInnerHTML={{ __html: wetlandsResponse }}
-                  />
-               )}
-               {chart && (
-                  <div className="absolute bg-slate-200 p-[15px] rounded-[10px]">
-                     <canvas
-                        id="chart"
-                        style={{ width: "100%", height: "400px" }}
-                     ></canvas>
-                  </div>
-               )}
+            <div id="popup" className={info ? "ol-popup " : "popup "}>
+               <div id="popup-content" ref={popupContent} className="relative">
+                  {info && wetlandsResponse?.length > 0 && (
+                     <div
+                        className="info-box bg-gray-200 p-[20px]"
+                        dangerouslySetInnerHTML={{ __html: wetlandsResponse }}
+                     />
+                  )}
+                  {info && reservoirsResponse?.length > 0 && (
+                     <div
+                        className="info-box bg-gray-200 p-[20px]"
+                        dangerouslySetInnerHTML={{ __html: reservoirsResponse }}
+                     />
+                  )}
+
+                  {chart && reservoirsChart && (
+                     <div className="absolute bg-slate-200 p-[15px] rounded-[10px] left-0 z-30">
+                        <Scatter data={reservoirsChart} options={options} />;
+                     </div>
+                  )}
+                  {chart && wetlandChart && (
+                     <div className="absolute bg-slate-200 p-[15px] rounded-[10px] left-0 z-30">
+                        <Scatter data={wetlandChart} options={options} />;
+                     </div>
+                  )}
+               </div>
             </div>
          </div>
       </div>

@@ -14,6 +14,10 @@ interface props {
    handleAreaButtonClick: () => void;
    areaFlag: boolean;
    isRulerActive: boolean;
+   info: boolean;
+   setInfo: (value: boolean) => void;
+   chart: boolean;
+   setChart: (value: boolean) => void;
 }
 
 const Sidebar = ({
@@ -23,6 +27,10 @@ const Sidebar = ({
    handleRulerButtonClick,
    areaFlag,
    isRulerActive,
+   info,
+   setInfo,
+   chart,
+   setChart,
 }: props) => {
    return (
       <div className="w-[3vw] bg-[#2a2b2e] flex flex-col h-[93vh] gap-[2vw] pt-[3vh]">
@@ -71,14 +79,22 @@ const Sidebar = ({
                className={areaFlag ? "text-blue-400" : "text-white"}
             />
          </button>
-         <button>
+         <button
+            onClick={() => {
+               setChart(!chart);
+            }}
+         >
             <FontAwesomeIcon
                icon={faLineChart}
                aria-hidden="true"
                className="text-white"
             />
          </button>
-         <button>
+         <button
+            onClick={() => {
+               setInfo(!info);
+            }}
+         >
             <FontAwesomeIcon
                icon={faInfoCircle}
                aria-hidden="true"

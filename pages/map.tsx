@@ -19,7 +19,10 @@ import VectorSource from "ol/source/Vector";
 import { Stroke, Style, Fill } from "ol/style";
 import { getDistance, getArea } from "ol/sphere";
 import { Draw } from "ol/interaction";
-import Control from "ol/control/Control";
+import axios from "axios";
+import { Chart, registerables } from "chart.js";
+
+Chart.register(...registerables);
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(0);
@@ -31,6 +34,10 @@ const MapComponents: React.FC = () => {
    const [areaFlag, setAreaFlag] = useState(false);
    const [draw, setDraw] = useState<Draw | null>(null);
    const [vectorSource] = useState(new VectorSource());
+   const [info, setInfo] = useState(false);
+   const [chart, setChart] = useState(false);
+   const [wetlandsResponse, setWetlandsResponse] = useState(null);
+   const [reservoirsResponse, setReservoirsResponse] = useState(null);
    const [vectorLayer] = useState(
       new VectorLayer({
          source: vectorSource,
@@ -45,6 +52,7 @@ const MapComponents: React.FC = () => {
          }),
       })
    );
+   const popupContent = useRef();
 
    const wetlandsLayer = useRef(
       new ImageLayer({
@@ -324,6 +332,153 @@ const MapComponents: React.FC = () => {
       }
    };
 
+   const handleInfo = async (evt) => {
+      if (info) {
+         const coordinate = evt.coordinate;
+         const viewResolution = map.getView().getResolution();
+
+         const wetlandsSource = wetlandsLayer.current.getSource();
+         const reservoirsSource = damsLayer.current.getSource();
+
+         const wetlandsFeatureInfoUrl = wetlandsSource.getFeatureInfoUrl(
+            coordinate,
+            viewResolution,
+            "EPSG:4326",
+            { INFO_FORMAT: "text/html" }
+         );
+
+         const reservoirsFeatureInfoUrl = reservoirsSource.getFeatureInfoUrl(
+            coordinate,
+            viewResolution,
+            "EPSG:4326",
+            { INFO_FORMAT: "text/html" }
+         );
+
+         if (wetlandsFeatureInfoUrl) {
+            axios.get(wetlandsFeatureInfoUrl).then((res) => {
+               setWetlandsResponse(res.data);
+               // if (popupContent.current) {
+               //    console.log("====================================");
+               //    console.log(wetlandsResponse);
+               //    console.log("====================================");
+               //    popupContent.current.innerHTML = wetlandsResponse;
+               // }
+            });
+         }
+
+         if (reservoirsFeatureInfoUrl) {
+            axios.get(reservoirsFeatureInfoUrl).then((res) => {
+               setReservoirsResponse(res.data);
+               console.log("====================================");
+               console.log(reservoirsResponse);
+               console.log("====================================");
+               // if (popupContent.current) {
+               //    popupContent.current.innerHTML += reservoirsResponse;
+               // }
+            });
+         }
+
+         const overlay = new Overlay({
+            element: document.getElementById("popup"),
+            positioning: "bottom-center",
+            offset: [0, -15],
+         });
+
+         map.addOverlay(overlay);
+         overlay.setPosition(coordinate);
+      }
+   };
+
+   useEffect(() => {
+      if (map && info) {
+         map.on("singleclick", handleInfo);
+      }
+   }, [map, info]);
+
+   const handleChart = async (evt) => {
+      if (chart) {
+         const coordinate = evt.coordinate;
+         const viewResolution = map.getView().getResolution();
+
+         // Fetch data from WMS
+         const wetlandsSource = wetlandsLayer.current.getSource();
+         const reservoirsSource = damsLayer.current.getSource();
+
+         const wetlandsFeatureInfoUrl = wetlandsSource.getFeatureInfoUrl(
+            coordinate,
+            viewResolution,
+            "EPSG:4326",
+            { INFO_FORMAT: "application/json" } // Change format if needed
+         );
+
+         const reservoirsFeatureInfoUrl = reservoirsSource.getFeatureInfoUrl(
+            coordinate,
+            viewResolution,
+            "EPSG:4326",
+            { INFO_FORMAT: "application/json" } // Change format if needed
+         );
+
+         try {
+            const [wetlandsResponse, reservoirsResponse] = await Promise.all([
+               axios.get(wetlandsFeatureInfoUrl),
+               axios.get(reservoirsFeatureInfoUrl),
+            ]);
+
+            const wetlandsData = wetlandsResponse.data;
+            const reservoirsData = reservoirsResponse.data;
+
+            console.log("Wetlands Data:", wetlandsData);
+            console.log("Reservoirs Data:", reservoirsData);
+
+            // Process data and render chart
+            // Example: Prepare data for Chart.js
+
+            const chartData = {
+               labels: ["Wetlands", "Reservoirs"],
+               datasets: [
+                  {
+                     label: "Area (in sq meters)",
+                     data: [wetlandsData.area, reservoirsData.area], // Replace with actual data
+                     backgroundColor: [
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(255, 99, 132, 0.2)",
+                     ],
+                     borderColor: [
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(255, 99, 132, 1)",
+                     ],
+                     borderWidth: 1,
+                  },
+               ],
+            };
+
+            // Render Chart.js
+            if (document.getElementById("chart")) {
+               new Chart(document.getElementById("chart"), {
+                  type: "bar", // or 'line' based on your needs
+                  data: chartData,
+                  options: {
+                     responsive: true,
+                     scales: {
+                        y: {
+                           beginAtZero: true,
+                        },
+                     },
+                  },
+               });
+            }
+         } catch (error) {
+            console.error("Error fetching chart data:", error);
+         }
+      }
+   };
+
+   useEffect(() => {
+      if (map && chart) {
+         map.on("singleclick", handleChart);
+      }
+   }, [map, chart]);
+
    return (
       <div className="flex relative mt-[-7vh]">
          <Sidebar
@@ -333,6 +488,10 @@ const MapComponents: React.FC = () => {
             handleAreaButtonClick={handleAreaButtonClick}
             areaFlag={areaFlag}
             isRulerActive={isRulerActive}
+            setInfo={setInfo}
+            info={info}
+            setChart={setChart}
+            chart={chart}
          />
 
          <div
@@ -385,7 +544,19 @@ const MapComponents: React.FC = () => {
          </div>
 
          <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-            {/* <div id="layerBoxText"></div> */}
+            <div id="popup" className={info ? "ol-popup" : "popup"}>
+               <div id="popup-content" ref={popupContent} className=""></div>
+               {info && wetlandsResponse?.length > 0 && (
+                  <div
+                     className="info-box bg-gray-200 p-[20px]"
+                     dangerouslySetInnerHTML={{ __html: wetlandsResponse }}
+                  />
+               )}
+            </div>
+            {/* <canvas
+               id="chart"
+               style={{ width: "100%", height: "400px" }}
+            ></canvas> */}
          </div>
       </div>
    );

@@ -563,29 +563,44 @@ const MapComponents: React.FC = () => {
          </div>
 
          <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-            <div id="popup" className={info ? "ol-popup " : "popup "}>
+            <div id="popup" className={"absolute left-0 top-0"}>
                <div id="popup-content" ref={popupContent} className="relative">
-                  {info && wetlandsResponse?.length > 0 && (
-                     <div
-                        className="info-box bg-gray-200 p-[20px]"
-                        dangerouslySetInnerHTML={{ __html: wetlandsResponse }}
-                     />
-                  )}
-                  {info && reservoirsResponse?.length > 0 && (
-                     <div
-                        className="info-box bg-gray-200 p-[20px]"
-                        dangerouslySetInnerHTML={{ __html: reservoirsResponse }}
-                     />
-                  )}
-
-                  {chart && reservoirsChart && (
-                     <div className="absolute bg-slate-200 p-[15px] rounded-[10px] left-0 z-30">
-                        <Scatter data={reservoirsChart} options={options} />;
+                  {info && (
+                     <div>
+                        {info && wetlandsResponse?.length > 0 && (
+                           <div
+                              className="info-box bg-gray-200 p-[20px]"
+                              dangerouslySetInnerHTML={{
+                                 __html: wetlandsResponse,
+                              }}
+                           />
+                        )}
+                        {info && reservoirsResponse?.length > 0 && (
+                           <div
+                              className="info-box bg-gray-200 p-[20px]"
+                              dangerouslySetInnerHTML={{
+                                 __html: reservoirsResponse,
+                              }}
+                           />
+                        )}
                      </div>
                   )}
-                  {chart && wetlandChart && (
-                     <div className="absolute bg-slate-200 p-[15px] rounded-[10px] left-0 z-30">
-                        <Scatter data={wetlandChart} options={options} />;
+                  {!info && (
+                     <div>
+                        {chart && reservoirsChart && (
+                           <div className="info-box bg-gray-200 p-[20px]">
+                              <Scatter
+                                 data={reservoirsChart}
+                                 options={options}
+                              />
+                              ;
+                           </div>
+                        )}
+                        {chart && wetlandChart && (
+                           <div className="info-box bg-gray-200 p-[20px]">
+                              <Scatter data={wetlandChart} options={options} />;
+                           </div>
+                        )}
                      </div>
                   )}
                </div>

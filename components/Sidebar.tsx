@@ -87,7 +87,7 @@ const Sidebar = ({
             <FontAwesomeIcon
                icon={faLineChart}
                aria-hidden="true"
-               className="text-white"
+               className={chart ? "text-blue-400" : "text-white"}
             />
          </button>
          <button
@@ -98,7 +98,7 @@ const Sidebar = ({
             <FontAwesomeIcon
                icon={faInfoCircle}
                aria-hidden="true"
-               className="text-white"
+               className={info ? "text-blue-400" : "text-white"}
             />
          </button>
       </div>

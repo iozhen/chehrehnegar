@@ -36,8 +36,10 @@ const MapComponents: React.FC = () => {
    const [vectorSource] = useState(new VectorSource());
    const [info, setInfo] = useState(false);
    const [chart, setChart] = useState(false);
-   const [wetlandsResponse, setWetlandsResponse] = useState(null);
-   const [reservoirsResponse, setReservoirsResponse] = useState(null);
+   const [wetlandsResponse, setWetlandsResponse] = useState("");
+   const [reservoirsResponse, setReservoirsResponse] = useState("");
+   const [wetlandChart, setWetlandChart] = useState(null);
+   const [reservoirsChart, setReservoirsChart] = useState(null);
    const [vectorLayer] = useState(
       new VectorLayer({
          source: vectorSource,
@@ -404,71 +406,34 @@ const MapComponents: React.FC = () => {
          const wetlandsSource = wetlandsLayer.current.getSource();
          const reservoirsSource = damsLayer.current.getSource();
 
-         const wetlandsFeatureInfoUrl = wetlandsSource.getFeatureInfoUrl(
+         const wetlandsFeatureInfoUrl = wetlandsSource?.getFeatureInfoUrl(
             coordinate,
             viewResolution,
             "EPSG:4326",
             { INFO_FORMAT: "application/json" } // Change format if needed
          );
 
-         const reservoirsFeatureInfoUrl = reservoirsSource.getFeatureInfoUrl(
+         const reservoirsFeatureInfoUrl = reservoirsSource?.getFeatureInfoUrl(
             coordinate,
             viewResolution,
             "EPSG:4326",
             { INFO_FORMAT: "application/json" } // Change format if needed
          );
-
-         try {
-            const [wetlandsResponse, reservoirsResponse] = await Promise.all([
-               axios.get(wetlandsFeatureInfoUrl),
-               axios.get(reservoirsFeatureInfoUrl),
-            ]);
-
-            const wetlandsData = wetlandsResponse.data;
-            const reservoirsData = reservoirsResponse.data;
-
-            console.log("Wetlands Data:", wetlandsData);
-            console.log("Reservoirs Data:", reservoirsData);
-
-            // Process data and render chart
-            // Example: Prepare data for Chart.js
-
-            const chartData = {
-               labels: ["Wetlands", "Reservoirs"],
-               datasets: [
-                  {
-                     label: "Area (in sq meters)",
-                     data: [wetlandsData.area, reservoirsData.area], // Replace with actual data
-                     backgroundColor: [
-                        "rgba(75, 192, 192, 0.2)",
-                        "rgba(255, 99, 132, 0.2)",
-                     ],
-                     borderColor: [
-                        "rgba(75, 192, 192, 1)",
-                        "rgba(255, 99, 132, 1)",
-                     ],
-                     borderWidth: 1,
-                  },
-               ],
-            };
-
-            // Render Chart.js
-            if (document.getElementById("chart")) {
-               new Chart(document.getElementById("chart"), {
-                  type: "bar", // or 'line' based on your needs
-                  data: chartData,
-                  options: {
-                     responsive: true,
-                     scales: {
-                        y: {
-                           beginAtZero: true,
-                        },
-                     },
-                  },
-               });
-            }
-         } catch (error) {
-            console.error("Error fetching chart data:", error);
+         if (wetlandsFeatureInfoUrl) {
+            axios.get(wetlandsFeatureInfoUrl).then((res) => {
+               setWetlandChart(res.data);
+               console.log("====================================");
+               console.log(wetlandChart);
+               console.log("====================================");
+            });
+         }
+         if (reservoirsFeatureInfoUrl) {
+            axios.get(reservoirsFeatureInfoUrl).then((res) => {
+               setReservoirsChart(res.data);
+               console.log("====================================");
+               console.log(reservoirsChart);
+               console.log("====================================");
+            });
          }
       }
    };
@@ -552,11 +517,15 @@ const MapComponents: React.FC = () => {
                      dangerouslySetInnerHTML={{ __html: wetlandsResponse }}
                   />
                )}
+               {chart && (
+                  <div className="absolute bg-slate-200 p-[15px] rounded-[10px]">
+                     <canvas
+                        id="chart"
+                        style={{ width: "100%", height: "400px" }}
+                     ></canvas>
+                  </div>
+               )}
             </div>
-            {/* <canvas
-               id="chart"
-               style={{ width: "100%", height: "400px" }}
-            ></canvas> */}
          </div>
       </div>
    );

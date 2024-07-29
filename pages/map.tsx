@@ -507,6 +507,8 @@ const MapComponents: React.FC = () => {
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
             setMapType={setMapType}
+            handleWetlandsToggle={handleWetlandsToggle}
+            handleDamsToggle={handleDamsToggle}
          />
          <Tools
             handleRulerButtonClick={handleRulerButtonClick}
@@ -595,7 +597,7 @@ const MapComponents: React.FC = () => {
                </div>
             </div>
          </div>
-         {/* <DateSlider /> */}
+         <DateSlider />
       </div>
    );
 };

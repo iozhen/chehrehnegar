@@ -8,9 +8,17 @@ interface Props {
    setIsSubMenu: (value: number) => void;
    isSubMenu: number;
    setMapType: (value: string) => void;
+   handleWetlandsToggle: () => void;
+   handleDamsToggle: () => void;
 }
 
-const Sidebar = ({ setIsSubMenu, isSubMenu, setMapType }: Props) => {
+const Sidebar = ({
+   setIsSubMenu,
+   isSubMenu,
+   setMapType,
+   handleWetlandsToggle,
+   handleDamsToggle,
+}: Props) => {
    const [activeLayer, setActiveLayer] = useState<string>("");
 
    const handleLayerClick = (layerTitle: string) => {
@@ -28,7 +36,10 @@ const Sidebar = ({ setIsSubMenu, isSubMenu, setMapType }: Props) => {
             />
             <h2 className="jost-black text-[25px] text-[#343C6A]">Bina</h2>
          </div>
-         <Wetland />
+         <Wetland
+            handleWetlandsToggle={handleWetlandsToggle}
+            handleDamsToggle={handleDamsToggle}
+         />
          <TextAndBorder text="layers" className="mb-[2.448vh]" />
          <div
             className={

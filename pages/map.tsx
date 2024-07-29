@@ -10,7 +10,7 @@ import ScaleLine from "ol/control/ScaleLine";
 import Overlay from "ol/Overlay";
 import { Coordinate } from "ol/coordinate";
 import Sidebar from "@/components/Sidebar";
-import data from "@/data/map/submenuItems.json";
+
 import { fromLonLat } from "ol/proj";
 import { LineString, Polygon } from "ol/geom";
 import { Feature } from "ol";
@@ -30,6 +30,8 @@ import {
    LinearScale,
 } from "chart.js";
 import DateSlider from "@/components/DateSlider";
+import MapHeader from "@/components/MapHeader";
+import Tools from "@/components/Tools";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
@@ -500,10 +502,13 @@ const MapComponents: React.FC = () => {
    };
 
    return (
-      <div className="flex relative mt-[-7vh]">
+      <div className="flex relative jost">
          <Sidebar
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
+            setMapType={setMapType}
+         />
+         <Tools
             handleRulerButtonClick={handleRulerButtonClick}
             handleAreaButtonClick={handleAreaButtonClick}
             areaFlag={areaFlag}
@@ -514,33 +519,6 @@ const MapComponents: React.FC = () => {
             chart={chart}
          />
 
-         <div
-            className={
-               "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
-               (isSubMenu === 1
-                  ? "translate-x-0 left-[3.1vw]"
-                  : "-translate-x-full")
-            }
-         >
-            {data.items.map((item) => (
-               <div
-                  key={item.title}
-                  className="w-full rounded-[20px] flex items-center justify-center h-[80px] relative"
-                  style={{
-                     backgroundImage: `url(${item.img})`,
-                  }}
-                  onClick={() => {
-                     setMapType(item.title);
-                     setIsSubMenu(0);
-                  }}
-               >
-                  <div className="absolute top-0 left-0 w-full h-full bg-[#0000006c] rounded-[20px]"></div>
-                  <h3 className="text-white font-[700] text-[20px] z-20">
-                     {item.title}
-                  </h3>
-               </div>
-            ))}
-         </div>
          <div
             className={
                "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
@@ -562,52 +540,62 @@ const MapComponents: React.FC = () => {
                Toggle Reservoirs
             </button>
          </div>
-
-         <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-            <div id="popup" className={"absolute left-0 top-0"}>
-               <div id="popup-content" ref={popupContent} className="relative">
-                  {info && (
-                     <div>
-                        {info && wetlandsResponse?.length > 0 && (
-                           <div
-                              className="info-box bg-gray-200 p-[20px]"
-                              dangerouslySetInnerHTML={{
-                                 __html: wetlandsResponse,
-                              }}
-                           />
-                        )}
-                        {info && reservoirsResponse?.length > 0 && (
-                           <div
-                              className="info-box bg-gray-200 p-[20px]"
-                              dangerouslySetInnerHTML={{
-                                 __html: reservoirsResponse,
-                              }}
-                           />
-                        )}
-                     </div>
-                  )}
-                  {!info && (
-                     <div>
-                        {chart && reservoirsChart && (
-                           <div className="info-box bg-gray-200 p-[20px]">
-                              <Scatter
-                                 data={reservoirsChart}
-                                 options={options}
+         <div className="w-full">
+            <MapHeader />
+            <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
+               <div id="popup" className={"absolute left-0 top-0"}>
+                  <div
+                     id="popup-content"
+                     ref={popupContent}
+                     className="relative"
+                  >
+                     {info && (
+                        <div>
+                           {info && wetlandsResponse?.length > 0 && (
+                              <div
+                                 className="info-box bg-gray-200 p-[20px]"
+                                 dangerouslySetInnerHTML={{
+                                    __html: wetlandsResponse,
+                                 }}
                               />
-                              ;
-                           </div>
-                        )}
-                        {chart && wetlandChart && (
-                           <div className="info-box bg-gray-200 p-[20px]">
-                              <Scatter data={wetlandChart} options={options} />;
-                           </div>
-                        )}
-                     </div>
-                  )}
+                           )}
+                           {info && reservoirsResponse?.length > 0 && (
+                              <div
+                                 className="info-box bg-gray-200 p-[20px]"
+                                 dangerouslySetInnerHTML={{
+                                    __html: reservoirsResponse,
+                                 }}
+                              />
+                           )}
+                        </div>
+                     )}
+                     {!info && (
+                        <div>
+                           {chart && reservoirsChart && (
+                              <div className="info-box bg-gray-200 p-[20px]">
+                                 <Scatter
+                                    data={reservoirsChart}
+                                    options={options}
+                                 />
+                                 ;
+                              </div>
+                           )}
+                           {chart && wetlandChart && (
+                              <div className="info-box bg-gray-200 p-[20px]">
+                                 <Scatter
+                                    data={wetlandChart}
+                                    options={options}
+                                 />
+                                 ;
+                              </div>
+                           )}
+                        </div>
+                     )}
+                  </div>
                </div>
             </div>
          </div>
-         <DateSlider />
+         {/* <DateSlider /> */}
       </div>
    );
 };

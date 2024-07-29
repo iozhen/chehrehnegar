@@ -1,105 +1,66 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMap } from "@fortawesome/free-regular-svg-icons";
-import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
-import { faRulerHorizontal } from "@fortawesome/free-solid-svg-icons";
-import { faAreaChart } from "@fortawesome/free-solid-svg-icons";
-import { faLineChart } from "@fortawesome/free-solid-svg-icons";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
+import data from "@/data/map/submenuItems.json";
+import Wetland from "./Wetland";
+import TextAndBorder from "./TextAndBorder";
+import MoreTools from "./MoreTools";
 
-interface props {
+interface Props {
    setIsSubMenu: (value: number) => void;
    isSubMenu: number;
-   handleRulerButtonClick: () => void;
-   handleAreaButtonClick: () => void;
-   areaFlag: boolean;
-   isRulerActive: boolean;
-   info: boolean;
-   setInfo: (value: boolean) => void;
-   chart: boolean;
-   setChart: (value: boolean) => void;
+   setMapType: (value: string) => void;
 }
 
-const Sidebar = ({
-   setIsSubMenu,
-   isSubMenu,
-   handleAreaButtonClick,
-   handleRulerButtonClick,
-   areaFlag,
-   isRulerActive,
-   info,
-   setInfo,
-   chart,
-   setChart,
-}: props) => {
-   return (
-      <div className="w-[3vw] bg-[#2a2b2e] flex flex-col h-[93vh] gap-[2vw] pt-[3vh]">
-         <button
-            onClick={() => {
-               if (isSubMenu == 1) {
-                  setIsSubMenu(0);
-               } else {
-                  setIsSubMenu(1);
-               }
-            }}
-         >
-            <FontAwesomeIcon
-               icon={faMap}
-               aria-hidden="true"
-               className="text-white"
-            />
-         </button>
+const Sidebar = ({ setIsSubMenu, isSubMenu, setMapType }: Props) => {
+   const [activeLayer, setActiveLayer] = useState<string>("");
 
-         <button
-            onClick={() => {
-               if (isSubMenu == 2) {
-                  setIsSubMenu(0);
-               } else {
-                  setIsSubMenu(2);
-               }
-            }}
+   const handleLayerClick = (layerTitle: string) => {
+      setMapType(layerTitle);
+      setActiveLayer(layerTitle);
+   };
+
+   return (
+      <div className="w-[17.6%] bg-white pl-[34px] relative">
+         <div className="flex items-center gap-[14px] h-[9.7vh] mb-[3.5vh]">
+            <img
+               src="/images/newsharif.png"
+               alt="logo"
+               className="w-[50px] h-[50px] "
+            />
+            <h2 className="jost-black text-[25px] text-[#343C6A]">Bina</h2>
+         </div>
+         <Wetland />
+         <TextAndBorder text="layers" className="mb-[2.448vh]" />
+         <div
+            className={
+               " flex items-center flex-col pr-[30px] gap-[0.97vh] cursor-pointer w-full"
+            }
          >
-            <FontAwesomeIcon
-               icon={faLayerGroup}
-               aria-hidden="true"
-               className="text-white"
-            />
-         </button>
-         <button onClick={handleRulerButtonClick}>
-            <FontAwesomeIcon
-               icon={faRulerHorizontal}
-               aria-hidden="true"
-               className={isRulerActive ? "text-blue-400" : "text-white"}
-            />
-         </button>
-         <button onClick={handleAreaButtonClick}>
-            <FontAwesomeIcon
-               icon={faAreaChart}
-               aria-hidden="true"
-               className={areaFlag ? "text-blue-400" : "text-white"}
-            />
-         </button>
-         <button
-            onClick={() => {
-               setChart(!chart);
-            }}
-         >
-            <FontAwesomeIcon
-               icon={faLineChart}
-               aria-hidden="true"
-               className={chart ? "text-blue-400" : "text-white"}
-            />
-         </button>
-         <button
-            onClick={() => {
-               setInfo(!info);
-            }}
-         >
-            <FontAwesomeIcon
-               icon={faInfoCircle}
-               aria-hidden="true"
-               className={info ? "text-blue-400" : "text-white"}
-            />
+            {data.items.map((item) => (
+               <div
+                  key={item.title}
+                  className={`w-full rounded-[20px] flex items-center justify-center h-[5.46vh] relative bg-center bg-contain px-[10px]  ${
+                     activeLayer === item.title
+                        ? "border-[#4379EE] border-[5px] "
+                        : ""
+                  }`}
+                  style={{
+                     backgroundImage: `url(${item.img})`,
+                  }}
+                  onClick={() => handleLayerClick(item.title)}
+               >
+                  {activeLayer != item.title && (
+                     <div className="w-full h-full absolute top-0 left-0 bg-[#00000050] rounded-[20px]"></div>
+                  )}
+                  <h3 className="font-[500] text-[15px] z-20 flex-shrink-0 text-white">
+                     {item.title}
+                  </h3>
+               </div>
+            ))}
+         </div>
+         <TextAndBorder text="more" className="mb-[2.148vh]" />
+         <MoreTools />
+         <button className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0">
+            Log Out
          </button>
       </div>
    );

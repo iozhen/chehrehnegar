@@ -29,6 +29,7 @@ import {
    PointElement,
    LinearScale,
 } from "chart.js";
+import DateSlider from "@/components/DateSlider";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
@@ -606,6 +607,7 @@ const MapComponents: React.FC = () => {
                </div>
             </div>
          </div>
+         <DateSlider />
       </div>
    );
 };

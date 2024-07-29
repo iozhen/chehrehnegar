@@ -12,7 +12,6 @@ import { Pagination, Autoplay } from "swiper/modules";
 // next translation
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import Link from "next/link";
 
 export default function HomeSlider() {
    const pagination = {
@@ -57,11 +56,9 @@ export default function HomeSlider() {
                            {t('Home_desc2')} <br />
                            {t('Home_desc3')} <br />
                         </p>
-                        <Link href={"/map"}>
-                           <button className="max-sm:w-[140px] w-[180px] max-sm:h-[45px] h-[52px] rounded-[1000px] max-sm:text-[16px] text-[20px] border-[2px] border-[#FFF] text-white flex text-center items-center justify-center justify-self-center font-[700] ___ sm:text-[18px] sm:mb-[100px]" >
-                              {t('Home_Btn')}
-                           </button>
-                        </Link>
+                        <button className="max-sm:w-[140px] w-[180px] max-sm:h-[45px] h-[52px] rounded-[1000px] max-sm:text-[16px] text-[20px] border-[2px] border-[#FFF] text-white flex text-center items-center justify-center justify-self-center font-[700] ___ sm:text-[18px] sm:mb-[100px]">
+                           {t('Home_Btn')}
+                        </button>
                      </div>
                   </div>
                </SwiperSlide>

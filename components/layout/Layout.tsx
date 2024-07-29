@@ -39,7 +39,8 @@ function Layout({ children }: LayoutProps) {
    return (
       <div>
          <div className="min-h-[100vh] w-[100vw]">
-            {!router.pathname.includes("map") && <Header />}
+            {!router.pathname.includes("map") &&
+               !router.pathname.includes("auth") && <Header />}
             <div className="w-full h-screen">{children}</div>
          </div>
       </div>

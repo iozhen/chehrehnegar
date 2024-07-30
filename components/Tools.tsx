@@ -101,7 +101,7 @@ const Tools = ({
                }
             }}
          >
-            <img src="/icons/info.svg" alt="info" />
+            <img src="/icons/info.svg" alt="info " />
             <span className="text-[15px]">get feature info</span>
          </div>
       </div>

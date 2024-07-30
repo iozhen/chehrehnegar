@@ -3,6 +3,10 @@ import data from "@/data/map/submenuItems.json";
 import Wetland from "./Wetland";
 import TextAndBorder from "./TextAndBorder";
 import MoreTools from "./MoreTools";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 interface Props {
    setIsSubMenu: (value: number) => void;
@@ -25,6 +29,10 @@ const Sidebar = ({
       setMapType(layerTitle);
       setActiveLayer(layerTitle);
    };
+
+   const token = Cookies.get("token");
+   const router = useRouter();
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
    return (
       <div className="w-[17.6%] bg-white pl-[34px] relative">
@@ -70,7 +78,34 @@ const Sidebar = ({
          </div>
          <TextAndBorder text="more" className="mb-[2.148vh]" />
          <MoreTools />
-         <button className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0">
+         <button
+            className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0"
+            onClick={() => {
+               if (token) {
+                  axios
+                     .post(
+                        `${baseUrl}/api/auth/logout`,
+                        {},
+                        {
+                           headers: {
+                              Authorization: `Bearer ${token}`,
+                           },
+                        }
+                     )
+                     .then((res) => {
+                        toast.success("Logged out successfully");
+                        Cookies.remove("token");
+                        router.push("/");
+                     })
+                     .catch((err) => {
+                        console.log(err);
+                        toast.error("Error logging out. Please try again.");
+                     });
+               } else {
+                  toast.error("No token found. Unable to log out.");
+               }
+            }}
+         >
             Log Out
          </button>
       </div>

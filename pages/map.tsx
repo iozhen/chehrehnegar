@@ -32,6 +32,9 @@ import {
 import DateSlider from "@/components/DateSlider";
 import MapHeader from "@/components/MapHeader";
 import Tools from "@/components/Tools";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
@@ -92,6 +95,10 @@ const MapComponents: React.FC = () => {
          }),
       })
    );
+
+   //token handeling
+   const token = Cookies.get("token");
+   const router = useRouter();
 
    useEffect(() => {
       if (typeof window !== "undefined") {
@@ -500,6 +507,15 @@ const MapComponents: React.FC = () => {
          },
       },
    };
+
+   useEffect(() => {
+      if (!token) {
+         router.push("/");
+         toast.error("your token has been expired");
+      } else {
+         return;
+      }
+   }, [token]);
 
    return (
       <div className="flex relative jost">

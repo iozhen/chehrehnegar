@@ -1,37 +1,39 @@
 {
-  "name": "chehrehnegar",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-regular-svg-icons": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "axios": "^1.7.2",
-    "formik": "^2.4.6",
-    "i18next": "^23.11.5",
-    "js-cookie": "^3.0.5",
-    "next": "14.2.4",
-    "ol": "^9.2.4",
-    "react": "^18",
-    "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18",
-    "react-i18next": "^14.1.2",
-    "swiper": "^11.1.5",
-    "yup": "^1.4.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+   "name": "chehrehnegar",
+   "version": "0.1.0",
+   "private": true,
+   "scripts": {
+      "dev": "next dev -p 3002",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+   },
+   "dependencies": {
+      "@fortawesome/fontawesome-svg-core": "^6.5.2",
+      "@fortawesome/free-regular-svg-icons": "^6.5.2",
+      "@fortawesome/free-solid-svg-icons": "^6.5.2",
+      "@fortawesome/react-fontawesome": "^0.2.2",
+      "axios": "^1.7.2",
+      "formik": "^2.4.6",
+      "i18next": "^23.11.5",
+      "js-cookie": "^3.0.5",
+      "next": "14.2.4",
+      "ol": "^9.2.4",
+      "react": "^18",
+      "react-chartjs-2": "^5.2.0",
+      "react-dom": "^18",
+      "react-i18next": "^14.1.2",
+      "react-toastify": "^10.0.5",
+      "swiper": "^11.1.5",
+      "yup": "^1.4.0"
+   },
+   "devDependencies": {
+      "@types/js-cookie": "^3.0.6",
+      "@types/node": "^20",
+      "@types/react": "^18",
+      "@types/react-dom": "^18",
+      "postcss": "^8",
+      "tailwindcss": "^3.4.1",
+      "typescript": "^5"
+   }
 }

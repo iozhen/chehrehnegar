@@ -1,137 +1,116 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Link from "next/link";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
 
-const Login = () => {
+const UpdatePassword = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
+   const { mobile } = router.query;
 
    const formik = useFormik({
       initialValues: {
-         mobile: "",
-         password: "",
+         newPassword: "",
+         confirmPassword: "",
       },
       validationSchema: Yup.object({
-         mobile: Yup.string()
-            .matches(/^[0-9]+$/, "Must be only digits")
-            .min(11, "Must be exactly 10 digits")
-            .max(11, "Must be exactly 10 digits")
+         newPassword: Yup.string().required("Required"),
+         confirmPassword: Yup.string()
+            .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
             .required("Required"),
-         password: Yup.string().required("Required"),
       }),
       onSubmit: (values) => {
-         // Handle form submission
          axios
-            .post(`${baseUrl}/api/auth/login`, {
-               mobileNumber: values.mobile,
-               password: values.password,
+            .post(`${baseUrl}/api/auth/reset-password`, {
+               mobileNumber: mobile,
+               otp: values.otp,
+               newPassword: values.newPassword,
             })
             .then((res) => {
-               console.log(res);
-               Cookies.set("token", res.data.data.token);
-               toast.success("login successfully!");
-               router.push("/");
+               toast.success("Password reset successfully!");
+               router.push("/auth/login");
             })
             .catch((err) => {
                console.log(err);
-               if (err.response.data.message == "User not found") {
-                  toast.error("you are not register yet");
-                  router.push("/auth/signup");
-               } else {
-                  toast.error("username or pass in wrong!");
-               }
+               toast.error("Error resetting password. Please try again.");
             });
       },
    });
 
    return (
       <div className="flex p-[2.08vw] items-center gap-[7.82vw] overflow-y-hidden h-[100vh]">
-         {/* image */}
          <img
             src="/images/loginBack.png"
             alt=""
             className="w-[44.37vw] h-[91.41vh]"
          />
-
-         {/* login form */}
          <div className="w-[36.35vw]">
             <h1 className="text-[3.32vw] font-[700] text-center mb-[2.93vh]">
-               Login
+               Reset Password
             </h1>
             <form
                onSubmit={formik.handleSubmit}
                className="flex flex-col gap-[1.46vh]"
             >
                <div className="flex flex-col gap-[1.46vh] mb-[1.95vh]">
-                  <label htmlFor="mobile" className="font-[700] text-[1.76vw]">
-                     Mobile Number
+                  <label
+                     htmlFor="newPassword"
+                     className="font-[700] text-[1.76vw]"
+                  >
+                     New Password
                   </label>
                   <input
-                     type="text"
-                     id="mobile"
-                     name="mobile"
-                     placeholder="Enter your mobile number"
+                     type="password"
+                     id="newPassword"
+                     name="newPassword"
+                     placeholder="Enter new password"
                      className="w-[36.35vw] h-[6.25vh] rounded-[9.77vh] border-[0.1vh] border-[#CBCBCB] px-[1.73vw]"
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
-                     value={formik.values.mobile}
+                     value={formik.values.newPassword}
                   />
-                  {formik.touched.mobile && formik.errors.mobile ? (
+                  {formik.touched.newPassword && formik.errors.newPassword ? (
                      <div className="text-red-500 text-sm">
-                        {formik.errors.mobile}
+                        {formik.errors.newPassword}
                      </div>
                   ) : null}
                </div>
                <div className="flex flex-col gap-[1.46vh]">
                   <label
-                     htmlFor="password"
+                     htmlFor="confirmPassword"
                      className="font-[700] text-[1.76vw]"
                   >
-                     Password
+                     Confirm Password
                   </label>
                   <input
                      type="password"
-                     id="password"
-                     name="password"
-                     placeholder="Enter your password"
+                     id="confirmPassword"
+                     name="confirmPassword"
+                     placeholder="Confirm new password"
                      className="w-[36.35vw] h-[6.25vh] rounded-[9.77vh] border-[0.1vh] border-[#CBCBCB] px-[1.73vw]"
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
-                     value={formik.values.password}
+                     value={formik.values.confirmPassword}
                   />
-                  {formik.touched.password && formik.errors.password ? (
+                  {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword ? (
                      <div className="text-red-500 text-sm">
-                        {formik.errors.password}
+                        {formik.errors.confirmPassword}
                      </div>
                   ) : null}
                </div>
-               <Link
-                  href="/auth/request-otp"
-                  className="text-[#58999F] text-[1.11vw] font-[400] mt-[1.46vh] mx-[1.73vw] block"
-               >
-                  Forget your password?
-               </Link>
                <button
                   type="submit"
                   className="w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh]"
                >
-                  Log in
+                  Reset Password
                </button>
-               <p className="text-[1.11vw] font-[400] text-center mt-[1.46vh]">
-                  Don't have an account?{" "}
-                  <Link href="/auth/signup" className="text-[#58999F]">
-                     Sign up
-                  </Link>
-               </p>
             </form>
          </div>
       </div>
    );
 };
 
-export default Login;
+export default UpdatePassword;

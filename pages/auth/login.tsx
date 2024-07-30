@@ -6,10 +6,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setProfileData } from "@/redux/slices/ProfilesSlice";
 
 const Login = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
+   const dispatch = useDispatch();
 
    const formik = useFormik({
       initialValues: {
@@ -33,9 +36,10 @@ const Login = () => {
             })
             .then((res) => {
                console.log(res);
-               Cookies.set("token", res.data.data.token);
+               Cookies.set("token", res.data.data.token, { expires: 1 });
+               dispatch(setProfileData({ ...res.data.data.user }));
                toast.success("login successfully!");
-               router.push("/");
+               router.push("/dashboard/profile");
             })
             .catch((err) => {
                console.log(err);

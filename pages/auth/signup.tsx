@@ -30,7 +30,6 @@ const SignUp = () => {
       }),
       onSubmit: (values) => {
          // Handle form submission
-         console.log(values);
          axios
             .post(`${baseUrl}/api/auth/sign-up`, {
                mobileNumber: values.mobile,

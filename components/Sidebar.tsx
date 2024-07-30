@@ -14,6 +14,8 @@ interface Props {
    setMapType: (value: string) => void;
    handleWetlandsToggle: () => void;
    handleDamsToggle: () => void;
+   isPlans: boolean;
+   setIsPlans: (value: boolean) => void;
 }
 
 const Sidebar = ({
@@ -22,6 +24,8 @@ const Sidebar = ({
    setMapType,
    handleWetlandsToggle,
    handleDamsToggle,
+   isPlans,
+   setIsPlans,
 }: Props) => {
    const [activeLayer, setActiveLayer] = useState<string>("");
 
@@ -77,7 +81,7 @@ const Sidebar = ({
             ))}
          </div>
          <TextAndBorder text="more" className="mb-[2.148vh]" />
-         <MoreTools />
+         <MoreTools isPlans={isPlans} setIsPlans={setIsPlans} />
          <button
             className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0"
             onClick={() => {

@@ -35,6 +35,7 @@ import Tools from "@/components/Tools";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import Plans from "@/components/Plans";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
@@ -54,6 +55,7 @@ const MapComponents: React.FC = () => {
    const [reservoirsResponse, setReservoirsResponse] = useState("");
    const [wetlandChart, setWetlandChart] = useState(null);
    const [reservoirsChart, setReservoirsChart] = useState(null);
+   const [isPlans, setIsPlans] = useState(false);
    const [vectorLayer] = useState(
       new VectorLayer({
          source: vectorSource,
@@ -518,24 +520,28 @@ const MapComponents: React.FC = () => {
    }, [token]);
 
    return (
-      <div className="flex relative jost">
+      <div className="flex relative jost h-screen overflow-y-hidden">
          <Sidebar
             setIsSubMenu={setIsSubMenu}
             isSubMenu={isSubMenu}
             setMapType={setMapType}
             handleWetlandsToggle={handleWetlandsToggle}
             handleDamsToggle={handleDamsToggle}
+            isPlans={isPlans}
+            setIsPlans={setIsPlans}
          />
-         <Tools
-            handleRulerButtonClick={handleRulerButtonClick}
-            handleAreaButtonClick={handleAreaButtonClick}
-            areaFlag={areaFlag}
-            isRulerActive={isRulerActive}
-            setInfo={setInfo}
-            info={info}
-            setChart={setChart}
-            chart={chart}
-         />
+         {!isPlans && (
+            <Tools
+               handleRulerButtonClick={handleRulerButtonClick}
+               handleAreaButtonClick={handleAreaButtonClick}
+               areaFlag={areaFlag}
+               isRulerActive={isRulerActive}
+               setInfo={setInfo}
+               info={info}
+               setChart={setChart}
+               chart={chart}
+            />
+         )}
 
          <div
             className={
@@ -560,60 +566,63 @@ const MapComponents: React.FC = () => {
          </div>
          <div className="w-full">
             <MapHeader />
-            <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
-               <div id="popup" className={"absolute left-0 top-0"}>
-                  <div
-                     id="popup-content"
-                     ref={popupContent}
-                     className="relative"
-                  >
-                     {info && (
-                        <div>
-                           {info && wetlandsResponse?.length > 0 && (
-                              <div
-                                 className="info-box bg-gray-200 p-[20px]"
-                                 dangerouslySetInnerHTML={{
-                                    __html: wetlandsResponse,
-                                 }}
-                              />
-                           )}
-                           {info && reservoirsResponse?.length > 0 && (
-                              <div
-                                 className="info-box bg-gray-200 p-[20px]"
-                                 dangerouslySetInnerHTML={{
-                                    __html: reservoirsResponse,
-                                 }}
-                              />
-                           )}
-                        </div>
-                     )}
-                     {!info && (
-                        <div>
-                           {chart && reservoirsChart && (
-                              <div className="info-box bg-gray-200 p-[20px]">
-                                 <Scatter
-                                    data={reservoirsChart}
-                                    options={options}
+            {isPlans && <Plans />}
+            {!isPlans && (
+               <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
+                  <div id="popup" className={"absolute left-0 top-0"}>
+                     <div
+                        id="popup-content"
+                        ref={popupContent}
+                        className="relative"
+                     >
+                        {info && (
+                           <div>
+                              {info && wetlandsResponse?.length > 0 && (
+                                 <div
+                                    className="info-box bg-gray-200 p-[20px]"
+                                    dangerouslySetInnerHTML={{
+                                       __html: wetlandsResponse,
+                                    }}
                                  />
-                                 ;
-                              </div>
-                           )}
-                           {chart && wetlandChart && (
-                              <div className="info-box bg-gray-200 p-[20px]">
-                                 <Scatter
-                                    data={wetlandChart}
-                                    options={options}
+                              )}
+                              {info && reservoirsResponse?.length > 0 && (
+                                 <div
+                                    className="info-box bg-gray-200 p-[20px]"
+                                    dangerouslySetInnerHTML={{
+                                       __html: reservoirsResponse,
+                                    }}
                                  />
-                                 ;
-                              </div>
-                           )}
-                        </div>
-                     )}
+                              )}
+                           </div>
+                        )}
+                        {!info && (
+                           <div>
+                              {chart && reservoirsChart && (
+                                 <div className="info-box bg-gray-200 p-[20px]">
+                                    <Scatter
+                                       data={reservoirsChart}
+                                       options={options}
+                                    />
+                                    ;
+                                 </div>
+                              )}
+                              {chart && wetlandChart && (
+                                 <div className="info-box bg-gray-200 p-[20px]">
+                                    <Scatter
+                                       data={wetlandChart}
+                                       options={options}
+                                    />
+                                    ;
+                                 </div>
+                              )}
+                           </div>
+                        )}
+                     </div>
                   </div>
                </div>
-            </div>
+            )}
          </div>
-         <DateSlider />
+         {!isPlans && <DateSlider />}
       </div>
    );
 };

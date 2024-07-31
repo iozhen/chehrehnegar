@@ -1,21 +1,20 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import Header from "./Header";
 import English from "@/data/en.json";
 import Persian from "@/data/fa.json";
 import i18n from "i18next";
-
 import { useTranslation, initReactI18next } from "react-i18next";
 import { useRouter } from "next/router";
+import MapHeader from "../MapHeader";
+import Sidebar from "../Sidebar";
 
 interface LayoutProps {
    children: ReactNode;
 }
+
 i18n
    .use(initReactI18next) // passes i18n down to react-i18next
    .init({
-      // the translations
-      // (tip move them in a JSON file and import them,
-      // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
       resources: {
          en: {
             translation: English,
@@ -24,25 +23,45 @@ i18n
             translation: Persian,
          },
       },
-      lng: "en", // if you're using a language detector, do not define the lng option
+      lng: "en",
       fallbackLng: "en",
-
       interpolation: {
-         escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+         escapeValue: false,
       },
    });
 
 function Layout({ children }: LayoutProps) {
    const { t } = useTranslation();
-   // i18n.changeLanguage("fa");
    const router = useRouter();
+
+   const showMapHeader =
+      router.pathname.includes("map") ||
+      router.pathname.includes("plans") ||
+      router.pathname.includes("dashboard");
+   const showHeader = !router.pathname.includes("auth") && !showMapHeader;
+
    return (
       <div>
-         <div className="min-h-[100vh] w-[100vw]">
-            {!router.pathname.includes("map") &&
-               !router.pathname.includes("auth") && <Header />}
-            <div className="w-full h-screen">{children}</div>
-         </div>
+         {showMapHeader && (
+            <div className="flex relative jost h-screen overflow-y-hidden w-full">
+               <Sidebar />
+               <div className="w-full h-screen">
+                  <MapHeader />
+                  <div className="w-full h-full">{children}</div>
+               </div>
+            </div>
+         )}
+
+         {!showMapHeader && showHeader && (
+            <div>
+               <Header />
+               <div className="w-full">{children}</div>
+            </div>
+         )}
+
+         {!showMapHeader && !showHeader && (
+            <div className="w-full">{children}</div>
+         )}
       </div>
    );
 }

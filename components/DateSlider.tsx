@@ -21,7 +21,7 @@ const DateSlider = () => {
    };
 
    return (
-      <div className="p-4 absolute w-[76.80vw] h-[5.58vh] bottom-[3.5vh] right-[3%] py-[30px] bg-white rounded-[10px] ">
+      <div className="p-4 absolute w-[76.80vw] h-[5.58vh] bottom-[14%] right-[4%] py-[30px] bg-white rounded-[10px] ">
          <div className="relative flex items-center justify-center">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mb-2 bg-white p-2 rounded shadow">
                selected date : {selectedDate}

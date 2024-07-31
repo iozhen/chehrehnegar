@@ -23,7 +23,7 @@ const Tools = ({
 }: props) => {
    const [selectedItem, setSelectedItem] = useState(0);
    return (
-      <div className=" bg-[#f8f8f8] flex items-center absolute left-[17%] top-[11.71%] z-30 rounded-[20px]">
+      <div className=" bg-[#f8f8f8] flex items-center absolute left-[2%] top-[2%] z-30 rounded-[20px]">
          <div
             className={
                "flex items-center gap-[10.7px] p-[15px] rounded-[20px] " +

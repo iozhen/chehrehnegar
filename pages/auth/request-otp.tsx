@@ -30,7 +30,7 @@ const RequestOtp = () => {
             })
             .catch((err) => {
                console.log(err);
-               if (err.response.data.message == "User not found") {
+               if (err?.response?.data?.message == "User not found") {
                   toast.error("you are not register yet");
                   router.push("/auth/signup");
                } else {
@@ -43,7 +43,7 @@ const RequestOtp = () => {
    return (
       <div className="flex p-[2.08vw] items-center gap-[7.82vw] overflow-y-hidden h-[100vh]">
          <img
-            src="/images/loginBack.png"
+            src="/images/loginBack.webp"
             alt=""
             className="w-[44.37vw] h-[91.41vh]"
          />

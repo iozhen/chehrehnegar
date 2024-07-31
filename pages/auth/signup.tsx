@@ -43,7 +43,7 @@ const SignUp = () => {
             })
             .catch((err) => {
                console.log(err);
-               if (err.response.data.message == "Phone already exists") {
+               if (err?.response?.data?.message == "Phone already exists") {
                   toast.error("You are signed up please login!");
                   router.push("/auth/login");
                } else {

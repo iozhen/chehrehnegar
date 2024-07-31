@@ -30,7 +30,7 @@ const RequestOtp = () => {
             })
             .catch((err) => {
                console.log(err);
-               if (err.response.data.message == "User not found") {
+               if (err?.response?.data?.message == "User not found") {
                   toast.error("you are not register yet");
                   router.push("/auth/signup");
                } else {

@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileData } from "@/redux/slices/ProfilesSlice";
+import { toast } from "react-toastify";
 
 const plans = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -50,11 +51,13 @@ const plans = () => {
                console.log("====================================");
                console.log(res);
                console.log("====================================");
+               toast.success("successful transaction");
             })
             .catch((err) => {
                console.log("====================================");
                console.log(err);
                console.log("====================================");
+               toast.error("please try again");
             });
       } else {
          axios
@@ -73,17 +76,16 @@ const plans = () => {
                console.log("====================================");
                console.log(res);
                console.log("====================================");
+               toast.success("successful transaction");
             })
             .catch((err) => {
                console.log("====================================");
                console.log(err);
                console.log("====================================");
+               toast.error("please try again");
             });
       }
    };
-   console.log("====================================");
-   console.log(profileData);
-   console.log("====================================");
    return (
       <div className="bg-gray-300 h-[100vh] px-[2.84vw] pt-[2.15vh] overflow-y-hidden">
          <h2 className="font-[600] text-[3.13vh]">CHOOSE YOUR PLAN</h2>

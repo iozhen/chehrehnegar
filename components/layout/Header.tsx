@@ -117,7 +117,7 @@ const Header = () => {
                            {isEnLang ? 'فا' : 'En'}
                         </button>
                         {
-                           profileData ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
+                           profileData?.avatar ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
                         <Link href={"/auth/login"} className="flex items-center gap-[7px]">
                               <h4 className="text-[16px] leading-[28px] font-[500]">login / register</h4>
                               <img src="/icons/profileicon.svg" alt="" />

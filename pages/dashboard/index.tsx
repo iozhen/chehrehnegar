@@ -1,8 +1,12 @@
 import Banner from "@/components/Banner";
 import Pagination from "@/components/Pagination";
 import Transaction from "@/components/Transaction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import data from "@/data/profile.json";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileData } from "@/redux/slices/ProfilesSlice";
 
 const profile = () => {
    const [currPage, setCurrPage] = useState(1);
@@ -14,6 +18,31 @@ const profile = () => {
    const [currPageProduct] = paginationProduct.filter(
       (_, index) => index + 1 === currPage
    );
+
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const token = Cookies.get("token");
+   const profileData = useSelector((state) => state.profile.ProfileData);
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      if (profileData) {
+         return;
+      }
+      axios
+         .get(`${baseUrl}/api/user/get-profile`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         })
+         .then((res) => {
+            dispatch(setProfileData({ ...res.data.data }));
+         })
+         .catch((err) => {
+            console.log("====================================");
+            console.log(err);
+            console.log("====================================");
+         });
+   }, [profileData]);
 
    return (
       <div className="px-[40px] pt-[1.75vh] h-[calc(100vh-9.76vh)]">

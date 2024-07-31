@@ -39,7 +39,7 @@ const Login = () => {
                Cookies.set("token", res.data.data.token, { expires: 1 });
                dispatch(setProfileData({ ...res.data.data.user }));
                toast.success("login successfully!");
-               router.push("/dashboard/profile");
+               router.push("/dashboard");
             })
             .catch((err) => {
                console.log(err);

@@ -4,12 +4,12 @@ const profile = () => {
    return (
       <div className="px-[40px] pt-[1.75vh] h-[calc(100vh-9.76vh)]">
          {/* banner */}
-         <div className="bg-[url(/images/banner-dashboard.png)] bg-[#e93b78dc] bg-blend-multiply bg-center bg-cover h-[20.8vh] rounded-[10.42px] flex justify-center items-end">
+         <div className="bg-[url(/images/banner-dashboard.webp)] bg-[#e93b78dc] bg-blend-multiply bg-center bg-cover h-[20.8vh] rounded-[10.42px] flex justify-center items-end">
             <div className="w-[95%] bg-white shadow-[0_1.74px_5.21px_0_#00000040] rounded-[10.42px] h-[9.66vh] translate-y-[50%] flex justify-between items-center pl-[13.9px] pr-[35.16px] text-[#344767]">
                <div className="flex items-center gap-[20.84px]">
                   <img
                      className="w-[64.27px] h-[66.01px] rounded-[6.95px]"
-                     src="/images/profile.png"
+                     src="/images/profile.webp"
                      alt="profile"
                   />
                   <div>

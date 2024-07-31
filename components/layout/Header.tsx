@@ -71,7 +71,7 @@ const Header = () => {
                         href="https://en.sharif.edu/"
                         target="_blank"
                         className={
-                           'inline-block bg-[url(/images/sharif.png)] bg-cover bg-center max-sm:w-[50px] max-sm:h-[50px] ' +
+                           'inline-block bg-[url(/images/sharif.webp)] bg-cover bg-center max-sm:w-[50px] max-sm:h-[50px] ' +
                            (router.pathname.includes('map')
                               ? 'w-[45px] h-[45px]'
                               : 'w-[76px] h-[76px]')

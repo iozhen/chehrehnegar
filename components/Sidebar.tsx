@@ -36,7 +36,7 @@ const Sidebar = () => {
             }
          >
             <img
-               src="/images/newsharif.png"
+               src="/images/newsharif.webp"
                alt="logo"
                className="w-[50px] h-[50px] "
             />

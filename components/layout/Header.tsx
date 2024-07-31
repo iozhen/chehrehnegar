@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import data from "../../data/db.json";
 import Link from "next/link";
 import i18next from "i18next";
@@ -7,6 +7,10 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import SidebarMenu from "../SidebarMenu";
+import Cookies from "js-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { setProfileData } from "@/redux/slices/ProfilesSlice";
+import axios from "axios";
 
 export interface linksType {
    href: string;
@@ -20,6 +24,31 @@ const Header = () => {
    const [sidebarState, setSidebarState] = useState<boolean>();
    const [changeLanguage, setChangeLanguage] = useState<boolean>(false);
    const [linkActive, setLinkActive] = useState(0);
+
+   const token = Cookies.get("token");
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const dispatch = useDispatch();
+   const profileData = useSelector((state) => state.profile.ProfileData);
+
+   useEffect(() => {
+      if (profileData) {
+         return;
+      }
+      axios
+         .get(`${baseUrl}/api/user/get-profile`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         })
+         .then((res) => {
+            dispatch(setProfileData({ ...res.data.data }));
+         })
+         .catch((err) => {
+            console.log("====================================");
+            console.log(err);
+            console.log("====================================");
+         });
+   }, [profileData]);
 
    return (
       <>
@@ -87,6 +116,13 @@ const Header = () => {
                         >
                            {isEnLang ? 'فا' : 'En'}
                         </button>
+                        {
+                           profileData ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
+                        <Link href={"/auth/login"} className="flex items-center gap-[7px]">
+                              <h4 className="text-[16px] leading-[28px] font-[500]">login / register</h4>
+                              <img src="/icons/profileicon.svg" alt="" />
+                        </Link>
+                        }
                      </nav>
 
                      <button

@@ -21,7 +21,11 @@ const UserProfile = () => {
          return;
       }
       axios
-         .get(`${baseUrl}/api/user/get-profile`)
+         .get(`${baseUrl}/api/user/get-profile`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         })
          .then((res) => {
             dispatch(setProfileData({ ...res.data.data }));
          })

@@ -7,40 +7,34 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setMapType } from "@/redux/slices/sidebarSlice";
 
-interface Props {
-   setIsSubMenu: (value: number) => void;
-   isSubMenu: number;
-   setMapType: (value: string) => void;
-   handleWetlandsToggle: () => void;
-   handleDamsToggle: () => void;
-   isPlans: boolean;
-   setIsPlans: (value: boolean) => void;
-}
-
-const Sidebar = ({
-   setIsSubMenu,
-   isSubMenu,
-   setMapType,
-   handleWetlandsToggle,
-   handleDamsToggle,
-   isPlans,
-   setIsPlans,
-}: Props) => {
+const Sidebar = () => {
    const [activeLayer, setActiveLayer] = useState<string>("");
-
-   const handleLayerClick = (layerTitle: string) => {
-      setMapType(layerTitle);
-      setActiveLayer(layerTitle);
-   };
-
+   const dispatch = useDispatch();
    const token = Cookies.get("token");
    const router = useRouter();
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
+   const handleLayerClick = (layerTitle: string) => {
+      // setMapType(layerTitle);
+      dispatch(setMapType(layerTitle));
+      setActiveLayer(layerTitle);
+      if (!router.pathname.includes("map")) {
+         router.push("/map");
+      }
+   };
+
    return (
       <div className="w-[17.6%] bg-white pl-[34px] relative">
-         <div className="flex items-center gap-[14px] h-[9.7vh] mb-[3.5vh]">
+         <div
+            className={
+               router.pathname.includes("dashboard")
+                  ? "flex items-center gap-[14px] h-[9.7vh]"
+                  : "flex items-center gap-[14px] h-[9.7vh] mb-[3.5vh]"
+            }
+         >
             <img
                src="/images/newsharif.png"
                alt="logo"
@@ -48,11 +42,45 @@ const Sidebar = ({
             />
             <h2 className="jost-black text-[25px] text-[#343C6A]">Bina</h2>
          </div>
-         <Wetland
-            handleWetlandsToggle={handleWetlandsToggle}
-            handleDamsToggle={handleDamsToggle}
+         {router.pathname.includes("dashboard") && (
+            <button
+               className="flex items-center gap-[17px] relative cursor-pointer mt-[1vh]"
+               onClick={() => {}}
+            >
+               <img
+                  src={
+                     router.pathname.includes("dashboard")
+                        ? "/icons/dashboardactive.svg"
+                        : "/icons/dashboard.svg"
+                  }
+                  alt="wetland"
+               />
+               <h3
+                  className={
+                     "text-[1.75vh] font-[500]  " +
+                     (router.pathname.includes("dashboard")
+                        ? "text-[#2D60FF]"
+                        : "text-[#B1B1B1]")
+                  }
+               >
+                  Dashboard
+               </h3>
+               {router.pathname.includes("dashboard") && (
+                  <div className="w-[6px] h-[5.85vh] bg-[#2D60FF] absolute left-[-34px] rounded-tr-[10px] rounded-br-[10px]"></div>
+               )}
+            </button>
+         )}
+         <TextAndBorder
+            text="Tools"
+            className={
+               router.pathname.includes("dashboard")
+                  ? "!mt-[2vh] mb-[2.448vh]"
+                  : "mb-[2.448vh]"
+            }
          />
-         <TextAndBorder text="layers" className="mb-[2.448vh]" />
+
+         <Wetland />
+         <TextAndBorder text="Layers" className="mb-[2.448vh]" />
          <div
             className={
                " flex items-center flex-col pr-[30px] gap-[0.97vh] cursor-pointer w-full"
@@ -69,7 +97,9 @@ const Sidebar = ({
                   style={{
                      backgroundImage: `url(${item.img})`,
                   }}
-                  onClick={() => handleLayerClick(item.title)}
+                  onClick={() => {
+                     handleLayerClick(item.title);
+                  }}
                >
                   {activeLayer != item.title && (
                      <div className="w-full h-full absolute top-0 left-0 bg-[#00000050] rounded-[20px]"></div>
@@ -80,8 +110,8 @@ const Sidebar = ({
                </div>
             ))}
          </div>
-         <TextAndBorder text="more" className="mb-[2.148vh]" />
-         <MoreTools isPlans={isPlans} setIsPlans={setIsPlans} />
+         <TextAndBorder text="More" className="mb-[2.148vh]" />
+         <MoreTools />
          <button
             className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0"
             onClick={() => {

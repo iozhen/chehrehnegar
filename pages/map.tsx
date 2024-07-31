@@ -32,12 +32,18 @@ import {
 import DateSlider from "@/components/DateSlider";
 import MapHeader from "@/components/MapHeader";
 import Tools from "@/components/Tools";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import Plans from "@/components/Plans";
+import { useSelector } from "react-redux";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(0);
-   const [mapType, setMapType] = useState("Open Street Map");
+   // const [mapType, setMapType] = useState("Open Street Map");
+   const mapType = useSelector((state) => state.sidebar.mapType);
    const [isRulerActive, setIsRulerActive] = useState(false);
    const [points, setPoints] = useState<Coordinate[]>([]);
    const mapElement = useRef<HTMLDivElement>(null);
@@ -51,6 +57,7 @@ const MapComponents: React.FC = () => {
    const [reservoirsResponse, setReservoirsResponse] = useState("");
    const [wetlandChart, setWetlandChart] = useState(null);
    const [reservoirsChart, setReservoirsChart] = useState(null);
+   const [isPlans, setIsPlans] = useState(false);
    const [vectorLayer] = useState(
       new VectorLayer({
          source: vectorSource,
@@ -92,6 +99,10 @@ const MapComponents: React.FC = () => {
          }),
       })
    );
+
+   //token handeling
+   const token = Cookies.get("token");
+   const router = useRouter();
 
    useEffect(() => {
       if (typeof window !== "undefined") {
@@ -325,26 +336,6 @@ const MapComponents: React.FC = () => {
       }
    };
 
-   const handleWetlandsToggle = () => {
-      if (wetlandsLayer.current) {
-         const isVisible = wetlandsLayer.current.getVisible();
-         wetlandsLayer.current.setVisible(!isVisible);
-         // if (!isVisible && damsLayer.current) {
-         //    damsLayer.current.setVisible(false);
-         // }
-      }
-   };
-
-   const handleDamsToggle = () => {
-      if (damsLayer.current) {
-         const isVisible = damsLayer.current.getVisible();
-         damsLayer.current.setVisible(!isVisible);
-         // if (!isVisible && wetlandsLayer.current) {
-         //    wetlandsLayer.current.setVisible(false);
-         // }
-      }
-   };
-
    const handleInfo = async (evt) => {
       if (info) {
          const coordinate = evt.coordinate;
@@ -501,15 +492,40 @@ const MapComponents: React.FC = () => {
       },
    };
 
+   useEffect(() => {
+      if (!token) {
+         router.push("/");
+         toast.error("your token has been expired");
+      } else {
+         return;
+      }
+   }, [token]);
+
+   const wetland = useSelector((state) => state.sidebar.isWetlands);
+   const dams = useSelector((state) => state.sidebar.isDams);
+
+   useEffect(() => {
+      if (wetlandsLayer.current) {
+         const isVisible = wetlandsLayer.current.getVisible();
+         wetlandsLayer.current.setVisible(!isVisible);
+         // if (!isVisible && damsLayer.current) {
+         //    damsLayer.current.setVisible(false);
+         // }
+      }
+   }, [wetland]);
+
+   useEffect(() => {
+      if (damsLayer.current) {
+         const isVisible = damsLayer.current.getVisible();
+         damsLayer.current.setVisible(!isVisible);
+         // if (!isVisible && wetlandsLayer.current) {
+         //    wetlandsLayer.current.setVisible(false);
+         // }
+      }
+   }, [dams]);
+
    return (
-      <div className="flex relative jost">
-         <Sidebar
-            setIsSubMenu={setIsSubMenu}
-            isSubMenu={isSubMenu}
-            setMapType={setMapType}
-            handleWetlandsToggle={handleWetlandsToggle}
-            handleDamsToggle={handleDamsToggle}
-         />
+      <div className="flex relative jost h-screen overflow-y-hidden">
          <Tools
             handleRulerButtonClick={handleRulerButtonClick}
             handleAreaButtonClick={handleAreaButtonClick}
@@ -521,29 +537,7 @@ const MapComponents: React.FC = () => {
             chart={chart}
          />
 
-         <div
-            className={
-               "left-0 top-0 z-40 w-[20%] absolute flex items-center flex-col h-[90vh] bg-[#0000006c] px-[20px] gap-[20px] transition-all duration-500 ease-in-out transform cursor-pointer p-[20px] " +
-               (isSubMenu === 2
-                  ? "translate-x-0 left-[3.1vw]"
-                  : "-translate-x-full")
-            }
-         >
-            <button
-               className="w-full h-[50px] bg-blue-500 text-white rounded-[10px] mt-4"
-               onClick={handleWetlandsToggle}
-            >
-               Toggle Wetlands
-            </button>
-            <button
-               className="w-full h-[50px] bg-blue-500 text-white rounded-[10px] mt-4"
-               onClick={handleDamsToggle}
-            >
-               Toggle Reservoirs
-            </button>
-         </div>
          <div className="w-full">
-            <MapHeader />
             <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>
                <div id="popup" className={"absolute left-0 top-0"}>
                   <div

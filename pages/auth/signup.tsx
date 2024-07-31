@@ -2,8 +2,13 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const SignUp = () => {
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const router = useRouter();
    const formik = useFormik({
       initialValues: {
          mobile: "",
@@ -13,8 +18,8 @@ const SignUp = () => {
       validationSchema: Yup.object({
          mobile: Yup.string()
             .matches(/^[0-9]+$/, "Must be only digits")
-            .min(10, "Must be exactly 10 digits")
-            .max(10, "Must be exactly 10 digits")
+            .min(11, "Must be exactly 10 digits")
+            .max(11, "Must be exactly 10 digits")
             .required("Required"),
          password: Yup.string()
             .min(8, "Password must be at least 8 characters")
@@ -25,7 +30,26 @@ const SignUp = () => {
       }),
       onSubmit: (values) => {
          // Handle form submission
-         console.log(values);
+         axios
+            .post(`${baseUrl}/api/auth/sign-up`, {
+               mobileNumber: values.mobile,
+               password: values.password,
+               otp: "1111",
+            })
+            .then((res) => {
+               console.log(res);
+               toast.success("Welcome To Bina Platform please login");
+               router.push("/auth/login");
+            })
+            .catch((err) => {
+               console.log(err);
+               if (err.response.data.message == "Phone already exists") {
+                  toast.error("You are signed up please login!");
+                  router.push("/auth/login");
+               } else {
+                  toast.error("please try again!");
+               }
+            });
       },
    });
 

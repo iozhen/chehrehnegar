@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { ReduxStore } from "@/types/index";
 
 const Banner = () => {
-   const profileData = useSelector((state) => state.profile.ProfileData);
+   const profileData = useSelector(
+      (state: ReduxStore) => state.profile.ProfileData
+   );
 
    return (
       <div className="bg-[url(/images/banner-dashboard.webp)] bg-[#e93b78dc] bg-blend-multiply bg-center bg-cover h-[20.8vh] rounded-[10.42px] flex justify-center items-end">

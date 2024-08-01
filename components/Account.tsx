@@ -121,18 +121,18 @@ const Account: React.FC = () => {
    };
 
    return (
-      <div>
-         <div className="flex items-center">
+      <div className="py-[3.5vh]">
+         <div className="flex items-center gap-[20px]">
             <img
                src={constructAvatarUrl(avatarRedux)}
                alt="profile photo"
-               className="w-[120px] h-[120px]"
+               className="w-[11.71vh] h-[11.71vh] rounded-[10px]"
             />
             <div>
                <div className="flex items-center gap-[16px]">
                   <div
                      onClick={handleClick}
-                     className="mt-1 block w-full border border-gray-300 rounded-md bg-blue-500 text-white text-center py-2 cursor-pointer"
+                     className="px-[22px] py-[0.68vh] bg-[#4379EE] text-[14px] font-[500] text-white rounded-[8px]"
                   >
                      Upload new photo
                   </div>
@@ -145,14 +145,24 @@ const Account: React.FC = () => {
                      className="hidden"
                      accept="image/jpeg,image/png,image/jpg"
                   />
-                  <button onClick={handleReset}>Reset</button>
+                  <button
+                     onClick={handleReset}
+                     className="bg-transparent border-[1px] border-[#FF4D49] text-[14px] font-[500] px-[22px] py-[0.68vh] text-[#FF4D49] rounded-[8px]"
+                  >
+                     Reset
+                  </button>
                </div>
-               <h3>Allowed JPG, JPEG, or PNG. Max size of 500K</h3>
+               <h3 className="mt-[1.56vh] text-[#4c4e64a1] text-[12px] font-[400]">
+                  Allowed JPG, JPEG, or PNG. Max size of 500K
+               </h3>
             </div>
          </div>
-         <div className="flex items-center">
-            <div className="">
-               <label htmlFor="firstName" className="block text-sm font-medium">
+         <div className="flex items-center w-full gap-[24px] mt-[4.49vh]">
+            <div className="w-full relative">
+               <label
+                  htmlFor="firstName"
+                  className="absolute top-[-20%] left-[2%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+               >
                   First Name
                </label>
                <input
@@ -161,11 +171,14 @@ const Account: React.FC = () => {
                   name="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md"
+                  className=" block w-full border border-gray-300 rounded-md py-[1.46vh] px-[12px] text-[16px]"
                />
             </div>
-            <div className="">
-               <label htmlFor="lastName" className="block text-sm font-medium">
+            <div className="w-full relative">
+               <label
+                  htmlFor="lastName"
+                  className="absolute top-[-20%] left-[2%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+               >
                   Last Name
                </label>
                <input
@@ -174,12 +187,15 @@ const Account: React.FC = () => {
                   name="lastName"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md"
+                  className="block w-full border border-gray-300 rounded-md py-[1.46vh] px-[12px] text-[16px]"
                />
             </div>
          </div>
-         <div className="mt-4">
-            <label htmlFor="email" className="block text-sm font-medium">
+         <div className="mt-4 relative">
+            <label
+               htmlFor="email"
+               className="absolute top-[-20%] left-[1%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+            >
                Email
             </label>
             <input
@@ -188,19 +204,19 @@ const Account: React.FC = () => {
                name="email"
                value={email}
                onChange={(e) => setEmail(e.target.value)}
-               className="mt-1 block w-full border border-gray-300 rounded-md"
+               className="block w-full border border-gray-300 rounded-md py-[1.46vh] px-[12px] text-[16px]"
             />
          </div>
          <div className="mt-6 flex gap-[16px]">
             <button
                onClick={handleSaveChanges}
-               className="bg-green-500 text-white px-4 py-2 rounded-md"
+               className="px-[22px] py-[0.68vh] bg-[#4379EE] text-[14px] font-[500] text-white rounded-[8px]"
             >
                Save Changes
             </button>
             <button
                onClick={handleReset}
-               className="bg-red-500 text-white px-4 py-2 rounded-md"
+               className="bg-transparent border-[1px] border-[#6D788D] text-[14px] font-[500] px-[22px] py-[0.68vh] text-[#6D788D] rounded-[8px]"
             >
                Cancel
             </button>

@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 
 const MapHeader = () => {
    const router = useRouter();
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const avatarRedux = useSelector((state) => state.profile.avatar);
 
    const TextCreater = () => {
       if (router.pathname.includes("dashboard")) {
@@ -14,6 +16,13 @@ const MapHeader = () => {
       } else {
          return "Map";
       }
+   };
+
+   const constructAvatarUrl = (path) => {
+      if (path.startsWith("uploads\\")) {
+         return `${baseUrl}/${path.replace(/\\/g, "/")}`;
+      }
+      return path;
    };
 
    const profileData = useSelector((state) => state.profile.ProfileData);
@@ -40,12 +49,9 @@ const MapHeader = () => {
                className="flex items-center justify-center w-[50px] h-[50px] bg-[#F5F7FA] rounded-full"
             >
                <img
-                  src={
-                     profileData?.avatar
-                        ? profileData?.avatar
-                        : "/icons/user.svg"
-                  }
+                  src={constructAvatarUrl(avatarRedux)}
                   alt="user"
+                  className="rounded-full"
                />
             </Link>
          </div>

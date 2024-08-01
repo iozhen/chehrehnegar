@@ -26,6 +26,28 @@ body {
    }
 }
 
+/* inter */
+/* @font-face {
+   font-family: "Inter";
+   src: url("co");
+   font-weight: 300;
+}
+@font-face {
+   font-family: "Inter";
+   src: url("../public/fonts/inter/Inter-Regular.ttf");
+   font-weight: 400;
+}
+@font-face {
+   font-family: "Inter";
+   src: url("../public/fonts/inter/Inter-Medium.ttf");
+   font-weight: 500;
+}
+@font-face {
+   font-family: "Inter";
+   src: url("../public/fonts/inter/Inter-Bold.ttf");
+   font-weight: 700;
+} */
+
 /* roboto */
 @font-face {
    font-family: "Roboto";

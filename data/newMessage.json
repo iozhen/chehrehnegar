@@ -1,0 +1,80 @@
+{
+   "Priority": ["Priority", "Priority", "Priority", "Priority"],
+   "inboxItems": [
+      {
+         "avatar": "D",
+         "overdue": "Overdue by 3 days",
+         "ago": "Customer responded 1h ago",
+         "respond": "Respond in 2h",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Headboard Workshop"
+      },
+      {
+         "avatar": "K",
+         "respond": "Respond in 2h",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Partnerships for forests",
+         "created": "Created 2h ago"
+      },
+      {
+         "avatar": "N",
+         "respond": "Respond in 2h",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Unknown Company",
+         "created": "Created 2h ago"
+      },
+      {
+         "avatar": "L",
+         "overdue": "Overdue by 3 days",
+         "ago": "Customer responded 1h ago",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Symec",
+         "created": "Created 2h ago"
+      },
+      {
+         "avatar": "M",
+         "respond": "Respond in 2h",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Genuine Impact",
+         "created": "Created 2h ago"
+      },
+      {
+         "avatar": "N",
+         "respond": "Respond in 2h",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Unknown Company",
+         "created": "Created 2h ago"
+      },
+      {
+         "avatar": "A",
+         "overdue": "Overdue by 3 days",
+         "ago": "Customer responded 1h ago",
+         "title": "Lorem ipsum dolor sit amet, consectetur",
+         "id": "#6493",
+         "sender": "hamed izadi",
+         "messageIco": "/images/message.svg",
+         "company": "Unknown Company",
+         "created": "Created 2h ago"
+      }
+   ],
+   "open": ["open", "open", "open"],
+   "order": ["Newest", "Oldest"]
+}

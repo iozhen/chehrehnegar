@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 const SignUp = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
+   const [loading, setLoading] = useState(false);
+
    const formik = useFormik({
       initialValues: {
          mobile: "",
@@ -18,8 +20,8 @@ const SignUp = () => {
       validationSchema: Yup.object({
          mobile: Yup.string()
             .matches(/^[0-9]+$/, "Must be only digits")
-            .min(11, "Must be exactly 10 digits")
-            .max(11, "Must be exactly 10 digits")
+            .min(11, "Must be exactly 11 digits")
+            .max(11, "Must be exactly 11 digits")
             .required("Required"),
          password: Yup.string()
             .min(8, "Password must be at least 8 characters")
@@ -29,7 +31,7 @@ const SignUp = () => {
             .required("Required"),
       }),
       onSubmit: (values) => {
-         // Handle form submission
+         setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/sign-up`, {
                mobileNumber: values.mobile,
@@ -43,12 +45,15 @@ const SignUp = () => {
             })
             .catch((err) => {
                console.log(err);
-               if (err?.response?.data?.message == "Phone already exists") {
+               if (err?.response?.data?.message === "Phone already exists") {
                   toast.error("You are signed up please login!");
                   router.push("/auth/login");
                } else {
-                  toast.error("please try again!");
+                  toast.error("Please try again!");
                }
+            })
+            .finally(() => {
+               setLoading(false); // Reset loading to false after the request completes
             });
       },
    });
@@ -140,9 +145,12 @@ const SignUp = () => {
                </div>
                <button
                   type="submit"
-                  className="w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh]"
+                  className={`w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh] ${
+                     loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={loading}
                >
-                  Sign Up
+                  {loading ? "Loading..." : "Sign Up"}
                </button>
                <p className="text-[1.11vw] font-[400] text-center mt-[1.46vh]">
                   Already have an account?{" "}

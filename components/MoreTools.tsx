@@ -11,12 +11,12 @@ const MoreTools = () => {
    const router = useRouter();
    return (
       <div className="flex items-start flex-col gap-[2.34vh] w-full">
-         <div className="flex items-center gap-[17px] relative ">
+         <button className="flex items-center gap-[17px] relative ">
             <img src="/icons/reservoirs.svg" alt="reservoirs" />
             <h3 className="text-[1.75vh] font-[500] text-[#B1B1B1]">
                go to website
             </h3>
-         </div>
+         </button>
          <Link
             href={"/plans"}
             className="flex items-center gap-[17px] relative cursor-pointer"

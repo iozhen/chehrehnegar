@@ -9,6 +9,8 @@ function SelectList({
    controlStyle,
    placeholder,
    name,
+   setFieldValue,
+   quantity,
 }: any) {
    // Format options for react-select
    const selectOptions = options.map((option: any) => ({
@@ -16,17 +18,27 @@ function SelectList({
       label: option,
    }));
 
+   // handle value
+   const handleValue = (selectedOption: string, name: string) => {
+      if (!selectedOption) return null;
+
+      return name === "show1" || name === "show2"
+         ? { value: selectedOption, label: `${selectedOption} (${quantity})` }
+         : { value: selectedOption, label: selectedOption };
+   };
+
    return (
       <div>
          <label className="hidden">{label}</label>
          <Select
             name={name}
-            value={
-               selectedOption
-                  ? { value: selectedOption, label: selectedOption }
-                  : null
-            }
-            onChange={(selected: any) => onFilterChange(selected.value, name)}
+            value={handleValue(selectedOption, name)}
+            onChange={(selected: any) => {
+               if (setFieldValue) {
+                  setFieldValue(name, selected.value);
+                  onFilterChange(selected.value, name);
+               } else onFilterChange(selected.value, name);
+            }}
             options={selectOptions}
             className={`${classes}`}
             placeholder={placeholder}
@@ -65,6 +77,7 @@ function SelectList({
                   alignItems: "center",
                   color: "#000",
                   background: isFocused || isSelected ? "#E1E1E1" : "#FFF",
+                  cursor: "pointer",
                }),
                menu: (styles) => ({
                   ...styles,

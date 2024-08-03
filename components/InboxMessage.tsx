@@ -1,9 +1,28 @@
-import data from "@/data/newMessage.json";
+import data from "@/data/support.json";
 import ProfileBox from "./ProfileBox";
 import SelectList from "./ReactSelectOption";
+import InboxItem from "./InboxItem";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { displayStatus, initialDataProps, sortedFunc } from "./inboxOperation";
 
-const InboxMessage = () => {
-   const { inboxItems, open, order } = data;
+interface props {
+   setChatSelected: Dispatch<SetStateAction<number>>;
+}
+
+const InboxMessage = ({ setChatSelected }: props) => {
+   const { open, order } = data;
+   const initialState = { show1: "open", show2: "", order: "Newest" };
+   const [values, setValues] = useState(initialState);
+   const [filteredInbox, setFilteredInbox] = useState<initialDataProps[]>();
+
+   // on filter change
+   const onFilterChange = (value: string, name: string) =>
+      setValues({ ...values, [name]: value });
+
+   useEffect(() => {
+      const result1 = sortedFunc(values.order);
+      setFilteredInbox(displayStatus(result1, values.show1));
+   }, [values]);
 
    return (
       <div className="w-[36.18vw] border-[0.07vw] border-[#D5D9DD] h-fit">
@@ -21,10 +40,15 @@ const InboxMessage = () => {
                         fontSize: "0.9vw",
                         width: "8.3vw",
                         justifyContent: "center",
+                        cursor: "pointer",
                      }}
-                     placeholder="Open (99)"
+                     selectedOption={values.show1}
+                     quantity={filteredInbox?.length}
+                     onFilterChange={onFilterChange}
+                     name="show1"
                   />
                </div>
+
                <div className="flex items-center">
                   <img src="/images/inbox.svg" />
                   {/* select component */}
@@ -36,8 +60,10 @@ const InboxMessage = () => {
                         fontSize: "0.9vw",
                         width: "8.3vw",
                         justifyContent: "center",
+                        cursor: "pointer",
                      }}
-                     placeholder="Open (99)"
+                     selectedOption={values.show2}
+                     onFilterChange={onFilterChange}
                   />
                </div>
             </div>
@@ -46,103 +72,30 @@ const InboxMessage = () => {
                <SelectList
                   options={order}
                   controlStyle={{
-                     border: "none !important",
+                     border: "none",
                      background: "none",
                      fontSize: "0.9vw",
                      width: "8vw",
                      justifyContent: "center",
+                     cursor: "pointer",
                   }}
                   placeholder="Select order"
+                  selectedOption={values.order}
+                  onFilterChange={onFilterChange}
+                  name="order"
                />
             </div>
          </div>
 
          {/* list */}
-         <ul>
-            {inboxItems.map(
-               ({
-                  avatar,
-                  overdue,
-                  ago,
-                  respond,
-                  title,
-                  id,
-                  sender,
-                  messageIco,
-                  company,
-                  created,
-               }) => (
-                  <li className="h-[9.28vh] [&:not(:last-child)]:border-b-[0.07vw] border-[#D3D8DD] flex gap-[1.39vw] items-center pl-[1.39vw]">
-                     <div className="flex items-start gap-[1.39vw]">
-                        <div className="flex gap-[1.39vw] items-center">
-                           <input
-                              type="checkbox"
-                              className="w-[0.9vw] h-[0.9vw]"
-                           />
-
-                           <ProfileBox text={avatar} />
-                        </div>
-
-                        <div className="flex gap-[1.39vw]">
-                           <div className="text-[0.76vw] flex flex-col gap-[0.49vh]">
-                              {/* badge */}
-                              <div className="flex items-center gap-[0.49vh] [&>*]:border-[0.07vh] [&>*]:rounded-[0.29vh] [&>*]:flex [&>*]:items-center [&>*]:px-[0.35vw] h-[1.56vh]">
-                                 {overdue && (
-                                    <div className="text-[#C82024] bg-[#FED5DB] border-[#FED5DB] h-full">
-                                       {overdue}
-                                    </div>
-                                 )}
-                                 {ago && (
-                                    <div className="text-[#2C5EC6] border-[#B3C0DD] bg-[#CCDAF9] h-full">
-                                       {ago}
-                                    </div>
-                                 )}
-                                 {respond && (
-                                    <div className="text-[#2C5EC6] border-[#B3C0DD] bg-[#CCDAF9] h-full">
-                                       {respond}
-                                    </div>
-                                 )}
-                              </div>
-
-                              {/* title */}
-                              <div className="font-[400] flex gap-[0.69vh]">
-                                 <p className="text-[0.9vw] text-[#031849]">
-                                    {title}
-                                 </p>
-                                 <p className="text-[0.83vw] text-[#4FAFCB]">
-                                    {id}
-                                 </p>
-                              </div>
-
-                              {/* desc */}
-                              <div className="text-[#9AA3AB] flex items-center gap-[0.42vw]">
-                                 {sender && (
-                                    <div className="flex gap-[0.42vw] items-center">
-                                       <img src={messageIco} />
-                                       {sender}
-                                    </div>
-                                 )}
-                                 <img
-                                    src="/images/circle.svg"
-                                    className="[&:last-child]:hidden"
-                                 />
-                                 {company && (
-                                    <p className="flex items-center gap-[0.42vw]">
-                                       {company}{" "}
-                                    </p>
-                                 )}
-                                 <img
-                                    src="/images/circle.svg"
-                                    className="[&:last-child]:hidden"
-                                 />
-                                 {created && <p>{created}</p>}
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </li>
-               )
-            )}
+         <ul className="max-h-[64.94vh] overflow-y-auto">
+            {filteredInbox?.map((item, index) => (
+               <InboxItem
+                  {...item}
+                  key={index}
+                  setChatSelected={setChatSelected}
+               />
+            ))}
          </ul>
       </div>
    );

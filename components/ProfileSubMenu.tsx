@@ -18,7 +18,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
 
    const dispatch = useDispatch();
    return (
-      <div className="relative bg-white p-[1.26vh] rounded-[10px] min-w-[205px] shadow-md">
+      <div className="relative bg-white p-[1.26vh] rounded-[10px] min-w-[205px] shadow-md z-40">
          <div className="absolute top-[-18%] left-[80%] transform -translate-x-1/2 before:content-[''] before:absolute before:w-0 before:h-0 before:border-l-[10px] before:border-r-[10px] before:border-b-[30px] before:border-l-transparent before:border-r-transparent before:border-b-white before:z-40 shadow-md"></div>
          <button
             className="flex items-center gap-[15px] border-b-[1px] border-b-[#979797] py-[1.074vh] w-full"

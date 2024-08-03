@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -9,6 +9,7 @@ const UpdatePassword = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
    const { mobile } = router.query;
+   const [loading, setLoading] = useState(false);
 
    const formik = useFormik({
       initialValues: {
@@ -22,10 +23,10 @@ const UpdatePassword = () => {
             .required("Required"),
       }),
       onSubmit: (values) => {
+         setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/reset-password`, {
                mobileNumber: mobile,
-               otp: values.otp,
                newPassword: values.newPassword,
             })
             .then((res) => {
@@ -35,6 +36,9 @@ const UpdatePassword = () => {
             .catch((err) => {
                console.log(err);
                toast.error("Error resetting password. Please try again.");
+            })
+            .finally(() => {
+               setLoading(false); // Reset loading to false after the request completes
             });
       },
    });
@@ -103,9 +107,12 @@ const UpdatePassword = () => {
                </div>
                <button
                   type="submit"
-                  className="w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh]"
+                  className={`w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh] ${
+                     loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={loading}
                >
-                  Reset Password
+                  {loading ? "Loading..." : "Reset Password"}
                </button>
             </form>
          </div>

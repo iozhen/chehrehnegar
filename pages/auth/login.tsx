@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
@@ -13,6 +13,7 @@ const Login = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
    const dispatch = useDispatch();
+   const [loading, setLoading] = useState(false);
 
    const formik = useFormik({
       initialValues: {
@@ -22,13 +23,13 @@ const Login = () => {
       validationSchema: Yup.object({
          mobile: Yup.string()
             .matches(/^[0-9]+$/, "Must be only digits")
-            .min(11, "Must be exactly 10 digits")
-            .max(11, "Must be exactly 10 digits")
+            .min(11, "Must be exactly 11 digits")
+            .max(11, "Must be exactly 11 digits")
             .required("Required"),
          password: Yup.string().required("Required"),
       }),
       onSubmit: (values) => {
-         // Handle form submission
+         setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/login`, {
                mobileNumber: values.mobile,
@@ -38,17 +39,20 @@ const Login = () => {
                console.log(res);
                Cookies.set("token", res.data.data.token, { expires: 1 });
                dispatch(setProfileData({ ...res.data.data.user }));
-               toast.success("login successfully!");
+               toast.success("Login successfully!");
                router.push("/dashboard");
             })
             .catch((err) => {
                console.log(err);
-               if (err?.response?.data?.message == "User not found") {
-                  toast.error("you are not register yet");
+               if (err?.response?.data?.message === "User not found") {
+                  toast.error("You are not registered yet");
                   router.push("/auth/signup");
                } else {
-                  toast.error("username or pass in wrong!");
+                  toast.error("Username or password is incorrect!");
                }
+            })
+            .finally(() => {
+               setLoading(false); // Reset loading to false after the request completes
             });
       },
    });
@@ -122,9 +126,12 @@ const Login = () => {
                </Link>
                <button
                   type="submit"
-                  className="w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh]"
+                  className={`w-full h-[6.25vh] bg-[#58999F] rounded-[97.66vh] text-white mt-[3.42vh] ${
+                     loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={loading}
                >
-                  Log in
+                  {loading ? "Loading..." : "Log in"}
                </button>
                <p className="text-[1.11vw] font-[400] text-center mt-[1.46vh]">
                   Don't have an account?{" "}

@@ -26,7 +26,7 @@ const Tools = ({
       <div className=" bg-[#f8f8f8] flex items-center absolute left-[2%] top-[2%] z-30 rounded-[20px]">
          <div
             className={
-               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] " +
+               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] cursor-pointer " +
                (selectedItem == 1 ? "bg-white" : "")
             }
             onClick={() => {
@@ -46,7 +46,7 @@ const Tools = ({
          )}
          <div
             className={
-               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] " +
+               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] cursor-pointer " +
                (selectedItem == 2 ? "bg-white" : "")
             }
             onClick={() => {
@@ -66,7 +66,7 @@ const Tools = ({
          )}
          <div
             className={
-               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] " +
+               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] cursor-pointer " +
                (selectedItem == 3 ? "bg-white" : "")
             }
             onClick={() => {
@@ -88,7 +88,7 @@ const Tools = ({
 
          <div
             className={
-               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] " +
+               "flex items-center gap-[10.7px] p-[15px] rounded-[20px] cursor-pointer " +
                (selectedItem == 4 ? "bg-white" : "")
             }
             onClick={() => {

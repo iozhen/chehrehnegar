@@ -45,8 +45,8 @@ const Login = () => {
             .catch((err) => {
                console.log(err);
                if (err?.response?.data?.message === "User not found") {
-                  toast.error("You are not registered yet");
-                  router.push("/auth/signup");
+                  toast.error("You are not registered yet singup first");
+                  // router.push("/auth/signup");
                } else {
                   toast.error("Username or password is incorrect!");
                }

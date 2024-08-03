@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setMapType } from "@/redux/slices/sidebarSlice";
+import Link from "next/link";
 
 const Sidebar = () => {
    const [activeLayer, setActiveLayer] = useState<string>("");
@@ -28,48 +29,43 @@ const Sidebar = () => {
 
    return (
       <div className="w-[17.6%] bg-white pl-[34px] relative">
-         <div
-            className={
-               router.pathname.includes("dashboard")
-                  ? "flex items-center gap-[14px] h-[9.7vh]"
-                  : "flex items-center gap-[14px] h-[9.7vh] mb-[3.5vh]"
-            }
-         >
+         <div className={"flex items-center gap-[14px] h-[9.7vh]"}>
             <img
-               src="/images/newsharif.png"
+               src="/images/newsharif.webp"
                alt="logo"
                className="w-[50px] h-[50px] "
             />
             <h2 className="jost-black text-[25px] text-[#343C6A]">Bina</h2>
          </div>
-         {router.pathname.includes("dashboard") && (
-            <button
-               className="flex items-center gap-[17px] relative cursor-pointer mt-[1vh]"
-               onClick={() => {}}
+
+         <Link
+            href={"/dashboard"}
+            className="flex items-center gap-[17px] relative cursor-pointer mt-[1vh]"
+            onClick={() => {}}
+         >
+            <img
+               src={
+                  router.pathname.includes("dashboard")
+                     ? "/icons/dashboardactive.svg"
+                     : "/icons/dashboard.svg"
+               }
+               alt="wetland"
+            />
+            <h3
+               className={
+                  "text-[1.75vh] font-[500]  " +
+                  (router.pathname.includes("dashboard")
+                     ? "text-[#2D60FF]"
+                     : "text-[#B1B1B1]")
+               }
             >
-               <img
-                  src={
-                     router.pathname.includes("dashboard")
-                        ? "/icons/dashboardactive.svg"
-                        : "/icons/dashboard.svg"
-                  }
-                  alt="wetland"
-               />
-               <h3
-                  className={
-                     "text-[1.75vh] font-[500]  " +
-                     (router.pathname.includes("dashboard")
-                        ? "text-[#2D60FF]"
-                        : "text-[#B1B1B1]")
-                  }
-               >
-                  Dashboard
-               </h3>
-               {router.pathname.includes("dashboard") && (
-                  <div className="w-[6px] h-[5.85vh] bg-[#2D60FF] absolute left-[-34px] rounded-tr-[10px] rounded-br-[10px]"></div>
-               )}
-            </button>
-         )}
+               Dashboard
+            </h3>
+            {router.pathname.includes("dashboard") && (
+               <div className="w-[6px] h-[5.85vh] bg-[#2D60FF] absolute left-[-34px] rounded-tr-[10px] rounded-br-[10px]"></div>
+            )}
+         </Link>
+
          <TextAndBorder
             text="Tools"
             className={

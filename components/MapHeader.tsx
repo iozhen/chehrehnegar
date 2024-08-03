@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import ProfileSubMenu from "./ProfileSubMenu";
 
 const MapHeader = () => {
    const router = useRouter();
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const avatarRedux = useSelector((state) => state.profile.avatar);
+   const [profileSubMenu, setProfileSubMenu] = useState(false);
 
    const TextCreater = () => {
       if (router.pathname.includes("dashboard")) {
@@ -14,6 +18,13 @@ const MapHeader = () => {
       } else {
          return "Map";
       }
+   };
+
+   const constructAvatarUrl = (path) => {
+      if (path.startsWith("uploads\\")) {
+         return `${baseUrl}/${path.replace(/\\/g, "/")}`;
+      }
+      return path;
    };
 
    const profileData = useSelector((state) => state.profile.ProfileData);
@@ -35,19 +46,30 @@ const MapHeader = () => {
             <div className="flex items-center justify-center w-[50px] h-[50px] bg-[#F5F7FA] rounded-full">
                <img src="/icons/notification.svg" alt="notification" />
             </div>
-            <Link
-               href={"/dashboard/profile"}
-               className="flex items-center justify-center w-[50px] h-[50px] bg-[#F5F7FA] rounded-full"
+            <button
+               onClick={() => {
+                  setProfileSubMenu(!profileSubMenu);
+               }}
+               className="flex items-center justify-center w-[50px] h-[50px] bg-[#F5F7FA] rounded-full relative"
             >
                <img
                   src={
-                     profileData?.avatar
-                        ? profileData?.avatar
-                        : "/icons/user.svg"
+                     avatarRedux
+                        ? constructAvatarUrl(avatarRedux)
+                        : "/images/Avatar.png"
                   }
                   alt="user"
+                  className="rounded-full"
                />
-            </Link>
+               {profileSubMenu && (
+                  <div className="absolute top-[160%] right-[-20%]">
+                     <ProfileSubMenu
+                        profileSubMenu={profileSubMenu}
+                        setProfileSubMenu={setProfileSubMenu}
+                     />
+                  </div>
+               )}
+            </button>
          </div>
       </div>
    );

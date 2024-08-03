@@ -1,8 +1,91 @@
-import React from "react";
+import React, { useEffect } from "react";
 import data from "@/data/plan.json";
 import Link from "next/link";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileData } from "@/redux/slices/ProfilesSlice";
+import { toast } from "react-toastify";
 
 const plans = () => {
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const token = Cookies.get("token");
+   const profileData = useSelector((state) => state.profile.ProfileData);
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      if (profileData) {
+         return;
+      }
+      axios
+         .get(`${baseUrl}/api/user/get-profile`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         })
+         .then((res) => {
+            dispatch(setProfileData({ ...res.data.data }));
+         })
+         .catch((err) => {
+            console.log("====================================");
+            console.log(err);
+            console.log("====================================");
+         });
+   }, [profileData]);
+
+   const handelBuyPlan = (name: string) => {
+      if (profileData?.plan) {
+         axios
+            .put(
+               `${baseUrl}/api/user/edit-profile`,
+               {
+                  plan: name,
+               },
+               {
+                  headers: {
+                     Authorization: `Bearer ${token}`,
+                  },
+               }
+            )
+            .then((res) => {
+               console.log("====================================");
+               console.log(res);
+               console.log("====================================");
+               toast.success("successful transaction");
+            })
+            .catch((err) => {
+               console.log("====================================");
+               console.log(err);
+               console.log("====================================");
+               toast.error("please try again");
+            });
+      } else {
+         axios
+            .post(
+               `${baseUrl}/api/plans`,
+               {
+                  name: name,
+               },
+               {
+                  headers: {
+                     Authorization: `Bearer ${token}`,
+                  },
+               }
+            )
+            .then((res) => {
+               console.log("====================================");
+               console.log(res);
+               console.log("====================================");
+               toast.success("successful transaction");
+            })
+            .catch((err) => {
+               console.log("====================================");
+               console.log(err);
+               console.log("====================================");
+               toast.error("please try again");
+            });
+      }
+   };
    return (
       <div className="bg-gray-300 h-[100vh] px-[2.84vw] pt-[2.15vh] overflow-y-hidden">
          <h2 className="font-[600] text-[3.13vh]">CHOOSE YOUR PLAN</h2>
@@ -38,7 +121,12 @@ const plans = () => {
                         })}
                      </ul>
                      <div className="w-full h-[0.1vh] bg-black"></div>
-                     <button className="px-[3.11vw] py-[1.76vh] border-[#4880FF] border-[0.14vw] rounded-[2.08vw] mt-[2.79vh] mb-[2.19vh]">
+                     <button
+                        className="px-[3.11vw] py-[1.76vh] border-[#4880FF] border-[0.14vw] rounded-[2.08vw] mt-[2.79vh] mb-[2.19vh]"
+                        onClick={() => {
+                           handelBuyPlan(item.name);
+                        }}
+                     >
                         Get Started
                      </button>
                      <Link

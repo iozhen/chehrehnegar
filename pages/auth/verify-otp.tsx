@@ -40,7 +40,7 @@ const VerifyOtp = () => {
    return (
       <div className="flex p-[2.08vw] items-center gap-[7.82vw] overflow-y-hidden h-[100vh]">
          <img
-            src="/images/loginBack.png"
+            src="/images/loginBack.webp"
             alt=""
             className="w-[44.37vw] h-[91.41vh]"
          />

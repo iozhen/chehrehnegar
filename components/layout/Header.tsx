@@ -71,7 +71,7 @@ const Header = () => {
                         href="https://en.sharif.edu/"
                         target="_blank"
                         className={
-                           'inline-block bg-[url(/images/sharif.png)] bg-cover bg-center max-sm:w-[50px] max-sm:h-[50px] ' +
+                           'inline-block bg-[url(/images/sharif.webp)] bg-cover bg-center max-sm:w-[50px] max-sm:h-[50px] ' +
                            (router.pathname.includes('map')
                               ? 'w-[45px] h-[45px]'
                               : 'w-[76px] h-[76px]')
@@ -117,7 +117,7 @@ const Header = () => {
                            {isEnLang ? 'فا' : 'En'}
                         </button>
                         {
-                           profileData ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
+                           profileData?.avatar ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
                         <Link href={"/auth/login"} className="flex items-center gap-[7px]">
                               <h4 className="text-[16px] leading-[28px] font-[500]">login / register</h4>
                               <img src="/icons/profileicon.svg" alt="" />

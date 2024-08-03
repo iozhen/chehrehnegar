@@ -43,7 +43,7 @@ const SignUp = () => {
             })
             .catch((err) => {
                console.log(err);
-               if (err.response.data.message == "Phone already exists") {
+               if (err?.response?.data?.message == "Phone already exists") {
                   toast.error("You are signed up please login!");
                   router.push("/auth/login");
                } else {
@@ -57,7 +57,7 @@ const SignUp = () => {
       <div className="flex p-[2.08vw] items-center gap-[7.82vw] overflow-y-hidden h-[100vh]">
          {/* image */}
          <img
-            src="/images/loginBack.png"
+            src="/images/loginBack.webp"
             alt=""
             className="w-[44.37vw] h-[91.41vh]"
          />

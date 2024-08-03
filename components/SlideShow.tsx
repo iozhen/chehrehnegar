@@ -45,9 +45,9 @@ export default function HomeSlider() {
                   key={index}
                   className="w-full h-full rounded-[20px] bg-white"
                >
-                  <div className="w-full h-[517px] overflow-hidden bg-[url(/images/slide.png)] bg-cover">
+                  <div className="w-full h-[517px] overflow-hidden bg-[url(/images/slide.webp)] bg-cover">
                      {/* prettier-ignore */}
-                     <div className={`w-full h-full max-sm:px-[20px] px-[45px] pt-[130px] bg-[url(/images/sliderFade.png)] bg-cover flex flex-col ${isEnLang ? 'items-start' : 'items-end'}`}>
+                     <div className={`w-full h-full max-sm:px-[20px] px-[45px] pt-[130px] bg-[url(/images/sliderFade.webp)] bg-cover flex flex-col ${isEnLang ? 'items-start' : 'items-end'}`}>
                         <p
                            className={`max-sm:text-[20px] text-[24px] w-full max-sm:leading-[35px] leading-[48px] text-white font-[700] ___ sm:text-[35px] ___ md:text-[40px] max-sm:mb-[20px] mb-[30px]
                         ${
@@ -78,7 +78,7 @@ export default function HomeSlider() {
             ))}
 
             <img
-               src="/images/shape-slider.png"
+               src="/images/shape-slider.webp"
                alt="shape"
                className="absolute left-0 bottom-0 w-[232px] h-[71px] z-[9]"
             />

@@ -4,12 +4,15 @@ import SelectList from "./ReactSelectOption";
 import InboxItem from "./InboxItem";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { displayStatus, initialDataProps, sortedFunc } from "./inboxOperation";
+import { useSelector } from "react-redux";
 
 interface props {
    setChatSelected: Dispatch<SetStateAction<number>>;
 }
 
 const InboxMessage = ({ setChatSelected }: props) => {
+   const tickets = useSelector((state: any) => state.ticket.tickets);
+
    const { open, order } = data;
    const initialState = { show1: "open", show2: "", order: "Newest" };
    const [values, setValues] = useState(initialState);

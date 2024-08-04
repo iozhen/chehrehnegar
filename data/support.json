@@ -1,5 +1,5 @@
 {
-   "Priority": ["Basic"],
+   "Priority": ["low", "medium", "high"],
    "inboxItems": [
       {
          "date": "8/19/2024",

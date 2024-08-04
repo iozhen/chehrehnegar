@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewMessageHeading from "./NewMessageHeading";
 import PrimaryButtonMessage from "./PrimaryButtonMessage";
 import SelectList from "./ReactSelectOption";
 import data from "@/data/support.json";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { newMessageSchema } from "@/schema";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 interface valuesType {
    name: string;
@@ -15,11 +19,46 @@ interface valuesType {
 
 const NewMessageFrom = () => {
    const [priorityValue, setPriorityVal] = useState("");
+   const token = Cookies.get("token");
+   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const router = useRouter();
 
    const { Priority } = data;
 
+   useEffect(() => {
+      if (!token) {
+         toast.error("your token has been expired!");
+         router.push("/auth/login");
+      }
+   }, [token]);
+
    const onFilterChange = (value: string) => setPriorityVal(value);
-   const handleSubmit = (values: valuesType) => console.log(values);
+   const handleSubmit = (values: valuesType) => {
+      axios
+         .post(
+            `${baseUrl}/api/tickets`,
+            {
+               name: values.name,
+               subject: values.subject,
+               priority: values.priority,
+               description: values.message,
+            },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         )
+         .then((res) => {
+            toast.success("Ticket send successfully");
+         })
+         .catch((err) => {
+            console.log("====================================");
+            console.log(err);
+            console.log("====================================");
+            toast.error("try again!");
+         });
+   };
 
    const initialValue = {
       name: "",

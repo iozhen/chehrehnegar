@@ -19,7 +19,7 @@ interface props {
 
 const Pagination = ({ currPage, setCurrPage, paginationProduct }: props) => {
    return (
-      <div className="flex justify-end w-full mt-[2.92vh]">
+      <div className="flex justify-end w-full mt-[1vh]">
          <div className="flex gap-[0.833vw]">
             <button
                onClick={() => currPage > 1 && setCurrPage(currPage - 1)}

@@ -45,7 +45,7 @@ const profile = () => {
    }, [profileData]);
 
    return (
-      <div className="px-[40px] pt-[1.75vh] h-[calc(100vh-9.76vh)]">
+      <div className="px-[40px] py-[1.75vh] h-[calc(100vh-9.76vh)]">
          <Banner />
 
          <Transaction currPageProduct={currPageProduct} />

@@ -14,9 +14,13 @@ const SupportSubmenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
          <div className="absolute top-[-18%] left-[80%] transform -translate-x-1/2 before:content-[''] before:absolute before:w-0 before:h-0 before:border-l-[10px] before:border-r-[10px] before:border-b-[30px] before:border-l-transparent before:border-r-transparent before:border-b-white before:z-40 shadow-md"></div>
          <button
             className="flex items-center gap-[15px] border-b-[1px] border-b-[#979797] py-[1.074vh] w-full"
-            onClick={() => {
-               router.push("/dashboard/support/new-support");
+            onClick={(e) => {
+               e.stopPropagation();
                setProfileSubMenu(0);
+               router.push("/dashboard/support/new-support");
+               console.log("====================================");
+               console.log("vsdsdvsd");
+               console.log("====================================");
             }}
          >
             <img src="/icons/ticket.svg" alt="ticket" />
@@ -26,7 +30,8 @@ const SupportSubmenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
          </button>
          <button
             className="flex items-center gap-[15px] py-[1.074vh] w-full"
-            onClick={() => {
+            onClick={(e) => {
+               e.stopPropagation();
                router.push("/dashboard/support/support-list");
                setProfileSubMenu(0);
             }}

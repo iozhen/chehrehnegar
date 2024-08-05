@@ -23,7 +23,9 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
          <div>
             <button
                className="flex items-center gap-[15px] border-b-[1px] border-b-[#979797] py-[1.074vh] w-full"
-               onClick={() => {
+               onClick={(e) => {
+                  e.stopPropagation();
+
                   router.push("/dashboard/profile");
                   dispatch(setIsSecurity("account"));
                   setProfileSubMenu(0);
@@ -36,7 +38,9 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
             </button>
             <button
                className="flex items-center gap-[15px] border-b-[1px] border-b-[#979797] py-[1.074vh] w-full"
-               onClick={() => {
+               onClick={(e) => {
+                  e.stopPropagation();
+
                   router.push("/dashboard/profile");
                   dispatch(setIsSecurity("security"));
                   setProfileSubMenu(0);
@@ -49,7 +53,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
             </button>
             <button
                className="flex items-center gap-[15px] py-[1.074vh] w-full"
-               onClick={() => {
+               onClick={(e) => {
                   if (token) {
                      axios
                         .post(
@@ -73,6 +77,8 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
                   } else {
                      toast.error("No token found. Unable to log out.");
                   }
+                  e.stopPropagation();
+
                   setProfileSubMenu(0);
                }}
             >

@@ -108,7 +108,7 @@ const Sidebar = () => {
          </div>
          <TextAndBorder text="More" className="mb-[2.148vh]" />
          <MoreTools />
-         <button
+         {/* <button
             className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0"
             onClick={() => {
                if (token) {
@@ -137,7 +137,7 @@ const Sidebar = () => {
             }}
          >
             Log Out
-         </button>
+         </button> */}
       </div>
    );
 };

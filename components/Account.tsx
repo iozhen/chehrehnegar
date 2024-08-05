@@ -114,7 +114,7 @@ const Account: React.FC = () => {
    };
 
    const constructAvatarUrl = (path) => {
-      if (path.startsWith("uploads\\")) {
+      if (path?.startsWith("uploads\\")) {
          return `${baseUrl}/${path.replace(/\\/g, "/")}`;
       }
       return path;
@@ -124,7 +124,11 @@ const Account: React.FC = () => {
       <div className="py-[3.5vh]">
          <div className="flex items-center gap-[20px]">
             <img
-               src={constructAvatarUrl(avatarRedux)}
+               src={
+                  constructAvatarUrl(avatarRedux)
+                     ? constructAvatarUrl(avatarRedux)
+                     : "/images/Avatar.png"
+               }
                alt="profile photo"
                className="w-[11.71vh] h-[11.71vh] rounded-[10px]"
             />

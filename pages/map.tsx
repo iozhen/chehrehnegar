@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
@@ -43,6 +43,8 @@ ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 const MapComponents: React.FC = () => {
    const [isSubMenu, setIsSubMenu] = useState(0);
    // const [mapType, setMapType] = useState("Open Street Map");
+   const [activeLayers, setActiveLayers] = useState<any[]>([]);
+   const [activeOverlays, setActiveOverlays] = useState<any>([]);
    const mapType = useSelector((state) => state.sidebar.mapType);
    const [isRulerActive, setIsRulerActive] = useState(false);
    const [points, setPoints] = useState<Coordinate[]>([]);
@@ -72,6 +74,31 @@ const MapComponents: React.FC = () => {
          }),
       })
    );
+
+   const handleEscapeButton = (e: any) => {
+      console.log("escape");
+      if (e.key === "Escape") {
+         setPoints([]);
+         if (draw) {
+            map?.removeInteraction(draw);
+            setDraw(null);
+         }
+      }
+   };
+
+   useEffect(() => {
+      console.log("draw1");
+      if (draw === null && isRulerActive) {
+         console.log("draw2");
+         addInteraction("line");
+      } else {
+         console.log(draw);
+         if (draw) {
+            document.addEventListener("keydown", handleEscapeButton);
+         }
+      }
+   }, [draw]);
+
    const popupContent = useRef();
 
    const wetlandsLayer = useRef(
@@ -222,10 +249,10 @@ const MapComponents: React.FC = () => {
       }
    }, [map]);
 
-   const addInteraction = () => {
+   const addInteraction = (type: string) => {
       const newDraw = new Draw({
          source: vectorSource,
-         type: "Polygon",
+         type: type === "line" ? "LineString" : "Polygon",
       });
 
       newDraw.on("drawend", (event) => {
@@ -242,7 +269,7 @@ const MapComponents: React.FC = () => {
             offset: [0, -15],
             positioning: "bottom-center",
          });
-         overlay.setPosition(polygon.getInteriorPoint().getCoordinates());
+         overlay.setPosition(polygon?.getInteriorPoint().getCoordinates());
          map.addOverlay(overlay);
       });
 
@@ -250,72 +277,97 @@ const MapComponents: React.FC = () => {
       map.addInteraction(newDraw);
    };
 
+   useEffect(() => {
+      if (isRulerActive) {
+         if (map && typeof window !== "undefined") {
+            map?.addEventListener("click", handleSetClick);
+            addInteraction("line");
+         }
+      } else {
+         if (draw) {
+            map?.removeInteraction(draw);
+            setDraw(null);
+         }
+         map?.removeEventListener("click", handleSetClick);
+         setPoints([]);
+         for (const item of activeLayers) {
+            map?.removeLayer(item);
+         }
+         for (const item of activeOverlays) {
+            map?.removeOverlay(item);
+         }
+      }
+   }, [isRulerActive]);
+
+   useEffect(() => {
+      if (points.length >= 2) {
+         const line = new LineString([
+            points[points.length - 2],
+            points[points.length - 1],
+         ]);
+         const distance = getDistance(
+            fromLonLat(points[points.length - 2]),
+            fromLonLat(points[points.length - 1])
+         );
+         const distanceFeature = new Feature({
+            geometry: line,
+         });
+
+         distanceFeature.setStyle(
+            new Style({
+               stroke: new Stroke({
+                  color: "#ff3355",
+                  width: 2,
+               }),
+            })
+         );
+
+         const vectorSource = new VectorSource({
+            features: [distanceFeature],
+         });
+
+         const vectorLayer = new VectorLayer({
+            source: vectorSource,
+         });
+
+         map?.addLayer(vectorLayer);
+         setActiveLayers((prevLayers) => [...prevLayers, vectorLayer]);
+
+         const [start, end] = [
+            points[points.length - 2],
+            points[points.length - 1],
+         ];
+         const midPoint = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
+
+         const distanceOverlay = new Overlay({
+            element: document.createElement("div"),
+            position: midPoint,
+            positioning: "bottom-center",
+         });
+
+         distanceOverlay.getElement().innerHTML = `${distance.toFixed(
+            2
+         )} meters`;
+         distanceOverlay.getElement().style.color = "black";
+         distanceOverlay.getElement().style.backgroundColor = "white";
+         distanceOverlay.getElement().style.padding = "5px";
+         distanceOverlay.getElement().style.borderRadius = "5px";
+
+         map?.addOverlay(distanceOverlay);
+         setActiveOverlays((prevOverlays: any) => [
+            ...prevOverlays,
+            distanceOverlay,
+         ]);
+      }
+   }, [points]);
+
+   const handleSetClick = useCallback((evt: any) => {
+      const clickedPoint = evt.coordinate;
+      setPoints((prevPoints) => [...prevPoints, clickedPoint]);
+   }, []);
+
    const handleRulerButtonClick = () => {
       setIsRulerActive(!isRulerActive);
-      if (map && typeof window !== "undefined" && isRulerActive) {
-         map.on("click", (evt) => {
-            const clickedPoint = evt.coordinate;
-            setPoints((prevPoints) => {
-               const newPoints = [...prevPoints, clickedPoint];
-
-               if (newPoints.length === 2) {
-                  const line = new LineString(newPoints);
-                  const distance = getDistance(
-                     fromLonLat(newPoints[0]),
-                     fromLonLat(newPoints[1])
-                  );
-                  const distanceFeature = new Feature({
-                     geometry: line,
-                  });
-
-                  distanceFeature.setStyle(
-                     new Style({
-                        stroke: new Stroke({
-                           color: "#ffcc33",
-                           width: 2,
-                        }),
-                     })
-                  );
-
-                  const vectorSource = new VectorSource({
-                     features: [distanceFeature],
-                  });
-
-                  const vectorLayer = new VectorLayer({
-                     source: vectorSource,
-                  });
-
-                  map.addLayer(vectorLayer);
-
-                  const [start, end] = newPoints;
-                  const midPoint = [
-                     (start[0] + end[0]) / 2,
-                     (start[1] + end[1]) / 2,
-                  ];
-
-                  const distanceOverlay = new Overlay({
-                     element: document.createElement("div"),
-                     position: midPoint,
-                     positioning: "bottom-center",
-                  });
-
-                  distanceOverlay.getElement().innerHTML = `${distance.toFixed(
-                     2
-                  )} meters`;
-                  distanceOverlay.getElement().style.color = "black";
-                  distanceOverlay.getElement().style.backgroundColor = "white";
-                  distanceOverlay.getElement().style.padding = "5px";
-                  distanceOverlay.getElement().style.borderRadius = "5px";
-
-                  map.addOverlay(distanceOverlay);
-
-                  setPoints([]);
-               } else {
-                  return newPoints;
-               }
-            });
-         });
-      }
    };
 
    const handleAreaButtonClick = () => {
@@ -323,7 +375,7 @@ const MapComponents: React.FC = () => {
 
       if (areaFlag) {
          if (draw) {
-            map.removeInteraction(draw);
+            map?.removeInteraction(draw);
             setDraw(null);
          }
          vectorSource.clear();

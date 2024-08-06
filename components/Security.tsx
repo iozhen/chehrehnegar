@@ -93,7 +93,7 @@ const Security = () => {
               />
               {passwordFormik.touched.currentPassword &&
               passwordFormik.errors.currentPassword ? (
-                <div className="text-red-500 text-sm">
+                <div className="text-red-500 text-sm absolute">
                   {passwordFormik.errors.currentPassword}
                 </div>
               ) : null}
@@ -121,7 +121,7 @@ const Security = () => {
               />
               {passwordFormik.touched.newPassword &&
               passwordFormik.errors.newPassword ? (
-                <div className="text-red-500 text-sm">
+                <div className="text-red-500 text-sm absolute">
                   {passwordFormik.errors.newPassword}
                 </div>
               ) : null}
@@ -149,7 +149,7 @@ const Security = () => {
               />
               {passwordFormik.touched.confirmPassword &&
               passwordFormik.errors.confirmPassword ? (
-                <div className="text-red-500 text-sm">
+                <div className="text-red-500 text-sm absolute">
                   {passwordFormik.errors.confirmPassword}
                 </div>
               ) : null}

@@ -101,31 +101,9 @@ const MapComponents: React.FC = () => {
 
    const popupContent = useRef();
 
-   const wetlandsLayer = useRef(
-      new ImageLayer({
-         title: "Wetlands",
-         visible: false,
-         source: new ImageWMS({
-            url: "http://bina.civil.sharif.edu/geoserver/wms",
-            params: { LAYERS: "Wetlands:Wetlands" },
-            ratio: 1,
-            serverType: "geoserver",
-         }),
-      })
-   );
+   const wetlandsLayer = useRef();
 
-   const damsLayer = useRef(
-      new ImageLayer({
-         title: "Reservoirs",
-         visible: false,
-         source: new ImageWMS({
-            url: "http://bina.civil.sharif.edu/geoserver/wms",
-            params: { LAYERS: "allyears:y1987" },
-            ratio: 1,
-            serverType: "geoserver",
-         }),
-      })
-   );
+   const damsLayer = useRef();
 
    //token handeling
    const token = Cookies.get("token");
@@ -133,6 +111,29 @@ const MapComponents: React.FC = () => {
 
    useEffect(() => {
       if (typeof window !== "undefined") {
+
+         wetlandsLayer.current = new ImageLayer({
+            title: "Wetlands",
+            visible: false,
+            source: new ImageWMS({
+              url: "http://bina.civil.sharif.edu/geoserver/wms",
+              params: { LAYERS: "Wetlands:Wetlands" },
+              ratio: 1,
+              serverType: "geoserver",
+            }),
+          });
+    
+          damsLayer.current = new ImageLayer({
+            title: "Reservoirs",
+            visible: false,
+            source: new ImageWMS({
+              url: "http://bina.civil.sharif.edu/geoserver/wms",
+              params: { LAYERS: "allyears:y1987" },
+              ratio: 1,
+              serverType: "geoserver",
+            }),
+          });
+          
          // Define map layers
          const osm = new TileLayer({
             title: "Open Street Map",
@@ -565,6 +566,19 @@ const MapComponents: React.FC = () => {
          // }
       }
    }, [wetland]);
+
+   const handleLayerError = (layer, layerName) => {
+      layer.getSource().on('imageloaderror', () => {
+        console.error(`Failed to load ${layerName} layer`);
+      });
+    };
+
+   useEffect(() => {
+      if (map) {
+        handleLayerError(wetlandsLayer.current, 'Wetlands');
+        handleLayerError(damsLayer.current, 'Reservoirs');
+      }
+    }, [map]);
 
    useEffect(() => {
       if (damsLayer.current) {

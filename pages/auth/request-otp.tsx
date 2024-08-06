@@ -11,27 +11,26 @@ const RequestOtp = () => {
 
    const formik = useFormik({
       initialValues: {
-         mobile: "",
+         email: "",
       },
       validationSchema: Yup.object({
-         mobile: Yup.string()
-            .matches(/^[0-9]+$/, "Must be only digits")
-            .length(11, "Must be exactly 11 digits")
+         email: Yup.string()
+            .email("Invalid email address")
             .required("Required"),
       }),
       onSubmit: (values) => {
          axios
             .post(`${baseUrl}/api/auth/send-otp-for-password-reset`, {
-               mobileNumber: values.mobile,
+               email: values.email,
             })
             .then((res) => {
                toast.success("OTP sent successfully!");
-               router.push(`/auth/verify-otp?mobile=${values.mobile}`);
+               router.push(`/auth/verify-otp?email=${values.email}`);
             })
             .catch((err) => {
                console.log(err);
-               if (err?.response?.data?.message == "User not found") {
-                  toast.error("you are not register yet");
+               if (err?.response?.data?.message === "User not found") {
+                  toast.error("You are not registered yet.");
                   router.push("/auth/signup");
                } else {
                   toast.error("Error sending OTP. Please try again.");
@@ -56,22 +55,22 @@ const RequestOtp = () => {
                className="flex flex-col gap-[1.46vh]"
             >
                <div className="flex flex-col gap-[1.46vh] mb-[1.95vh]">
-                  <label htmlFor="mobile" className="font-[700] text-[1.76vw]">
-                     Mobile Number
+                  <label htmlFor="email" className="font-[700] text-[1.76vw]">
+                     Email
                   </label>
                   <input
-                     type="text"
-                     id="mobile"
-                     name="mobile"
-                     placeholder="Enter your mobile number"
+                     type="email"
+                     id="email"
+                     name="email"
+                     placeholder="Enter your email address"
                      className="w-[36.35vw] h-[6.25vh] rounded-[9.77vh] border-[0.1vh] border-[#CBCBCB] px-[1.73vw]"
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
-                     value={formik.values.mobile}
+                     value={formik.values.email}
                   />
-                  {formik.touched.mobile && formik.errors.mobile ? (
+                  {formik.touched.email && formik.errors.email ? (
                      <div className="text-red-500 text-sm">
-                        {formik.errors.mobile}
+                        {formik.errors.email}
                      </div>
                   ) : null}
                </div>

@@ -17,14 +17,12 @@ const Login = () => {
 
    const formik = useFormik({
       initialValues: {
-         mobile: "",
+         email: "",
          password: "",
       },
       validationSchema: Yup.object({
-         mobile: Yup.string()
-            .matches(/^[0-9]+$/, "Must be only digits")
-            .min(11, "Must be exactly 11 digits")
-            .max(11, "Must be exactly 11 digits")
+         email: Yup.string()
+            .email("Invalid email address")
             .required("Required"),
          password: Yup.string().required("Required"),
       }),
@@ -32,7 +30,7 @@ const Login = () => {
          setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/login`, {
-               mobileNumber: values.mobile,
+               email: values.email,
                password: values.password,
             })
             .then((res) => {
@@ -45,7 +43,7 @@ const Login = () => {
             .catch((err) => {
                console.log(err);
                if (err?.response?.data?.message === "User not found") {
-                  toast.error("You are not registered yet singup first");
+                  toast.error("You are not registered yet, signup first");
                   // router.push("/auth/signup");
                } else {
                   toast.error("Username or password is incorrect!");
@@ -76,22 +74,22 @@ const Login = () => {
                className="flex flex-col gap-[1.46vh]"
             >
                <div className="flex flex-col gap-[1.46vh] mb-[1.95vh]">
-                  <label htmlFor="mobile" className="font-[700] text-[1.76vw]">
-                     Mobile Number
+                  <label htmlFor="email" className="font-[700] text-[1.76vw]">
+                     Email
                   </label>
                   <input
-                     type="text"
-                     id="mobile"
-                     name="mobile"
-                     placeholder="Enter your mobile number"
+                     type="email"
+                     id="email"
+                     name="email"
+                     placeholder="Enter your email"
                      className="w-[36.35vw] h-[6.25vh] rounded-[9.77vh] border-[0.1vh] border-[#CBCBCB] px-[1.73vw]"
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
-                     value={formik.values.mobile}
+                     value={formik.values.email}
                   />
-                  {formik.touched.mobile && formik.errors.mobile ? (
+                  {formik.touched.email && formik.errors.email ? (
                      <div className="text-red-500 text-sm">
-                        {formik.errors.mobile}
+                        {formik.errors.email}
                      </div>
                   ) : null}
                </div>

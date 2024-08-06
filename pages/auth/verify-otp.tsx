@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 const VerifyOtp = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
-   const { mobile } = router.query;
+   const { email } = router.query;
 
    const formik = useFormik({
       initialValues: {
@@ -23,12 +23,12 @@ const VerifyOtp = () => {
       onSubmit: (values) => {
          axios
             .post(`${baseUrl}/api/auth/verify-otp-for-password-reset`, {
-               mobileNumber: mobile,
+               email: email,
                otp: values.otp,
             })
             .then((res) => {
                toast.success("OTP verified successfully!");
-               router.push(`/auth/update-password?mobile=${mobile}`);
+               router.push(`/auth/update-password?email=${email}`);
             })
             .catch((err) => {
                console.log(err);

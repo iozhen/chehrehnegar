@@ -13,15 +13,13 @@ const SignUp = () => {
 
    const formik = useFormik({
       initialValues: {
-         mobile: "",
+         email: "",
          password: "",
          repeatPassword: "",
       },
       validationSchema: Yup.object({
-         mobile: Yup.string()
-            .matches(/^[0-9]+$/, "Must be only digits")
-            .min(11, "Must be exactly 11 digits")
-            .max(11, "Must be exactly 11 digits")
+         email: Yup.string()
+            .email("Invalid email address")
             .required("Required"),
          password: Yup.string()
             .min(8, "Password must be at least 8 characters")
@@ -34,19 +32,19 @@ const SignUp = () => {
          setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/sign-up`, {
-               mobileNumber: values.mobile,
+               email: values.email,
                password: values.password,
                otp: "1111",
             })
             .then((res) => {
                console.log(res);
-               toast.success("Welcome To Bina Platform please login");
+               toast.success("Welcome To Bina Platform, please login");
                router.push("/auth/login");
             })
             .catch((err) => {
                console.log(err);
-               if (err?.response?.data?.message === "Phone already exists") {
-                  toast.error("You are signed up please login!");
+               if (err?.response?.data?.message === "Email already exists") {
+                  toast.error("You are already signed up, please login!");
                   router.push("/auth/login");
                } else {
                   toast.error("Please try again!");
@@ -77,22 +75,22 @@ const SignUp = () => {
                className="flex flex-col gap-[1.46vh]"
             >
                <div className="flex flex-col gap-[1.46vh] mb-[1.95vh]">
-                  <label htmlFor="mobile" className="font-[700] text-[1.76vw]">
-                     Mobile Number
+                  <label htmlFor="email" className="font-[700] text-[1.76vw]">
+                     Email
                   </label>
                   <input
-                     type="text"
-                     id="mobile"
-                     name="mobile"
-                     placeholder="Enter your mobile number"
+                     type="email"
+                     id="email"
+                     name="email"
+                     placeholder="Enter your email"
                      className="w-[36.35vw] h-[6.25vh] rounded-[9.77vh] border-[0.1vh] border-[#CBCBCB] px-[1.73vw]"
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
-                     value={formik.values.mobile}
+                     value={formik.values.email}
                   />
-                  {formik.touched.mobile && formik.errors.mobile ? (
+                  {formik.touched.email && formik.errors.email ? (
                      <div className="text-red-500 text-sm">
-                        {formik.errors.mobile}
+                        {formik.errors.email}
                      </div>
                   ) : null}
                </div>

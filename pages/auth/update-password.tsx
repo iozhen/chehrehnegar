@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 const UpdatePassword = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const router = useRouter();
-   const { mobile } = router.query;
+   const { email } = router.query;
    const [loading, setLoading] = useState(false);
 
    const formik = useFormik({
@@ -26,7 +26,7 @@ const UpdatePassword = () => {
          setLoading(true); // Set loading to true when the form is submitted
          axios
             .post(`${baseUrl}/api/auth/reset-password`, {
-               mobileNumber: mobile,
+               email: email,
                newPassword: values.newPassword,
             })
             .then((res) => {

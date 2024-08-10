@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProfileData, setAvatar } from "@/redux/slices/ProfilesSlice";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const Account: React.FC = () => {
    const profileData = useSelector((state) => state.profile.ProfileData);
@@ -16,6 +18,8 @@ const Account: React.FC = () => {
    const [email, setEmail] = useState<string>("");
    const inputRef = useRef<HTMLInputElement>(null);
    const dispatch = useDispatch();
+   const { t } = useTranslation();
+   const isEn = i18next.language === "en";
 
    useEffect(() => {
       if (profileData) {
@@ -134,7 +138,7 @@ const Account: React.FC = () => {
                      onClick={handleClick}
                      className="px-[22px] py-[0.68vh] bg-[#4379EE] text-[14px] font-[500] text-white rounded-[8px]"
                   >
-                     Upload new photo
+                     {t("uploadBtn")}
                   </div>
                   <input
                      type="file"
@@ -149,11 +153,11 @@ const Account: React.FC = () => {
                      onClick={handleReset}
                      className="bg-transparent border-[1px] border-[#FF4D49] text-[14px] font-[500] px-[22px] py-[0.68vh] text-[#FF4D49] rounded-[8px]"
                   >
-                     Reset
+                     {t("resetBtn")}
                   </button>
                </div>
                <h3 className="mt-[1.56vh] text-[#4c4e64a1] text-[12px] font-[400]">
-                  Allowed JPG, JPEG, or PNG. Max size of 500K
+                  {t("uploadRestricted")}
                </h3>
             </div>
          </div>
@@ -161,9 +165,11 @@ const Account: React.FC = () => {
             <div className="w-full relative">
                <label
                   htmlFor="firstName"
-                  className="absolute top-[-20%] left-[2%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+                  className={`absolute top-[-20%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px] ${
+                     isEn ? "left-[2%]" : "right-[2%]"
+                  }`}
                >
-                  First Name
+                  {t("firstNameLabel")}
                </label>
                <input
                   type="text"
@@ -177,9 +183,11 @@ const Account: React.FC = () => {
             <div className="w-full relative">
                <label
                   htmlFor="lastName"
-                  className="absolute top-[-20%] left-[2%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+                  className={`absolute top-[-20%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px] ${
+                     isEn ? "left-[2%]" : "right-[2%]"
+                  }`}
                >
-                  Last Name
+                  {t("lastNameLabel")}
                </label>
                <input
                   type="text"
@@ -194,9 +202,11 @@ const Account: React.FC = () => {
          <div className="mt-4 relative">
             <label
                htmlFor="email"
-               className="absolute top-[-20%] left-[1%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px]"
+               className={`absolute top-[-20%] bg-white text-[12px] font-[400] text-[#4c4e64a5] px-[4px] ${
+                  isEn ? "left-[1%]" : "right-[1%]"
+               }`}
             >
-               Email
+               {t("emailLabel")}
             </label>
             <input
                type="email"
@@ -212,13 +222,13 @@ const Account: React.FC = () => {
                onClick={handleSaveChanges}
                className="px-[22px] py-[0.68vh] bg-[#4379EE] text-[14px] font-[500] text-white rounded-[8px]"
             >
-               Save Changes
+               {t("saveBtn")}
             </button>
             <button
                onClick={handleReset}
                className="bg-transparent border-[1px] border-[#6D788D] text-[14px] font-[500] px-[22px] py-[0.68vh] text-[#6D788D] rounded-[8px]"
             >
-               Cancel
+               {t("cancelBtn")}
             </button>
          </div>
       </div>

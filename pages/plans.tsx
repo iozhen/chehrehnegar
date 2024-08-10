@@ -6,12 +6,21 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileData } from "@/redux/slices/ProfilesSlice";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
+interface planItemProps {
+   name: string;
+   price: number;
+   lists: { text: string; itHas: boolean }[];
+}
 
 const plans = () => {
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
    const token = Cookies.get("token");
    const profileData = useSelector((state) => state.profile.ProfileData);
    const dispatch = useDispatch();
+   const { t } = useTranslation();
+   const planItems = t("planitems", { returnObjects: true }) as planItemProps[];
 
    useEffect(() => {
       if (profileData) {
@@ -88,21 +97,21 @@ const plans = () => {
    };
    return (
       <div className="bg-gray-300 h-[100vh] px-[2.84vw] pt-[2.15vh] overflow-y-hidden">
-         <h2 className="font-[600] text-[3.13vh]">CHOOSE YOUR PLAN</h2>
+         <h2 className="font-[600] text-[3.13vh]">{t("planHeading")}</h2>
          <p className="mb-[2.63vh] text-[1.86vh] font-[400]">
-            Choose your plan to work with the system
+            {t("planHeadingDesc")}
          </p>
          <div className="flex items-center gap-[2.75vw] justify-center">
-            {data.planitems.map((item) => {
+            {planItems.map((item) => {
                return (
                   <div
                      key={item.name}
-                     className="flex items-center flex-col bg-white px-[1.39vw] py-[3.71vh] rounded-[1.63vw]"
+                     className="flex items-center flex-col bg-white px-[1.39vw] py-[3.71vh] rounded-[1.63vw] min-w-[344px]"
                   >
                      <h3 className="text-[2.05vh] font-[700]">{item.name}</h3>
-                     <p className="text-[1.54vh]">Monthly Charge</p>
+                     <p className="text-[1.54vh]">{t("monthlyText")}</p>
                      <h2 className="text-[4.39vh] font-[900] text-[#4880FF]">
-                        {item.price}
+                        ${item.price}
                      </h2>
                      <div className="w-full h-[0.1vh] bg-black"></div>
                      <ul className="flex items-center flex-col gap-[2.76vh] py-[3.71vh]">
@@ -127,13 +136,13 @@ const plans = () => {
                            handelBuyPlan(item.name);
                         }}
                      >
-                        Get Started
+                        {t("getStarted")}
                      </button>
                      <Link
                         className="text-black font-[700] text-[1.54vh] underline"
                         href={"#"}
                      >
-                        Start Your 7 Day Free Trial
+                        {t("startTrial")}
                      </Link>
                   </div>
                );

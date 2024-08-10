@@ -1,5 +1,3 @@
-import data from "@/data/support.json";
-
 export interface initialDataProps {
    avatar: string;
    chatId: number;
@@ -18,11 +16,12 @@ export interface initialDataProps {
    overdue: string;
 }
 
-const { inboxItems } = data;
-
 // sort order
-export const sortedFunc = (values: string) => {
-   const addedGetTime = inboxItems.map((item) => ({
+export const sortedFunc = (
+   values: string,
+   allInboxItems: initialDataProps[]
+) => {
+   const addedGetTime = allInboxItems.map((item) => ({
       ...item,
       getTime: new Date(item.date).getTime(),
    }));

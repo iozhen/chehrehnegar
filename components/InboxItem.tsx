@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import ProfileBox from "./ProfileBox";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface props {
    chatId: number;
@@ -32,10 +34,15 @@ const InboxItem = ({
    created,
    setChatSelected,
 }: props) => {
+   const { t } = useTranslation();
+   const isEn = i18next.language === "en";
+
    return (
       <li
          onClick={() => setChatSelected(chatId)}
-         className="h-[9.28vh] [&:not(:last-child)]:border-b-[0.07vw] border-[#D3D8DD] flex gap-[1.39vw] items-center pl-[1.39vw] cursor-pointer"
+         className={`h-[9.28vh] [&:not(:last-child)]:border-b-[0.07vw] border-[#D3D8DD] flex gap-[1.39vw] items-center cursor-pointer ${
+            isEn ? "pl-[1.39vw]" : "pr-[1.39vw]"
+         }`}
       >
          <div className="flex items-start gap-[1.39vw]">
             <div className="flex gap-[1.39vw] items-center">

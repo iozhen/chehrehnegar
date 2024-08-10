@@ -4,23 +4,35 @@ import SelectList from "./ReactSelectOption";
 import InboxItem from "./InboxItem";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { displayStatus, initialDataProps, sortedFunc } from "./inboxOperation";
+import { useTranslation } from "react-i18next";
 
 interface props {
    setChatSelected: Dispatch<SetStateAction<number>>;
 }
 
 const InboxMessage = ({ setChatSelected }: props) => {
-   const { open, order } = data;
-   const initialState = { show1: "open", show2: "", order: "Newest" };
+   const { t } = useTranslation();
+   const openInitial = t("open", { returnObjects: true }) as string[];
+   const orderInitial = t("order", { returnObjects: true }) as string[];
+   const initialState = {
+      show1: openInitial[0],
+      show2: "",
+      order: orderInitial[0],
+   };
    const [values, setValues] = useState(initialState);
    const [filteredInbox, setFilteredInbox] = useState<initialDataProps[]>();
+   const allInboxItem = t("inboxItems", {
+      returnObjects: true,
+   }) as initialDataProps[];
+   const headerOptions = t("open", { returnObjects: true }) as string[];
+   const headerOrder = t("order", { returnObjects: true }) as string[];
 
    // on filter change
    const onFilterChange = (value: string, name: string) =>
       setValues({ ...values, [name]: value });
 
    useEffect(() => {
-      const result1 = sortedFunc(values.order);
+      const result1 = sortedFunc(values.order, allInboxItem);
       setFilteredInbox(displayStatus(result1, values.show1));
    }, [values]);
 
@@ -33,7 +45,7 @@ const InboxMessage = ({ setChatSelected }: props) => {
                   <img src="/images/inbox.svg" />
                   {/* select component */}
                   <SelectList
-                     options={open}
+                     options={headerOptions}
                      controlStyle={{
                         border: "none",
                         background: "none",
@@ -53,7 +65,7 @@ const InboxMessage = ({ setChatSelected }: props) => {
                   <img src="/images/inbox.svg" />
                   {/* select component */}
                   <SelectList
-                     options={open}
+                     options={headerOptions}
                      controlStyle={{
                         border: "none",
                         background: "none",
@@ -70,7 +82,7 @@ const InboxMessage = ({ setChatSelected }: props) => {
 
             <div>
                <SelectList
-                  options={order}
+                  options={headerOrder}
                   controlStyle={{
                      border: "none",
                      background: "none",

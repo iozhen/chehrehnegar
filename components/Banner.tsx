@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { ReduxStore } from "@/types/index";
+import { useTranslation } from "react-i18next";
 
 const Banner = () => {
+   const { t } = useTranslation();
    const profileData = useSelector(
       (state: ReduxStore) => state.profile.ProfileData
    );
@@ -18,10 +20,10 @@ const Banner = () => {
                />
                <div>
                   <p className="text-[17.37px] font-[700] leading-[24.32px]">
-                     hamed izadi
+                     {t("bannerName")}
                   </p>
                   <p className="text-[12.16px] font-[400] leading-[17.02px]">
-                     ux designer
+                     {t("bannerPost")}
                   </p>
                </div>
             </div>
@@ -29,18 +31,20 @@ const Banner = () => {
             <div className="flex items-center gap-[33.03px]">
                <div>
                   <p className="text-[17.37px] font-[700] leading-[24.32px]">
-                     your active plan :{" "}
-                     {profileData?.plan ? profileData.plan : "Free"}
+                     {t("bannerActivePlan")}{" "}
+                     {profileData?.plan
+                        ? profileData.plan
+                        : t("bannerActivePlanVal")}
                   </p>
                   <p className="text-[12.16px] font-[400] leading-[17.02px]">
-                     29 days remaning
+                     {t("bannerDate")}
                   </p>
                </div>
                <Link
                   href={"/plans"}
                   className="w-[146.97px] h-[48.99px] rounded-[30px] border-[#4880FF] border-[1.97px] text-[#4880FF] text-[15.74px] font-[700] flex items-center justify-center"
                >
-                  Upgrade
+                  {t("bannerUpgrade")}
                </Link>
             </div>
          </div>

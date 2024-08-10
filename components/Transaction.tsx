@@ -1,31 +1,28 @@
-import data from "@/data/profile.json";
+import { productProps } from "@/pages/dashboard";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
-interface props {
-   currPageProduct: {
-      arrow: {
-         up: string;
-         down: string;
-      };
-      title: string;
-      id: string;
-      type: string;
-      date: string;
-      amount: string;
-      moreIcon: string;
-   }[];
-}
+const Transaction = ({
+   currPageProduct,
+}: {
+   currPageProduct: productProps[];
+}) => {
+   const { t } = useTranslation();
+   const transactionTh = t("transactionTh", {
+      returnObjects: true,
+   }) as string[];
+   const isEn = i18next.language === "en";
 
-const Transaction = ({ currPageProduct }: props) => {
    return (
       <div className="mt-[8.3vh]">
          <h2 className="text-[22px] font-[600] leading-[26.63px] text-[#343C6A] mb-[2.63vh]">
-            Recent Transactions
+            {t("transactionHeading")}
          </h2>
 
          {/* tabs */}
          <div className="border-[#EBEEF2] border-b-[1px]">
             <button className="text-[#2D60FF]">
-               <div className="px-[11px] mb-[5px]">All Transactions</div>
+               <div className="px-[11px] mb-[5px]">{t("transactionTab")}</div>
                <div className="bg-[#2D60FF] rounded-[10px_10px_0_0] h-[3px]"></div>
             </button>
          </div>
@@ -35,10 +32,14 @@ const Transaction = ({ currPageProduct }: props) => {
             <table className="w-full">
                <thead>
                   <tr className="border-[#E6EFF5] border-b-[1px] text-[#718EBF] font-[500] leading-[19.36px] h-[5.07vh] text-left">
-                     {data.tabs.map((tab, index) =>
-                        // prettier-ignore
-                        <th key={index}>{tab}</th>
-                     )}
+                     {transactionTh.map((tab, index) => (
+                        <th
+                           key={index}
+                           className={`${isEn ? "text-left" : "text-right"}`}
+                        >
+                           {tab}
+                        </th>
+                     ))}
                   </tr>
                </thead>
 

@@ -1,4 +1,6 @@
+import i18next from "i18next";
 import { SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
 interface props {
    currPage: number;
@@ -18,9 +20,12 @@ interface props {
 }
 
 const Pagination = ({ currPage, setCurrPage, paginationProduct }: props) => {
+   const { t } = useTranslation();
+   const isEn = i18next.language === "en";
+
    return (
       <div className="flex justify-end w-full mt-[2.92vh]">
-         <div className="flex gap-[0.833vw]">
+         <div dir="ltr" className="flex gap-[0.833vw]">
             <button
                onClick={() => currPage > 1 && setCurrPage(currPage - 1)}
                className="text-[#2D60FF] flex items-center gap-[0.347vw] text-[1.042vw] font-[500]"
@@ -29,7 +34,7 @@ const Pagination = ({ currPage, setCurrPage, paginationProduct }: props) => {
                   src="/images/chevLeft.svg"
                   className="w-[0.833vw] h-[1.172vh]"
                />
-               Previous
+               {t("prevButton")}
             </button>
 
             <div>
@@ -51,7 +56,7 @@ const Pagination = ({ currPage, setCurrPage, paginationProduct }: props) => {
                }
                className="text-[#2D60FF] flex items-center gap-[0.347vw] text-[1.042vw] font-[500]"
             >
-               Next
+               {t("nextButton")}
                <img
                   src="/images/chevRight.svg"
                   className="w-[0.833vw] h-[1.172vh]"

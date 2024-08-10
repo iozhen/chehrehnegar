@@ -1,5 +1,6 @@
 {
    "tabs": ["Description", "Transaction ID", "Type", "Date", "Amount"],
+
    "transactions": [
       {
          "arrow": {

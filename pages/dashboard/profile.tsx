@@ -2,9 +2,11 @@ import Account from "@/components/Account";
 import Security from "@/components/Security";
 import { setIsSecurity } from "@/redux/slices/ChangeProfileSlice";
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 const UserProfile = () => {
+   const { t } = useTranslation();
    const securityType = useSelector(
       (state) => state.changeProfile.securityType
    );
@@ -31,7 +33,7 @@ const UserProfile = () => {
                         dispatch(setIsSecurity("account"));
                      }}
                   >
-                     Account
+                     {t("profileTab1")}
                   </button>
                   <button
                      className={
@@ -44,7 +46,7 @@ const UserProfile = () => {
                         dispatch(setIsSecurity("security"));
                      }}
                   >
-                     Security
+                     {t("profileTab2")}
                   </button>
                </div>
                {securityType == "account" && <Account />}

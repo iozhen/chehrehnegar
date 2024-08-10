@@ -5,6 +5,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 interface props {
    profileSubMenu: boolean;
@@ -15,6 +16,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
    const router = useRouter();
    const token = Cookies.get("token");
    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+   const { t } = useTranslation();
 
    const dispatch = useDispatch();
    return (
@@ -30,7 +32,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
          >
             <img src="/images/profileEdite.svg" alt="profileEdite" />
             <p className="text-[1.36vh] font-[600] text-[#404040]">
-               Manage Account
+               {t("profileOption1")}
             </p>
          </button>
          <button
@@ -43,7 +45,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
          >
             <img src="/images/profileEdite.svg" alt="profileEdite" />
             <p className="text-[1.36vh] font-[600] text-[#404040]">
-               Change Password
+               {t("profileOption2")}
             </p>
          </button>
          <button
@@ -76,7 +78,9 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
             }}
          >
             <img src="/images/profileEdite.svg" alt="profileEdite" />
-            <p className="text-[1.36vh] font-[600] text-[#404040]">Log out</p>
+            <p className="text-[1.36vh] font-[600] text-[#404040]">
+               {t("profileOption3")}
+            </p>
          </button>
       </div>
    );

@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import TwoFactor from "./TwoFactor";
+import { useTranslation } from "react-i18next";
 
 const Security = () => {
    const token = Cookies.get("token");
@@ -12,6 +13,7 @@ const Security = () => {
    const [showPassword, setShowPassword] = useState(false);
    const [showNewPassword, setShowNewPassword] = useState(false);
    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+   const { t } = useTranslation();
 
    const togglePasswordVisibility = (type: string) => {
       if (type === "current") {
@@ -30,13 +32,13 @@ const Security = () => {
          confirmPassword: "",
       },
       validationSchema: Yup.object({
-         currentPassword: Yup.string().required("Required"),
+         currentPassword: Yup.string().required(t("profilePassErrorReq")),
          newPassword: Yup.string()
-            .required("Required")
-            .min(6, "Password must be at least 6 characters long"),
+            .required(t("profilePassErrorReq"))
+            .min(6, t("profileNewPassError")),
          confirmPassword: Yup.string()
-            .required("Required")
-            .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
+            .required(t("profilePassErrorReq"))
+            .oneOf([Yup.ref("newPassword"), null], t("profileConfPassError")),
       }),
       onSubmit: (values) => {
          axios
@@ -64,10 +66,11 @@ const Security = () => {
             });
       },
    });
+   console.log(passwordFormik);
 
    return (
       <div>
-         <form onSubmit={passwordFormik.handleSubmit} className="">
+         <form onSubmit={passwordFormik.handleSubmit}>
             <div className="flex items-center gap-[24px] w-full h-[22.75vh]">
                <div className="w-full">
                   <div className="relative">
@@ -75,7 +78,7 @@ const Security = () => {
                         type={showPassword ? "text" : "password"}
                         id="currentPassword"
                         name="currentPassword"
-                        placeholder="Current Password"
+                        placeholder={t("currentPassPlaceholder")}
                         onChange={passwordFormik.handleChange}
                         onBlur={passwordFormik.handleBlur}
                         value={passwordFormik.values.currentPassword}
@@ -103,7 +106,7 @@ const Security = () => {
                         type={showNewPassword ? "text" : "password"}
                         id="newPassword"
                         name="newPassword"
-                        placeholder="New Password"
+                        placeholder={t("newPassPlaceholder")}
                         onChange={passwordFormik.handleChange}
                         onBlur={passwordFormik.handleBlur}
                         value={passwordFormik.values.newPassword}
@@ -131,7 +134,7 @@ const Security = () => {
                         type={showConfirmPassword ? "text" : "password"}
                         id="confirmPassword"
                         name="confirmPassword"
-                        placeholder="Confirm Password"
+                        placeholder={t("confirmPassPlaceholder")}
                         onChange={passwordFormik.handleChange}
                         onBlur={passwordFormik.handleBlur}
                         value={passwordFormik.values.confirmPassword}
@@ -167,13 +170,13 @@ const Security = () => {
                   type="submit"
                   className="px-[22px] py-[0.68vh] bg-[#4379EE] text-[14px] font-[500] text-white rounded-[8px]"
                >
-                  Save Changes
+                  {t("saveBtn")}
                </button>
                <button
                   // onClick={handleReset}
                   className="bg-transparent border-[1px] border-[#6D788D] text-[14px] font-[500] px-[22px] py-[0.68vh] text-[#6D788D] rounded-[8px]"
                >
-                  Cancel
+                  {t("cancelBtn")}
                </button>
             </div>
          </form>

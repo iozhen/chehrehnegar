@@ -7,14 +7,36 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileData } from "@/redux/slices/ProfilesSlice";
+import { useTranslation } from "react-i18next";
+
+export interface productProps {
+   arrow: {
+      up: string;
+      down: string;
+   };
+   title: string;
+   id: string;
+   type: string;
+   date: string;
+   amount: string;
+   moreIcon: string;
+}
 
 const profile = () => {
+   const { t } = useTranslation();
    const [currPage, setCurrPage] = useState(1);
 
-   const allPage = Math.ceil(data.transactions.length / 5);
+   // all product
+   const allProduct = t("transactions", {
+      returnObjects: true,
+   }) as productProps[];
+   // all page
+   const allPage = Math.ceil(allProduct.length / 5);
+   // pagination product
    const paginationProduct = [];
    for (let i = 0; i <= allPage - 1; i++)
-      paginationProduct.push(data.transactions.slice(i * 5, (i + 1) * 5));
+      paginationProduct.push(allProduct.slice(i * 5, (i + 1) * 5));
+   // final product
    const [currPageProduct] = paginationProduct.filter(
       (_, index) => index + 1 === currPage
    );

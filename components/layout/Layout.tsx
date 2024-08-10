@@ -3,10 +3,11 @@ import Header from "./Header";
 import English from "@/data/en.json";
 import Persian from "@/data/fa.json";
 import i18n from "i18next";
-import { useTranslation, initReactI18next } from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import { useRouter } from "next/router";
 import MapHeader from "../MapHeader";
 import Sidebar from "../Sidebar";
+import i18next from "i18next";
 
 interface LayoutProps {
    children: ReactNode;
@@ -23,7 +24,7 @@ i18n
             translation: Persian,
          },
       },
-      lng: "en",
+      lng: "fa",
       fallbackLng: "en",
       interpolation: {
          escapeValue: false,
@@ -31,8 +32,8 @@ i18n
    });
 
 function Layout({ children }: LayoutProps) {
-   const { t } = useTranslation();
    const router = useRouter();
+   const isEn = i18next.language === "en";
 
    const showMapHeader =
       router.pathname.includes("map") ||
@@ -43,7 +44,10 @@ function Layout({ children }: LayoutProps) {
    return (
       <div>
          {showMapHeader && (
-            <div className="flex relative jost h-screen overflow-y-hidden w-full">
+            <div
+               dir={isEn ? "ltr" : "rtl"}
+               className="flex relative jost h-screen overflow-y-hidden w-full"
+            >
                <Sidebar />
                <div className="w-full h-screen">
                   <MapHeader />

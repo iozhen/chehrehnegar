@@ -1,4 +1,4 @@
-import ChatTextBox from "./ChatTextBox";
+import { useTranslation } from "react-i18next";
 import MessageChat from "./MessageChat";
 import ProfileBox from "./ProfileBox";
 
@@ -13,6 +13,8 @@ interface prop {
 }
 
 const Chat = ({ currentChat, storeAvatar }: prop) => {
+   const { t } = useTranslation();
+
    return (
       <div className="h-[69.82vh] w-[39.10vw] flex flex-col justify-between">
          {/* header */}
@@ -22,7 +24,7 @@ const Chat = ({ currentChat, storeAvatar }: prop) => {
                   <ProfileBox text="D" />
                </div>
                <div className="flex gap-[0.56vw] items-center">
-                  <img src="/images/messageFill.svg" /> Hamed Izadi
+                  <img src="/images/messageFill.svg" /> {t("userName")}
                </div>
             </div>
 

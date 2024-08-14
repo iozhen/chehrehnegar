@@ -11,31 +11,9 @@ import { useRouter } from "next/router";
 const plans = () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const token = Cookies.get("token");
-  const profileData = useSelector((state) => state.profile.ProfileData);
+  const profileData = useSelector((state: any) => state.profile.ProfileData);
   const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    if (profileData) {
-      return;
-    }
-    axios
-      .get(`${baseUrl}/api/user/get-profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        dispatch(setProfileData({ ...res.data.data }));
-      })
-      .catch((err) => {
-        console.log("====================================");
-        console.log(err);
-        console.log("====================================");
-      });
-  }, [profileData]);
-
-  console.log(profileData);
 
   const handelBuyPlan = (name: string) => {
     if (

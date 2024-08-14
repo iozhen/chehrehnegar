@@ -13,60 +13,45 @@ import { setProfileData } from "@/redux/slices/ProfilesSlice";
 import axios from "axios";
 
 export interface linksType {
-   href: string;
-   title: string;
+  href: string;
+  title: string;
 }
 
 const Header = () => {
-   const router = useRouter();
-   const { t } = useTranslation();
-   const isEnLang = i18next.language === "en";
-   const [sidebarState, setSidebarState] = useState<boolean>();
-   const [changeLanguage, setChangeLanguage] = useState<boolean>(false);
-   const [linkActive, setLinkActive] = useState(0);
+  const router = useRouter();
+  const { t } = useTranslation();
+  const isEnLang = i18next.language === "en";
+  const [sidebarState, setSidebarState] = useState<boolean>();
+  const [changeLanguage, setChangeLanguage] = useState<boolean>(false);
+  const [linkActive, setLinkActive] = useState(0);
 
-   const token = Cookies.get("token");
-   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-   const dispatch = useDispatch();
-   const profileData = useSelector((state) => state.profile.ProfileData);
+  const token = Cookies.get("token");
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const dispatch = useDispatch();
+  const profileData = useSelector((state: any) => state.profile.ProfileData);
 
-   useEffect(() => {
-      if (profileData) {
-         return;
-      }
-      axios
-         .get(`${baseUrl}/api/user/get-profile`, {
-            headers: {
-               Authorization: `Bearer ${token}`,
-            },
-         })
-         .then((res) => {
-            dispatch(setProfileData({ ...res.data.data }));
-         })
-         .catch((err) => {
-            console.log("====================================");
-            console.log(err);
-            console.log("====================================");
-         });
-   }, [profileData]);
+  const constructAvatarUrl = (path: string) => {
+    if (path?.startsWith("uploads\\")) {
+      return `${baseUrl}/${path.replace(/\\/g, "/")}`;
+    }
+    return path;
+  };
 
-   return (
-      <>
-         {router.pathname !== "/login" && (
-            <>
-               <div className="w-full max-sm:h-[70px] h-[101px] mb-[40px]"></div>
+  return (
+    <>
+      {router.pathname !== "/login" && (
+        <>
+          <div className="w-full max-sm:h-[70px] h-[101px] mb-[40px]"></div>
 
-               <header
-                  className={`fixed top-0 left-0 w-full max-sm:h-[70px] z-[10] pt-[25px] text-black bg-white
+          <header
+            className={`fixed top-0 left-0 w-full max-sm:h-[70px] z-[10] pt-[25px] text-black bg-white
                      ${
-                        router.pathname.includes("map")
-                           ? "h-[7vh]"
-                           : "h-[120px]"
+                       router.pathname.includes("map") ? "h-[7vh]" : "h-[120px]"
                      }  
                   `}
-               >
-                  {/* prettier-ignore */}
-                  <div className={`mx-auto flex justify-between items-center ${isEnLang ? 'flex-row' : 'flex-row-reverse'} max-sm:w-[90%] md:w-[700px] ___ lg:w-[900px] ___ xl:w-[1200px]`}>
+          >
+            {/* prettier-ignore */}
+            <div className={`mx-auto flex justify-between items-center ${isEnLang ? 'flex-row' : 'flex-row-reverse'} max-sm:w-[90%] md:w-[700px] ___ lg:w-[900px] ___ xl:w-[1200px]`}>
                      <a
                         href="https://en.sharif.edu/"
                         target="_blank"
@@ -117,7 +102,7 @@ const Header = () => {
                            {isEnLang ? 'فا' : 'En'}
                         </button>
                         {
-                           profileData?.avatar ? <img src={profileData?.avatar} alt="avatar" className="w-[40px] h-[40px]" /> :
+                           profileData?.avatar ? <img src={constructAvatarUrl(profileData.avatar)} alt="avatar" className="w-[40px] h-[40px]" /> :
                         <Link href={"/auth/login"} className="flex items-center gap-[7px]">
                               <h4 className="text-[16px] leading-[28px] font-[500]">login / register</h4>
                               <img src="/icons/profileicon.svg" alt="" />
@@ -138,11 +123,11 @@ const Header = () => {
                         changeLanguage={changeLanguage}
                      />
                   </div>
-               </header>
-            </>
-         )}
-      </>
-   );
+          </header>
+        </>
+      )}
+    </>
+  );
 };
 
 export default Header;

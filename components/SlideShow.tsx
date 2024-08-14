@@ -15,39 +15,41 @@ import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export default function HomeSlider() {
-   const pagination = {
-      clickable: true,
-      renderBullet: function (index: number, className: string) {
-         return '<span class="' + className + '">' + (index + 1) + "</span>";
-      },
-   };
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index: number, className: string) {
+      return '<span class="' + className + '">' + (index + 1) + "</span>";
+    },
+  };
 
-   const { t } = useTranslation();
-   const isEnLang = i18next.language === "en";
-   const token = Cookies.get("token");
-   const router = useRouter();
+  const { t } = useTranslation();
+  const isEnLang = i18next.language === "en";
+  const token = Cookies.get("token");
+  const router = useRouter();
+  const isLogin = useSelector((state: any) => state.login.isLogin);
 
-   return (
-      <>
-         <Swiper
-            pagination={pagination}
-            modules={[Pagination, Autoplay]}
-            className="homeSlider relative rounded-[20px]"
-            autoplay={{
-               delay: 5000,
-               disableOnInteraction: false,
-            }}
-         >
-            {["", "", "", "", ""].map((_, index) => (
-               <SwiperSlide
-                  key={index}
-                  className="w-full h-full rounded-[20px] bg-white"
-               >
-                  <div className="w-full h-[517px] overflow-hidden bg-[url(/images/slide.webp)] bg-cover">
-                     {/* prettier-ignore */}
-                     <div className={`w-full h-full max-sm:px-[20px] px-[45px] pt-[130px] bg-[url(/images/sliderFade.webp)] bg-cover flex flex-col ${isEnLang ? 'items-start' : 'items-end'}`}>
+  return (
+    <>
+      <Swiper
+        pagination={pagination}
+        modules={[Pagination, Autoplay]}
+        className="homeSlider relative rounded-[20px]"
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+      >
+        {["", "", "", "", ""].map((_, index) => (
+          <SwiperSlide
+            key={index}
+            className="w-full h-full rounded-[20px] bg-white"
+          >
+            <div className="w-full h-[517px] overflow-hidden bg-[url(/images/slide.webp)] bg-cover">
+              {/* prettier-ignore */}
+              <div className={`w-full h-full max-sm:px-[20px] px-[45px] pt-[130px] bg-[url(/images/sliderFade.webp)] bg-cover flex flex-col ${isEnLang ? 'items-start' : 'items-end'}`}>
                         <p
                            className={`max-sm:text-[20px] text-[24px] w-full max-sm:leading-[35px] leading-[48px] text-white font-[700] ___ sm:text-[35px] ___ md:text-[40px] max-sm:mb-[20px] mb-[30px]
                         ${
@@ -63,7 +65,7 @@ export default function HomeSlider() {
                         </p>
                         
                         <button className="max-sm:w-[140px] w-[180px] max-sm:h-[45px] h-[52px] rounded-[1000px] max-sm:text-[16px] text-[20px] border-[2px] border-[#FFF] text-white flex text-center items-center justify-center justify-self-center font-[700] ___ sm:text-[18px] sm:mb-[100px]" onClick={() => {
-                           if(token) {
+                           if(isLogin) {
                               router.push("/map")
                            } else{
                               toast.error("you should login first")
@@ -73,16 +75,16 @@ export default function HomeSlider() {
                            {t('Home_Btn')}
                         </button>
                      </div>
-                  </div>
-               </SwiperSlide>
-            ))}
+            </div>
+          </SwiperSlide>
+        ))}
 
-            <img
-               src="/images/shape-slider.webp"
-               alt="shape"
-               className="absolute left-0 bottom-0 w-[232px] h-[71px] z-[9]"
-            />
-         </Swiper>
-      </>
-   );
+        <img
+          src="/images/shape-slider.webp"
+          alt="shape"
+          className="absolute left-0 bottom-0 w-[232px] h-[71px] z-[9]"
+        />
+      </Swiper>
+    </>
+  );
 }

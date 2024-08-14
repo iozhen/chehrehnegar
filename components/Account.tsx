@@ -8,8 +8,8 @@ import Cookies from "js-cookie";
 import * as Yup from "yup";
 
 const Account: React.FC = () => {
-  const profileData = useSelector((state) => state.profile.ProfileData);
-  const avatarRedux = useSelector((state) => state.profile.avatar);
+  const profileData = useSelector((state: any) => state.profile.ProfileData);
+  const avatarRedux = useSelector((state: any) => state.profile.avatar);
   const token = Cookies.get("token");
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const dispatch = useDispatch();
@@ -27,29 +27,6 @@ const Account: React.FC = () => {
           : "", // Format the birthday correctly
       });
       dispatch(setAvatar(profileData.avatar));
-    } else {
-      axios
-        .get(`${baseUrl}/api/user/get-profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setProfileData({ ...res.data.data }));
-          formik.setValues({
-            firstName: res.data.data.firstName || "",
-            lastName: res.data.data.lastName || "",
-            email: res.data.data.email || "",
-            nationalCode: res.data.data.nationalCode || "",
-            mobile: res.data.data.mobile || "",
-            birthday: res.data.data.birthday
-              ? new Date(res.data.data.birthday).toISOString().split("T")[0]
-              : "", // Format the birthday correctly
-          });
-        })
-        .catch((err) => {
-          console.log("Error fetching profile data:", err);
-        });
     }
   }, [profileData, dispatch, baseUrl, token]);
 

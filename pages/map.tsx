@@ -41,6 +41,10 @@ import { useSelector } from "react-redux";
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
 const MapComponents: React.FC = () => {
+  const wetland = useSelector((state: any) => state.sidebar.isWetlands);
+  const dams = useSelector((state: any) => state.sidebar.isDams);
+  const isLogin = useSelector((state: any) => state.login.isLogin);
+
   const [isSubMenu, setIsSubMenu] = useState(0);
   // const [mapType, setMapType] = useState("Open Street Map");
   const [activeLayers, setActiveLayers] = useState<any[]>([]);
@@ -540,17 +544,14 @@ const MapComponents: React.FC = () => {
     },
   };
 
-  useEffect(() => {
-    if (!token) {
-      router.push("/");
-      toast.error("your token has been expired");
-    } else {
-      return;
-    }
-  }, [token]);
-
-  const wetland = useSelector((state) => state.sidebar.isWetlands);
-  const dams = useSelector((state) => state.sidebar.isDams);
+  //   useEffect(() => {
+  //     if (!isLogin) {
+  //       router.push("/auth/login");
+  //       toast.error("your token has been expired");
+  //     } else {
+  //       return;
+  //     }
+  //   }, [isLogin]);
 
   useEffect(() => {
     if (wetlandsLayer.current) {

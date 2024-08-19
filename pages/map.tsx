@@ -43,6 +43,7 @@ ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 const MapComponents: React.FC = () => {
   const wetland = useSelector((state: any) => state.sidebar.isWetlands);
   const dams = useSelector((state: any) => state.sidebar.isDams);
+  const floods = useSelector((state: any) => state.sidebar.isFloods);
   const isLogin = useSelector((state: any) => state.login.isLogin);
 
   const [isSubMenu, setIsSubMenu] = useState(0);
@@ -109,6 +110,8 @@ const MapComponents: React.FC = () => {
 
   const damsLayer = useRef();
 
+  const floodsLayer = useRef();
+
   //token handeling
   const token = Cookies.get("token");
   const router = useRouter();
@@ -132,6 +135,17 @@ const MapComponents: React.FC = () => {
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
           params: { LAYERS: "allyears:y1987" },
+          ratio: 1,
+          serverType: "geoserver",
+        }),
+      });
+
+      floodsLayer.current = new ImageLayer({
+        title: "Floods",
+        visible: false,
+        source: new ImageWMS({
+          url: "http://bina.civil.sharif.edu/geoserver/wms",
+          params: { LAYERS: "flood:floodmap_1403-07-01" },
           ratio: 1,
           serverType: "geoserver",
         }),
@@ -207,6 +221,7 @@ const MapComponents: React.FC = () => {
           water,
           wetlandsLayer.current, // Add wetlandsLayer
           damsLayer.current, // Add damsLayer
+          floodsLayer.current, // Add floods layer
           vectorLayer, // Add vectorLayer to map
         ],
       });
@@ -563,6 +578,16 @@ const MapComponents: React.FC = () => {
     }
   }, [wetland]);
 
+  useEffect(() => {
+    if (floodsLayer.current) {
+      const isVisible = floodsLayer.current.getVisible();
+      floodsLayer.current.setVisible(!isVisible);
+      // if (!isVisible && damsLayer.current) {
+      //    damsLayer.current.setVisible(false);
+      // }
+    }
+  }, [floods]);
+
   const handleLayerError = (layer, layerName) => {
     layer.getSource().on("imageloaderror", () => {
       console.error(`Failed to load ${layerName} layer`);
@@ -585,6 +610,8 @@ const MapComponents: React.FC = () => {
       // }
     }
   }, [dams]);
+
+  console.log(floods);
 
   return (
     <div className="flex relative jost h-screen overflow-y-hidden">

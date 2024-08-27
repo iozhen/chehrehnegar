@@ -51,42 +51,47 @@ function Layout({ children }: LayoutProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (
-      router.pathname.includes("map") ||
-      router.pathname.includes("dashboard")
-    ) {
-      if (!token) {
-        router.push("/auth/login");
-        //   toast.error("please login first");
-        return;
+    console.log("test");
+
+    const fetchProfileData = async () => {
+      if (!token && isLogin) {
+        // If there is no token and the user is on a dashboard page, redirect to login
+        if (router.pathname.includes("dashboard")) {
+          router.push("/auth/login");
+          dispatch(setLogin(false));
+        }
+        return; // If no token, stop the execution here.
       }
 
-      if (isLogin && profileData) {
-        dispatch(setLogin(true));
-        //   toast.error("please login first");
-        return;
-      }
-    }
-    axios
-      .get(`${baseUrl}/api/user/get-profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        dispatch(setProfileData({ ...res.data.data }));
-      })
-      .catch((err) => {
-        if (err?.response?.data?.message === "Invalid token.") {
+      try {
+        const response = await axios.get(`${baseUrl}/api/user/get-profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Dispatch the profile data to the Redux store
+        dispatch(setProfileData({ ...response.data.data }));
+        dispatch(setLogin(true)); // Mark the user as logged in
+      } catch (err) {
+        if (err?.response?.data === "Invalid token.") {
           dispatch(setLogin(false));
           Cookies.remove("token");
-          toast.error("Your session has expired. Please log in again.");
-          router.push("/auth/login");
+
+          // If the user is on a dashboard page, show error and redirect to login
+          if (router.pathname.includes("dashboard")) {
+            toast.error("Your session has expired. Please log in again.");
+            router.push("/auth/login");
+          }
         } else {
-          console.log("Error fetching profile data:", err);
+          console.error("Error fetching profile data:", err);
         }
-      });
-  }, [token, profileData, isLogin]);
+      }
+    };
+
+    // Fetch profile data for all routes, regardless of whether it's a dashboard route or not
+    fetchProfileData();
+  }, [router.pathname, token, dispatch, isLogin, baseUrl]);
 
   return (
     <div>

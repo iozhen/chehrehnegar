@@ -46,6 +46,7 @@ const MapComponents: React.FC = () => {
   const floodMap = useSelector((state: any) => state.sidebar.isFloods);
   const floodAlert = useSelector((state: any) => state.sidebar.isFloodAlert);
   const isLogin = useSelector((state: any) => state.login.isLogin);
+  const selectedDate = useSelector((state) => state.date.selectedDate);
 
   const [isSubMenu, setIsSubMenu] = useState(0);
   // const [mapType, setMapType] = useState("Open Street Map");
@@ -148,7 +149,7 @@ const MapComponents: React.FC = () => {
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
-          params: { LAYERS: "floodmap:floodmap_1403-07-01" },
+          params: { LAYERS: `floodmap:floodmap_${selectedDate}` },
           ratio: 1,
           serverType: "geoserver",
         }),
@@ -159,7 +160,7 @@ const MapComponents: React.FC = () => {
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
-          params: { LAYERS: "floodalert:floodalert_1403-07-01" },
+          params: { LAYERS: `floodalert:floodalert_${selectedDate}` },
           ratio: 1,
           serverType: "geoserver",
         }),
@@ -247,6 +248,20 @@ const MapComponents: React.FC = () => {
       return () => newMap.setTarget(undefined);
     }
   }, []);
+
+  useEffect(() => {
+    if (floodsLayer.current) {
+      floodsLayer.current.getSource().updateParams({
+        LAYERS: `floodmap:floodmap_${selectedDate}`,
+      });
+    }
+
+    if (floodAlertsLayer.current) {
+      floodAlertsLayer.current.getSource().updateParams({
+        LAYERS: `floodalert:floodalert_${selectedDate}`,
+      });
+    }
+  }, [selectedDate]);
 
   useEffect(() => {
     if (map) {

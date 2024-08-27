@@ -5,6 +5,7 @@ import sidebarSlice from "./slices/sidebarSlice";
 import ChangeProfileSlice from "./slices/ChangeProfileSlice";
 import TicketSlice from "./slices/TicketSlice";
 import LoginSlice from "./slices/LoginSlice";
+import dateSlice from "./slices/dateSlice";
 
 const reducers = combineReducers({
   profile: ProfilesSlice,
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   changeProfile: ChangeProfileSlice,
   ticket: TicketSlice,
   login: LoginSlice,
+  date: dateSlice,
 });
 
 export const store = configureStore({

@@ -8,6 +8,7 @@ const sidebarSlice = createSlice({
     isWetlands: false,
     isDams: false,
     isFloods: false,
+    isFloodAlert: false,
   },
   reducers: {
     setMapType(state, action) {
@@ -25,9 +26,18 @@ const sidebarSlice = createSlice({
     setIsFloods(state, action) {
       state.isFloods = action.payload;
     },
+    setIsFloodAlerts(state, action) {
+      state.isFloodAlert = action.payload;
+    },
   },
 });
 
-export const { setMapType, setIsPlans, setIsDams, setIsWetlands, setIsFloods } =
-  sidebarSlice.actions;
+export const {
+  setMapType,
+  setIsPlans,
+  setIsDams,
+  setIsWetlands,
+  setIsFloods,
+  setIsFloodAlerts,
+} = sidebarSlice.actions;
 export default sidebarSlice.reducer;

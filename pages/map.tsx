@@ -43,7 +43,8 @@ ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 const MapComponents: React.FC = () => {
   const wetland = useSelector((state: any) => state.sidebar.isWetlands);
   const dams = useSelector((state: any) => state.sidebar.isDams);
-  const floods = useSelector((state: any) => state.sidebar.isFloods);
+  const floodMap = useSelector((state: any) => state.sidebar.isFloods);
+  const floodAlert = useSelector((state: any) => state.sidebar.isFloodAlert);
   const isLogin = useSelector((state: any) => state.login.isLogin);
 
   const [isSubMenu, setIsSubMenu] = useState(0);
@@ -112,6 +113,8 @@ const MapComponents: React.FC = () => {
 
   const floodsLayer = useRef();
 
+  const floodAlertsLayer = useRef();
+
   //token handeling
   const token = Cookies.get("token");
   const router = useRouter();
@@ -141,11 +144,22 @@ const MapComponents: React.FC = () => {
       });
 
       floodsLayer.current = new ImageLayer({
-        title: "Floods",
+        title: "Flood Map",
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
-          params: { LAYERS: "flood:floodmap_1403-07-01" },
+          params: { LAYERS: "floodmap:floodmap_1403-07-01" },
+          ratio: 1,
+          serverType: "geoserver",
+        }),
+      });
+
+      floodAlertsLayer.current = new ImageLayer({
+        title: "Flood Alert",
+        visible: false,
+        source: new ImageWMS({
+          url: "http://bina.civil.sharif.edu/geoserver/wms",
+          params: { LAYERS: "floodalert:floodalert_1403-07-01" },
           ratio: 1,
           serverType: "geoserver",
         }),
@@ -222,6 +236,7 @@ const MapComponents: React.FC = () => {
           wetlandsLayer.current, // Add wetlandsLayer
           damsLayer.current, // Add damsLayer
           floodsLayer.current, // Add floods layer
+          floodAlertsLayer.current,
           vectorLayer, // Add vectorLayer to map
         ],
       });
@@ -586,7 +601,17 @@ const MapComponents: React.FC = () => {
       //    damsLayer.current.setVisible(false);
       // }
     }
-  }, [floods]);
+  }, [floodMap]);
+
+  useEffect(() => {
+    if (floodAlertsLayer.current) {
+      const isVisible = floodAlertsLayer.current.getVisible();
+      floodAlertsLayer.current.setVisible(!isVisible);
+      // if (!isVisible && damsLayer.current) {
+      //    damsLayer.current.setVisible(false);
+      // }
+    }
+  }, [floodAlert]);
 
   const handleLayerError = (layer, layerName) => {
     layer.getSource().on("imageloaderror", () => {
@@ -610,8 +635,6 @@ const MapComponents: React.FC = () => {
       // }
     }
   }, [dams]);
-
-  console.log(floods);
 
   return (
     <div className="flex relative jost h-screen overflow-y-hidden">

@@ -78,6 +78,8 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
                 });
             } else {
               toast.error("No token found. Unable to log out.");
+              router.push("/");
+              dispatch(setLogin(false));
             }
             e.stopPropagation();
 

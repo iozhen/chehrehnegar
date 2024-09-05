@@ -51,8 +51,6 @@ function Layout({ children }: LayoutProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("test");
-
     const fetchProfileData = async () => {
       if (!token && isLogin) {
         // If there is no token and the user is on a dashboard page, redirect to login
@@ -77,6 +75,9 @@ function Layout({ children }: LayoutProps) {
         if (err?.response?.data === "Invalid token.") {
           dispatch(setLogin(false));
           Cookies.remove("token");
+          if (router.pathname !== "/" && !router.pathname.includes("auth")) {
+            router.push("/");
+          }
 
           // If the user is on a dashboard page, show error and redirect to login
           if (router.pathname.includes("dashboard")) {
@@ -85,6 +86,7 @@ function Layout({ children }: LayoutProps) {
           }
         } else {
           console.error("Error fetching profile data:", err);
+          router.push("/");
         }
       }
     };

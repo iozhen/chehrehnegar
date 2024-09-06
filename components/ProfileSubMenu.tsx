@@ -70,7 +70,7 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
                 .then((res) => {
                   toast.success("Logged out successfully");
                   Cookies.remove("token");
-                  // router.push("/");
+                  router.push("/");
                 })
                 .catch((err) => {
                   console.log(err);

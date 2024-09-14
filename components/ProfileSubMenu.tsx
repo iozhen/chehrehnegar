@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { setLogin } from "@/redux/slices/LoginSlice";
+import { setAllNull } from "@/redux/slices/ProfilesSlice";
 
 interface props {
   profileSubMenu: number;
@@ -56,7 +57,6 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
           className="flex items-center gap-[15px] py-[1.074vh] w-full"
           onClick={(e) => {
             if (token) {
-              dispatch(setLogin(false));
               axios
                 .post(
                   `${baseUrl}/api/auth/logout`,
@@ -70,6 +70,8 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
                 .then((res) => {
                   toast.success("Logged out successfully");
                   Cookies.remove("token");
+                  dispatch(setLogin(false));
+                  dispatch(setAllNull({}));
                   router.push("/");
                 })
                 .catch((err) => {
@@ -77,9 +79,11 @@ const ProfileSubMenu = ({ setProfileSubMenu, profileSubMenu }: props) => {
                   toast.error("Error logging out. Please try again.");
                 });
             } else {
+              Cookies.remove("token");
+              dispatch(setLogin(false));
+              dispatch(setAllNull({}));
               toast.error("No token found. Unable to log out.");
               router.push("/");
-              dispatch(setLogin(false));
             }
             e.stopPropagation();
 

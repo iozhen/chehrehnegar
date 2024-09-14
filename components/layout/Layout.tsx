@@ -92,7 +92,9 @@ function Layout({ children }: LayoutProps) {
     };
 
     // Fetch profile data for all routes, regardless of whether it's a dashboard route or not
-    fetchProfileData();
+    if (Cookies.get("token")) {
+      fetchProfileData();
+    }
   }, [router.pathname, token, dispatch, isLogin, baseUrl]);
 
   return (

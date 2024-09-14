@@ -9,8 +9,6 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import SidebarMenu from "../SidebarMenu";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
-import { setProfileData } from "@/redux/slices/ProfilesSlice";
-import axios from "axios";
 
 export interface linksType {
   href: string;
@@ -29,6 +27,8 @@ const Header = () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const dispatch = useDispatch();
   const profileData = useSelector((state: any) => state.profile.ProfileData);
+
+  console.log(profileData);
 
   const constructAvatarUrl = (path: string) => {
     if (path?.startsWith("uploads\\")) {
@@ -102,7 +102,7 @@ const Header = () => {
                            {isEnLang ? 'فا' : 'En'}
                         </button>
                         {
-                           profileData?.avatar ? <img src={constructAvatarUrl(profileData.avatar)} alt="avatar" className="w-[40px] h-[40px]" /> :
+                           profileData?.avatar ? <img src={constructAvatarUrl(profileData.avatar)} alt="avatar" className="w-[40px] h-[40px] rounded-full cursor-pointer" onClick={() => {router.push("/dashboard")}} /> :
                         <Link href={"/auth/login"} className="flex items-center gap-[7px]">
                               <h4 className="text-[16px] leading-[28px] font-[500]">login / register</h4>
                               <img src="/icons/profileicon.svg" alt="" />

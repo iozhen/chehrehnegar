@@ -8,7 +8,6 @@ import SupportSubmenu from "./SupportSubmenu";
 const MapHeader = () => {
   const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const avatarRedux = useSelector((state) => state.profile.avatar);
   const [profileSubMenu, setProfileSubMenu] = useState(0);
 
   const TextCreater = () => {
@@ -71,12 +70,12 @@ const MapHeader = () => {
         >
           <img
             src={
-              avatarRedux
-                ? constructAvatarUrl(avatarRedux)
+              profileData?.avatar
+                ? constructAvatarUrl(profileData.avatar)
                 : "/images/Avatar.png"
             }
             alt="user"
-            className="rounded-full"
+            className="rounded-full w-full h-full object-cover"
           />
           {profileSubMenu == 1 && (
             <div className="absolute top-[160%] right-[-20%]">

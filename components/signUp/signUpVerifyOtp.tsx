@@ -51,6 +51,14 @@ export default function SignUpVerifyOtp({
 
   return (
     <div className="w-[36.35vw]">
+      <div className="flex">
+        <button
+          className="ml-auto text-[18px] font-bold"
+          onClick={() => router.push("/")}
+        >
+          {"< "}Back
+        </button>
+      </div>
       <h1 className="text-[3.32vw] font-[700] text-center mb-[2.93vh]">
         Verify OTP
       </h1>

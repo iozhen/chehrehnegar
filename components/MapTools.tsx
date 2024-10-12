@@ -1,18 +1,99 @@
-import React, { useState } from "react";
+import { LineString } from "ol/geom";
+import { Draw } from "ol/interaction";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { getLength as getGeodesicLength } from "ol/sphere";
+import { Stroke, Style, Text } from "ol/style";
+import React, { useEffect, useRef, useState } from "react";
 
 interface props {
-  handleRulerButtonClick: () => void;
-  handleAreaButtonClick: () => void;
-  areaFlag: boolean;
-  isRulerActive: boolean;
-  info: boolean;
-  setInfo: (value: boolean) => void;
-  chart: boolean;
-  setChart: (value: boolean) => void;
+  map: any;
 }
 
-const MapTools = ({ handleAreaButtonClick, handleRulerButtonClick }: props) => {
+const MapTools = ({ map }: props) => {
   const [selectedItem, setSelectedItem] = useState("");
+  const [distance, setDistance] = useState<number>(0);
+  const drawRef = useRef<Draw | null>(null);
+  const sourceRef = useRef<VectorSource>(new VectorSource());
+
+  useEffect(() => {
+    if (map) {
+      const vectorLayer = new VectorLayer({
+        source: sourceRef.current,
+        style: new Style({
+          stroke: new Stroke({
+            color: "blue",
+            width: 2,
+          }),
+        }),
+      });
+      map.addLayer(vectorLayer);
+
+      // Add Draw interaction for LineString
+      const draw = new Draw({
+        source: sourceRef.current,
+        type: "LineString",
+      });
+      drawRef.current = draw;
+      map.addInteraction(draw);
+
+      let clickCount = 0;
+
+      const handleClick = () => {
+        clickCount += 1;
+
+        if (clickCount === 2) {
+          draw.finishDrawing(); // Finish drawing after the second click
+          map.un("click", handleClick); // Remove click listener after finishing
+          clickCount = 0; // Reset the counter for the next drawing
+        }
+      };
+
+      // Attach the click handler when drawing starts
+      draw.on("drawstart", () => {
+        map.on("click", handleClick);
+      });
+
+      // Measure length when drawing finishes
+      draw.on("drawend", (event) => {
+        const geometry = event.feature.getGeometry() as LineString;
+        const length = getGeodesicLength(geometry, { projection: "EPSG:4326" });
+        setDistance(length); // Distance in meters
+
+        // Format the label to show distance in kilometers
+        const distanceText = `${(length / 1000).toFixed(2)} km`;
+
+        // Style with distance label
+        const lineStyle = new Style({
+          stroke: new Stroke({
+            color: "blue",
+            width: 2,
+          }),
+          text: new Text({
+            text: distanceText,
+            font: "14px Calibri,sans-serif",
+            fill: new Stroke({ color: "#000" }),
+            stroke: new Stroke({ color: "#fff", width: 3 }),
+            placement: "line", // Place text along the line
+          }),
+        });
+
+        // Apply the style with the label to the drawn feature
+        event.feature.setStyle(lineStyle);
+      });
+    }
+  }, [map]);
+
+  console.log("distance", distance);
+
+  useEffect(() => {
+    if (selectedItem === "length") {
+      map?.addInteraction(drawRef.current!);
+    } else {
+      map?.removeInteraction(drawRef.current!);
+      sourceRef.current.clear();
+    }
+  }, [selectedItem]);
   return (
     <div className=" bg-[#f8f8f8] flex items-center rounded-[20px] p-1">
       <div
@@ -21,7 +102,6 @@ const MapTools = ({ handleAreaButtonClick, handleRulerButtonClick }: props) => {
           (selectedItem == "length" ? "bg-[#cbf3ff]" : "")
         }
         onClick={() => {
-          handleRulerButtonClick();
           if (selectedItem === "length") {
             setSelectedItem("");
           } else {
@@ -45,7 +125,6 @@ const MapTools = ({ handleAreaButtonClick, handleRulerButtonClick }: props) => {
           (selectedItem === "area" ? "bg-[#cbf3ff]" : "")
         }
         onClick={() => {
-          handleAreaButtonClick();
           if (selectedItem == "area") {
             setSelectedItem("");
           } else {

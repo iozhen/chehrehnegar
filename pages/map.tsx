@@ -294,142 +294,142 @@ const MapComponents: React.FC = () => {
     }
   }, [map]);
 
-  const addInteraction = (type: string) => {
-    const newDraw = new Draw({
-      source: vectorSource,
-      type: type === "line" ? "LineString" : "Polygon",
-    });
+  // const addInteraction = (type: string) => {
+  //   const newDraw = new Draw({
+  //     source: vectorSource,
+  //     type: type === "line" ? "LineString" : "Polygon",
+  //   });
 
-    newDraw.on("drawend", (event) => {
-      const polygon = event.feature.getGeometry() as Polygon;
-      const area = getArea(polygon);
-      const output = `${Math.round(area * 100) / 100} m²`;
+  //   newDraw.on("drawend", (event) => {
+  //     const polygon = event.feature.getGeometry() as Polygon;
+  //     const area = getArea(polygon);
+  //     const output = `${Math.round(area * 100) / 100} m²`;
 
-      const tooltipElement = document.createElement("div");
-      tooltipElement.className = "ol-tooltip ol-tooltip-static";
-      tooltipElement.innerHTML = output;
+  //     const tooltipElement = document.createElement("div");
+  //     tooltipElement.className = "ol-tooltip ol-tooltip-static";
+  //     tooltipElement.innerHTML = output;
 
-      const overlay = new Overlay({
-        element: tooltipElement,
-        offset: [0, -15],
-        positioning: "bottom-center",
-      });
-      overlay.setPosition(polygon?.getInteriorPoint().getCoordinates());
-      map?.addOverlay(overlay);
-    });
+  //     const overlay = new Overlay({
+  //       element: tooltipElement,
+  //       offset: [0, -15],
+  //       positioning: "bottom-center",
+  //     });
+  //     overlay.setPosition(polygon?.getInteriorPoint().getCoordinates());
+  //     map?.addOverlay(overlay);
+  //   });
 
-    setDraw(newDraw);
-    map?.addInteraction(newDraw);
-  };
+  //   setDraw(newDraw);
+  //   map?.addInteraction(newDraw);
+  // };
 
-  useEffect(() => {
-    if (isRulerActive) {
-      if (map && typeof window !== "undefined") {
-        map?.addEventListener("click", handleSetClick);
-        addInteraction("line");
-      }
-    } else {
-      if (draw) {
-        map?.removeInteraction(draw);
-        setDraw(null);
-      }
-      map?.removeEventListener("click", handleSetClick);
-      setPoints([]);
-      for (const item of activeLayers) {
-        map?.removeLayer(item);
-      }
-      for (const item of activeOverlays) {
-        map?.removeOverlay(item);
-      }
-    }
-  }, [isRulerActive]);
+  // useEffect(() => {
+  //   if (isRulerActive) {
+  //     if (map && typeof window !== "undefined") {
+  //       map?.addEventListener("click", handleSetClick);
+  //       addInteraction("line");
+  //     }
+  //   } else {
+  //     if (draw) {
+  //       map?.removeInteraction(draw);
+  //       setDraw(null);
+  //     }
+  //     map?.removeEventListener("click", handleSetClick);
+  //     setPoints([]);
+  //     for (const item of activeLayers) {
+  //       map?.removeLayer(item);
+  //     }
+  //     for (const item of activeOverlays) {
+  //       map?.removeOverlay(item);
+  //     }
+  //   }
+  // }, [isRulerActive]);
 
-  useEffect(() => {
-    if (points.length >= 2) {
-      const line = new LineString([
-        points[points.length - 2],
-        points[points.length - 1],
-      ]);
-      const distance = getDistance(
-        fromLonLat(points[points.length - 2]),
-        fromLonLat(points[points.length - 1])
-      );
-      const distanceFeature = new Feature({
-        geometry: line,
-      });
+  // useEffect(() => {
+  //   if (points.length >= 2) {
+  //     const line = new LineString([
+  //       points[points.length - 2],
+  //       points[points.length - 1],
+  //     ]);
+  //     const distance = getDistance(
+  //       fromLonLat(points[points.length - 2]),
+  //       fromLonLat(points[points.length - 1])
+  //     );
+  //     const distanceFeature = new Feature({
+  //       geometry: line,
+  //     });
 
-      distanceFeature.setStyle(
-        new Style({
-          stroke: new Stroke({
-            color: "#ff3355",
-            width: 2,
-          }),
-        })
-      );
+  //     distanceFeature.setStyle(
+  //       new Style({
+  //         stroke: new Stroke({
+  //           color: "#ff3355",
+  //           width: 2,
+  //         }),
+  //       })
+  //     );
 
-      const vectorSource = new VectorSource({
-        features: [distanceFeature],
-      });
+  //     const vectorSource = new VectorSource({
+  //       features: [distanceFeature],
+  //     });
 
-      const vectorLayer = new VectorLayer({
-        source: vectorSource,
-      });
+  //     const vectorLayer = new VectorLayer({
+  //       source: vectorSource,
+  //     });
 
-      map?.addLayer(vectorLayer);
-      setActiveLayers((prevLayers) => [...prevLayers, vectorLayer]);
+  //     map?.addLayer(vectorLayer);
+  //     setActiveLayers((prevLayers) => [...prevLayers, vectorLayer]);
 
-      const [start, end] = [
-        points[points.length - 2],
-        points[points.length - 1],
-      ];
-      const midPoint = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
+  //     const [start, end] = [
+  //       points[points.length - 2],
+  //       points[points.length - 1],
+  //     ];
+  //     const midPoint = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
 
-      const distanceOverlay = new Overlay({
-        element: document.createElement("div"),
-        position: midPoint,
-        positioning: "bottom-center",
-      });
+  //     const distanceOverlay = new Overlay({
+  //       element: document.createElement("div"),
+  //       position: midPoint,
+  //       positioning: "bottom-center",
+  //     });
 
-      distanceOverlay.getElement().innerHTML = `${distance.toFixed(2)} meters`;
-      distanceOverlay.getElement().style.color = "black";
-      distanceOverlay.getElement().style.backgroundColor = "white";
-      distanceOverlay.getElement().style.padding = "5px";
-      distanceOverlay.getElement().style.borderRadius = "5px";
+  //     distanceOverlay.getElement().innerHTML = `${distance.toFixed(2)} meters`;
+  //     distanceOverlay.getElement().style.color = "black";
+  //     distanceOverlay.getElement().style.backgroundColor = "white";
+  //     distanceOverlay.getElement().style.padding = "5px";
+  //     distanceOverlay.getElement().style.borderRadius = "5px";
 
-      map?.addOverlay(distanceOverlay);
-      setActiveOverlays((prevOverlays: any) => [
-        ...prevOverlays,
-        distanceOverlay,
-      ]);
-    }
-  }, [points]);
+  //     map?.addOverlay(distanceOverlay);
+  //     setActiveOverlays((prevOverlays: any) => [
+  //       ...prevOverlays,
+  //       distanceOverlay,
+  //     ]);
+  //   }
+  // }, [points]);
 
-  const handleSetClick = useCallback((evt: any) => {
-    const clickedPoint = evt.coordinate;
-    setPoints((prevPoints) => [...prevPoints, clickedPoint]);
-  }, []);
+  // const handleSetClick = useCallback((evt: any) => {
+  //   const clickedPoint = evt.coordinate;
+  //   setPoints((prevPoints) => [...prevPoints, clickedPoint]);
+  // }, []);
 
-  const handleRulerButtonClick = () => {
-    setIsRulerActive(!isRulerActive);
-  };
+  // const handleRulerButtonClick = () => {
+  //   setIsRulerActive(!isRulerActive);
+  // };
 
-  const handleAreaButtonClick = () => {
-    setAreaFlag(!areaFlag);
+  // const handleAreaButtonClick = () => {
+  //   setAreaFlag(!areaFlag);
 
-    if (areaFlag) {
-      if (draw) {
-        map?.removeInteraction(draw);
-        setDraw(null);
-      }
-      vectorSource.clear();
-      const elements = document.getElementsByClassName(
-        "ol-tooltip ol-tooltip-static"
-      );
-      while (elements.length > 0) elements[0].remove();
-    } else {
-      addInteraction();
-    }
-  };
+  //   if (areaFlag) {
+  //     if (draw) {
+  //       map?.removeInteraction(draw);
+  //       setDraw(null);
+  //     }
+  //     vectorSource.clear();
+  //     const elements = document.getElementsByClassName(
+  //       "ol-tooltip ol-tooltip-static"
+  //     );
+  //     while (elements.length > 0) elements[0].remove();
+  //   } else {
+  //     addInteraction();
+  //   }
+  // };
 
   const handleInfo = async (evt) => {
     if (info) {
@@ -653,20 +653,17 @@ const MapComponents: React.FC = () => {
     <div className="flex relative jost h-screen overflow-y-hidden">
       <div className="flex items-center absolute top-[2%] left-[2%] z-30 gap-2">
         <MapTools
-          handleRulerButtonClick={handleRulerButtonClick}
-          handleAreaButtonClick={handleAreaButtonClick}
-          areaFlag={areaFlag}
-          isRulerActive={isRulerActive}
-          setInfo={setInfo}
-          info={info}
-          setChart={setChart}
-          chart={chart}
+          // handleRulerButtonClick={handleRulerButtonClick}
+          // handleAreaButtonClick={handleAreaButtonClick}
+          // areaFlag={areaFlag}
+          // isRulerActive={isRulerActive}
+          // setInfo={setInfo}
+          // info={info}
+          // setChart={setChart}
+          // chart={chart}
+          map={map}
         />
         <InfoTools
-          handleRulerButtonClick={handleRulerButtonClick}
-          handleAreaButtonClick={handleAreaButtonClick}
-          areaFlag={areaFlag}
-          isRulerActive={isRulerActive}
           setInfo={setInfo}
           info={info}
           setChart={setChart}

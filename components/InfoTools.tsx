@@ -1,26 +1,13 @@
 import React, { useState } from "react";
 
 interface props {
-  handleRulerButtonClick: () => void;
-  handleAreaButtonClick: () => void;
-  areaFlag: boolean;
-  isRulerActive: boolean;
   info: boolean;
   setInfo: (value: boolean) => void;
   chart: boolean;
   setChart: (value: boolean) => void;
 }
 
-const InfoTools = ({
-  handleAreaButtonClick,
-  handleRulerButtonClick,
-  areaFlag,
-  isRulerActive,
-  info,
-  setInfo,
-  chart,
-  setChart,
-}: props) => {
+const InfoTools = ({ info, setInfo, chart, setChart }: props) => {
   const [selectedItem, setSelectedItem] = useState("");
   return (
     <div className=" bg-[#f8f8f8] flex items-center rounded-[20px] p-1">

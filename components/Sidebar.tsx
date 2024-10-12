@@ -10,6 +10,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setMapType } from "@/redux/slices/sidebarSlice";
 import Link from "next/link";
+import SettingButton from "./sideBar/SettingButton";
 
 const Sidebar = () => {
   const [activeLayer, setActiveLayer] = useState<string>("Open Street Map");
@@ -30,7 +31,7 @@ const Sidebar = () => {
   console.log("active layer", activeLayer);
 
   return (
-    <div className="w-[17.6%] bg-white relative overflow-auto custom-scroll pb-[20px]">
+    <div className="w-[17.6%] bg-white relative custom-scroll pb-[20px]">
       <Link href="/">
         <div className="flex items-center gap-[14px] pl-[34px] h-[9.7vh] sticky top-0 bg-white z-10 shadow-[0_0_10px_10px_rgba(0,0,0,0.1)]">
           <img
@@ -41,7 +42,7 @@ const Sidebar = () => {
           <h2 className="jost-black text-[25px] text-[#343C6A]">Bina</h2>
         </div>
       </Link>
-      <div className="pl-[34px]">
+      <div className="pl-[34px] flex flex-col h-[calc(100%-100px)]">
         <Link
           href={"/dashboard"}
           className="flex items-center gap-[17px] relative cursor-pointer mt-[2vh]"
@@ -80,8 +81,13 @@ const Sidebar = () => {
         />
 
         <Wetland />
-        <TextAndBorder text="Layers" className="mb-[2.448vh]" />
-        <div
+        <div className="mt-auto flex flex-col gap-[2.34vh]">
+          <TextAndBorder text="More" className="mb-[2.148vh]" />
+          <SettingButton />
+          <MoreTools />
+        </div>
+
+        {/* <div
           className={
             " flex items-center flex-col pr-[30px] gap-[0.97vh] cursor-pointer w-full"
           }
@@ -109,41 +115,8 @@ const Sidebar = () => {
               </h3>
             </div>
           ))}
-        </div>
-        <TextAndBorder text="More" className="mb-[2.148vh]" />
-        <MoreTools />
+        </div> */}
       </div>
-
-      {/* <button
-            className="bg-[#E96363] flex items-center justify-center w-full py-[1.36vh] text-[18px] font-[500] text-white mt-[2.148vh] absolute left-0 bottom-0"
-            onClick={() => {
-               if (token) {
-                  axios
-                     .post(
-                        `${baseUrl}/api/auth/logout`,
-                        {},
-                        {
-                           headers: {
-                              Authorization: `Bearer ${token}`,
-                           },
-                        }
-                     )
-                     .then((res) => {
-                        toast.success("Logged out successfully");
-                        Cookies.remove("token");
-                        router.push("/");
-                     })
-                     .catch((err) => {
-                        console.log(err);
-                        toast.error("Error logging out. Please try again.");
-                     });
-               } else {
-                  toast.error("No token found. Unable to log out.");
-               }
-            }}
-         >
-            Log Out
-         </button> */}
     </div>
   );
 };

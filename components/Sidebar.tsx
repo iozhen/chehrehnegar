@@ -12,7 +12,7 @@ import { setMapType } from "@/redux/slices/sidebarSlice";
 import Link from "next/link";
 
 const Sidebar = () => {
-  const [activeLayer, setActiveLayer] = useState<string>("");
+  const [activeLayer, setActiveLayer] = useState<string>("Open Street Map");
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   const router = useRouter();
@@ -26,6 +26,8 @@ const Sidebar = () => {
       router.push("/map");
     }
   };
+
+  console.log("active layer", activeLayer);
 
   return (
     <div className="w-[17.6%] bg-white relative overflow-auto custom-scroll pb-[20px]">

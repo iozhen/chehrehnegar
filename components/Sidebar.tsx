@@ -70,7 +70,33 @@ const Sidebar = () => {
             <div className="w-[6px] h-[5.85vh] bg-[#2D60FF] absolute left-[-34px] rounded-tr-[10px] rounded-br-[10px]"></div>
           )}
         </Link>
-
+        <Link
+          href={"/map"}
+          className="flex items-center gap-[17px] relative cursor-pointer mt-[2vh]"
+          onClick={() => {}}
+        >
+          <img
+            src={
+              router.pathname.includes("map")
+                ? "/icons/dashboardactive.svg"
+                : "/icons/dashboard.svg"
+            }
+            alt="wetland"
+          />
+          <h3
+            className={
+              "text-[1.75vh] font-[500]  " +
+              (router.pathname.includes("map")
+                ? "text-[#2D60FF]"
+                : "text-[#B1B1B1]")
+            }
+          >
+            Map
+          </h3>
+          {router.pathname.includes("map") && (
+            <div className="w-[6px] h-[5.85vh] bg-[#2D60FF] absolute left-[-34px] rounded-tr-[10px] rounded-br-[10px]"></div>
+          )}
+        </Link>
         <TextAndBorder
           text="Tools"
           className={
@@ -79,14 +105,12 @@ const Sidebar = () => {
               : "mb-[2.448vh]"
           }
         />
-
         <Wetland />
         <div className="mt-auto flex flex-col gap-[2.34vh]">
           <TextAndBorder text="More" className="mb-[2.148vh]" />
           <SettingButton />
           <MoreTools />
         </div>
-
         {/* <div
           className={
             " flex items-center flex-col pr-[30px] gap-[0.97vh] cursor-pointer w-full"

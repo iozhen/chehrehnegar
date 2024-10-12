@@ -36,14 +36,7 @@ export default function SettingButton() {
   return (
     <div className="relative w-full">
       <div className="flex items-center gap-[17px] relative cursor-pointer">
-        <img
-          src={
-            router.pathname.includes("plans")
-              ? "/icons/plansactive.svg"
-              : "/icons/plans.svg"
-          }
-          alt="Price plans"
-        />
+        <img src={"/icons/plans.svg"} alt="Price plans" />
         <button
           className="w-full text-left text-[#B1B1B1]"
           onClick={(e) => {

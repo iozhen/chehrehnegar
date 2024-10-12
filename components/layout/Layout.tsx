@@ -71,7 +71,7 @@ function Layout({ children }: LayoutProps) {
         // Dispatch the profile data to the Redux store
         dispatch(setProfileData({ ...response.data.data }));
         dispatch(setLogin(true)); // Mark the user as logged in
-      } catch (err) {
+      } catch (err: any) {
         if (err?.response?.data === "Invalid token.") {
           dispatch(setLogin(false));
           Cookies.remove("token");

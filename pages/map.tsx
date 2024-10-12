@@ -31,12 +31,14 @@ import {
 } from "chart.js";
 import DateSlider from "@/components/DateSlider";
 import MapHeader from "@/components/MapHeader";
-import Tools from "@/components/Tools";
+import Tools from "@/components/InfoTools";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import Plans from "@/components/Plans";
 import { useSelector } from "react-redux";
+import MapTools from "@/components/MapTools";
+import InfoTools from "@/components/InfoTools";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LinearScale);
 
@@ -46,13 +48,13 @@ const MapComponents: React.FC = () => {
   const floodMap = useSelector((state: any) => state.sidebar.isFloods);
   const floodAlert = useSelector((state: any) => state.sidebar.isFloodAlert);
   const isLogin = useSelector((state: any) => state.login.isLogin);
-  const selectedDate = useSelector((state) => state.date.selectedDate);
+  const selectedDate = useSelector((state: any) => state.date.selectedDate);
 
   const [isSubMenu, setIsSubMenu] = useState(0);
   // const [mapType, setMapType] = useState("Open Street Map");
   const [activeLayers, setActiveLayers] = useState<any[]>([]);
   const [activeOverlays, setActiveOverlays] = useState<any>([]);
-  const mapType = useSelector((state) => state.sidebar.mapType);
+  const mapType = useSelector((state: any) => state.sidebar.mapType);
   const [isRulerActive, setIsRulerActive] = useState(false);
   const [points, setPoints] = useState<Coordinate[]>([]);
   const mapElement = useRef<HTMLDivElement>(null);
@@ -108,13 +110,13 @@ const MapComponents: React.FC = () => {
 
   const popupContent = useRef();
 
-  const wetlandsLayer = useRef();
+  const wetlandsLayer = useRef<ImageLayer<ImageWMS>>();
 
-  const damsLayer = useRef();
+  const damsLayer = useRef<ImageLayer<ImageWMS>>();
 
-  const floodsLayer = useRef();
+  const floodsLayer = useRef<ImageLayer<ImageWMS>>();
 
-  const floodAlertsLayer = useRef();
+  const floodAlertsLayer = useRef<ImageLayer<ImageWMS>>();
 
   //token handeling
   const token = Cookies.get("token");
@@ -123,7 +125,6 @@ const MapComponents: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       wetlandsLayer.current = new ImageLayer({
-        title: "Wetlands",
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
@@ -134,7 +135,6 @@ const MapComponents: React.FC = () => {
       });
 
       damsLayer.current = new ImageLayer({
-        title: "Reservoirs",
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
@@ -145,7 +145,6 @@ const MapComponents: React.FC = () => {
       });
 
       floodsLayer.current = new ImageLayer({
-        title: "Flood Map",
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
@@ -156,7 +155,6 @@ const MapComponents: React.FC = () => {
       });
 
       floodAlertsLayer.current = new ImageLayer({
-        title: "Flood Alert",
         visible: false,
         source: new ImageWMS({
           url: "http://bina.civil.sharif.edu/geoserver/wms",
@@ -251,13 +249,13 @@ const MapComponents: React.FC = () => {
 
   useEffect(() => {
     if (floodsLayer.current) {
-      floodsLayer.current.getSource().updateParams({
+      floodsLayer.current.getSource()?.updateParams({
         LAYERS: `floodmap:floodmap_${selectedDate}`,
       });
     }
 
     if (floodAlertsLayer.current) {
-      floodAlertsLayer.current.getSource().updateParams({
+      floodAlertsLayer.current.getSource()?.updateParams({
         LAYERS: `floodalert:floodalert_${selectedDate}`,
       });
     }
@@ -317,11 +315,11 @@ const MapComponents: React.FC = () => {
         positioning: "bottom-center",
       });
       overlay.setPosition(polygon?.getInteriorPoint().getCoordinates());
-      map.addOverlay(overlay);
+      map?.addOverlay(overlay);
     });
 
     setDraw(newDraw);
-    map.addInteraction(newDraw);
+    map?.addInteraction(newDraw);
   };
 
   useEffect(() => {
@@ -653,16 +651,28 @@ const MapComponents: React.FC = () => {
 
   return (
     <div className="flex relative jost h-screen overflow-y-hidden">
-      <Tools
-        handleRulerButtonClick={handleRulerButtonClick}
-        handleAreaButtonClick={handleAreaButtonClick}
-        areaFlag={areaFlag}
-        isRulerActive={isRulerActive}
-        setInfo={setInfo}
-        info={info}
-        setChart={setChart}
-        chart={chart}
-      />
+      <div className="flex items-center absolute top-[2%] left-[2%] z-30 gap-2">
+        <MapTools
+          handleRulerButtonClick={handleRulerButtonClick}
+          handleAreaButtonClick={handleAreaButtonClick}
+          areaFlag={areaFlag}
+          isRulerActive={isRulerActive}
+          setInfo={setInfo}
+          info={info}
+          setChart={setChart}
+          chart={chart}
+        />
+        <InfoTools
+          handleRulerButtonClick={handleRulerButtonClick}
+          handleAreaButtonClick={handleAreaButtonClick}
+          areaFlag={areaFlag}
+          isRulerActive={isRulerActive}
+          setInfo={setInfo}
+          info={info}
+          setChart={setChart}
+          chart={chart}
+        />
+      </div>
 
       <div className="w-full">
         <div ref={mapElement} style={{ width: "100%", height: "90vh" }}>

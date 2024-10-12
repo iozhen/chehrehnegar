@@ -211,11 +211,11 @@ const MapComponents: React.FC = () => {
         }),
       });
 
-      const water = new TileLayer({
+      const waterColor = new TileLayer({
         title: "Water Color",
         visible: false,
         source: new XYZ({
-          url: "http://{a-d}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg",
+          url: "https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg",
         }),
       });
 
@@ -233,7 +233,7 @@ const MapComponents: React.FC = () => {
           googleTerrainRoads,
           googleSatellite,
           googleSatelliteRoads,
-          water,
+          waterColor,
           wetlandsLayer.current, // Add wetlandsLayer
           damsLayer.current, // Add damsLayer
           floodsLayer.current, // Add floods layer

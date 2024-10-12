@@ -111,35 +111,6 @@ const Sidebar = () => {
           <SettingButton />
           <MoreTools />
         </div>
-        {/* <div
-          className={
-            " flex items-center flex-col pr-[30px] gap-[0.97vh] cursor-pointer w-full"
-          }
-        >
-          {data.items.map((item) => (
-            <div
-              key={item.title}
-              className={`w-full rounded-[20px] flex items-center justify-center h-[5.46vh] relative bg-center bg-contain px-[10px]  ${
-                activeLayer === item.title
-                  ? "border-[#4379EE] border-[5px] "
-                  : ""
-              }`}
-              style={{
-                backgroundImage: `url(${item.img})`,
-              }}
-              onClick={() => {
-                handleLayerClick(item.title);
-              }}
-            >
-              {activeLayer != item.title && (
-                <div className="w-full h-full absolute top-0 left-0 bg-[#00000050] rounded-[20px]"></div>
-              )}
-              <h3 className="font-[500] text-[15px] z-20 flex-shrink-0 text-white">
-                {item.title}
-              </h3>
-            </div>
-          ))}
-        </div> */}
       </div>
     </div>
   );
